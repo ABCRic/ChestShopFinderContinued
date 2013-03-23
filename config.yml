@@ -1,0 +1,33 @@
+config-version: 1
+properties:
+  chat-prefix: '&7[&dCSF&7] '
+  
+  #Database to use, sqlite or mysql. 
+  db-type: sqlite
+  
+  #Default permission access. If you don't want ops access set to false.
+  permission-default: op
+  
+  # Check for new version on startup.
+  check-new-version: true
+  
+  # Help the developer know how popular the plugin is.
+  use-metrics: true
+  
+  # When possible, run db queries in seperate thread to reduce lag.
+  async-db-queries: true
+  
+  # Show debug messages.
+  debug-messages: false
+  
+  # Auto add shop upon creation to our database.
+  auto-register: true
+  
+# MySQL DB info.
+mysql:
+  hostname: localhost
+  username: root
+  password: CHANGEME
+  port: 3306
+  database: minecraft
+  prefix: CSF_
