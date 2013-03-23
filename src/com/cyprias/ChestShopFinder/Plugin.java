@@ -23,6 +23,7 @@ import com.cyprias.ChestShopFinder.database.MySQL;
 import com.cyprias.ChestShopFinder.database.SQLite;
 import com.cyprias.ChestShopFinder.listeners.ChestShopListener;
 import com.cyprias.ChestShopFinder.listeners.EntityListener;
+import com.cyprias.ChestShopFinder.listeners.InventoryListener;
 
 public class Plugin extends JavaPlugin {
 	// static PluginDescriptionFile description;
@@ -71,7 +72,7 @@ public class Plugin extends JavaPlugin {
 
 		loadPermissions();
 
-		registerListeners(new EntityListener(), new ChestShopListener());
+		registerListeners(new EntityListener(), new ChestShopListener(), new InventoryListener());
 		
 		
 		

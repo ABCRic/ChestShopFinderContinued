@@ -149,5 +149,11 @@ public class SQLite implements Database {
 		return false;
 	}
 
+	@Override
+	public boolean setInStock(int id, int inStock) throws SQLException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 
 }

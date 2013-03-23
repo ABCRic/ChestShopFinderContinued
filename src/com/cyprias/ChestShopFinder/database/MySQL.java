@@ -196,6 +196,16 @@ public class MySQL implements Database {
 	}
 
 
+	@Override
+	public boolean setInStock(int id, int inStock) throws SQLException {
+		// 
+		
+		String query = "UPDATE `"+shops_table+"` SET `inStock` = ? WHERE `id` = ?;";
+		int success = executeUpdate(query, inStock, id);
+		return (success > 0) ? true : false;
+	}
+
+
 
 	
 }

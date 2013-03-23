@@ -15,6 +15,8 @@ public interface Database {
 	Shop getShopAtLocation(Location loc) throws SQLException;
 	
 	boolean deleteShopAtLocation(Location loc) throws SQLException;
+
+	boolean setInStock(int id, int inStock) throws SQLException;
 	
 	
 }
