@@ -16,6 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
 
 import com.cyprias.ChestShopFinder.command.CommandManager;
+import com.cyprias.ChestShopFinder.command.TestCommand;
 import com.cyprias.ChestShopFinder.configuration.Config;
 import com.cyprias.ChestShopFinder.configuration.YML;
 import com.cyprias.ChestShopFinder.database.Database;
@@ -66,7 +67,7 @@ public class Plugin extends JavaPlugin {
 		}
 		
 		CommandManager cm = new CommandManager();
-		
+		cm.registerCommand("test", new TestCommand());
 		
 		this.getCommand("csf").setExecutor(cm);
 

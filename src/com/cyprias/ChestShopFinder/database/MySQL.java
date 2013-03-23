@@ -5,14 +5,18 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
 import com.Acrobot.Breeze.Utils.MaterialUtil;
 import com.cyprias.ChestShopFinder.Logger;
+import com.cyprias.ChestShopFinder.Plugin;
 import com.cyprias.ChestShopFinder.configuration.Config;
 
 public class MySQL implements Database {
@@ -205,7 +209,55 @@ public class MySQL implements Database {
 		return (success > 0) ? true : false;
 	}
 
+	public static List<Shop> findShopsNear(CommandSender sender, Location loc) throws SQLException{
+		
+		
+		int latitude = loc.getBlockX();
+		int longitude = loc.getBlockZ();
+		int distance = 10;
+		
+		//String qry = "SELECT *,(((acos(sin((" + latitude + "*pi()/180)) * sin((`x`*pi()/180))+cos((" + latitude + "*pi()/180)) * cos((`x`*pi()/180)) * cos(((" + longitude + "- `z`)*pi()/180))))*180/pi())*60*1.1515) as distance FROM `"+shops_table+"` HAVING distance >= " + distance;
+		
+		
+		String qry = "SELECT *, SQRT(("+latitude+"-x)*("+latitude+"-x) + ("+longitude+"-z)*("+longitude+"-z)) as distance FROM "+shops_table+" WHERE `inStock` > 0 ORDER BY distance ";
 
+		queryReturn results = executeQuery(qry);
+		ResultSet r = results.result;
+		Location tLoc;
+		
+		List<Shop> shops = new ArrayList<Shop>();
+		
+		Shop shop;
+		ItemStack stock;
+		while (r.next()) {
+			
+			tLoc = new Location(Plugin.getInstance().getServer().getWorld(r.getString("world")), r.getDouble("x"), r.getDouble("y"), r.getDouble("z"));
+			
+			
+			
+			//Logger.info(r.getInt("id") + " " + loc.distance(tLoc));
+			
+			//sender.sendMessage(r.getInt("id") + " " + loc.distance(tLoc));
+			
+			stock = new ItemStack(r.getInt("typeId"),r.getShort("durability"));
+			stock.addEnchantments(MaterialUtil.Enchantment.getEnchantments(r.getString("enchantments")));
+			
+			shop = new Shop(r.getString("owner"), stock, r.getString("enchantments"), r.getInt("amount"), r.getDouble("buyPrice"), r.getDouble("sellPrice"), tLoc, r.getInt("inStock"));
+			shop.setId(r.getInt("id"));
+			
+			shops.add(shop);
+			
+		}
+		
+		
+		return shops;
+		//queryReturn results = executeQuery("SELECT *, ( 3959 * acos( cos( radians(78.3232) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(65.3234) ) + sin( radians(65.3234) ) * sin( radians( lat ) ) ) ) AS distance FROM markers HAVING distance < 30 ORDER BY distance");
+		
+		
+		
+		
+		
+	}
 
 	
 }

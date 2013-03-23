@@ -1,10 +1,12 @@
 package com.cyprias.ChestShopFinder.command;
 
+import java.sql.SQLException;
+
 import org.bukkit.command.CommandSender;
 
 public interface Command extends Listable {
 
-	boolean execute(CommandSender sender, org.bukkit.command.Command cmd, String[] args);
+	boolean execute(CommandSender sender, org.bukkit.command.Command cmd, String[] args) throws SQLException;
 
 	CommandAccess getAccess();
 
