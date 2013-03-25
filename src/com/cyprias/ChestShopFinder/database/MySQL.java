@@ -209,6 +209,7 @@ public class MySQL implements Database {
 		return (success > 0) ? true : false;
 	}
 
+	//http://forums.phpfreaks.com/topic/84811-solved-sorting-distance-from-a-point-in-a-coordinate-system-from-a-mysql-table/
 	public static List<Shop> findShopsNear(CommandSender sender, Location loc) throws SQLException{
 		
 		
@@ -257,6 +258,41 @@ public class MySQL implements Database {
 		
 		
 		
+	}
+
+
+	@Override
+	public List<Shop> findItemNearby(ItemStack stock, Location loc) throws SQLException {
+		List<Shop> shops =  new ArrayList<Shop>();
+		
+		int pX = loc.getBlockX();
+		int pZ = loc.getBlockZ();
+		
+		String itemSearch = " AND `typeId` = ? AND `durability` = ? AND `enchantments` = ?";
+		
+		String enchantments = MaterialUtil.Enchantment.encodeEnchantment(stock);
+		if (enchantments == null)
+			enchantments = "";
+
+		String qry = "SELECT *, SQRT(("+pX+"-x)*("+pX+"-x) + ("+pZ+"-z)*("+pZ+"-z)) as distance FROM "+shops_table+" WHERE `inStock` >= `amount` AND `world` LIKE ? "+itemSearch+ " ORDER BY distance ";
+
+		queryReturn results = executeQuery(qry, loc.getWorld().getName(), stock.getTypeId(), stock.getDurability(), enchantments);
+		ResultSet r = results.result;
+		Location tLoc;
+
+		Shop shop;
+		while (r.next()) {
+			
+			tLoc = new Location(Plugin.getInstance().getServer().getWorld(r.getString("world")), r.getDouble("x"), r.getDouble("y"), r.getDouble("z"));
+
+			shop = new Shop(r.getString("owner"), stock, r.getString("enchantments"), r.getInt("amount"), r.getDouble("buyPrice"), r.getDouble("sellPrice"), tLoc, r.getInt("inStock"));
+			shop.setId(r.getInt("id"));
+			
+			shops.add(shop);
+			
+		}
+
+		return shops;
 	}
 
 	

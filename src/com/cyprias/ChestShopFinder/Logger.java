@@ -1,7 +1,10 @@
 package com.cyprias.ChestShopFinder;
 
+import com.cyprias.ChestShopFinder.configuration.Config;
+
+
 public class Logger {
-	private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger("AdminNotes");
+	private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Plugin.getInstance().getName());
 	private static final Plugin plugin = Plugin.getInstance();
 
 	public static void info(String mess) {
@@ -10,6 +13,8 @@ public class Logger {
 
 	public static void info(String format, Object... args) {
 		logger.info(getLogPrefix() + String.format(format, args));
+		
+		
 	}
 
 	public static void info(Object... args) {
@@ -18,6 +23,11 @@ public class Logger {
 			msg += ", %s";
 		}
 		info(msg, args);
+	}
+	
+	public static void debug(String mess) {
+		if (Config.getBoolean("properties.debug-messages"))
+			logger.info(getLogPrefix() +"[Debug] "+ mess);
 	}
 	
 	public static void infoRaw(String mess) {

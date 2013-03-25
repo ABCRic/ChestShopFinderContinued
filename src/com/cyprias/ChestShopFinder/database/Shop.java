@@ -22,6 +22,8 @@ public class Shop {
 		this.stock = stock;
 		this.enchantments = enchantments;
 		this.amount = amount;
+		
+		//Note Buy price is how much it costs the player to 'buy' from the shop. Same with sell.
 		this.buyPrice = buyPrice;
 		this.sellPrice = sellPrice;
 		this.location = location;

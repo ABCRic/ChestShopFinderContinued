@@ -1,9 +1,13 @@
 package com.cyprias.ChestShopFinder.database;
 
+import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 import org.bukkit.Location;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.inventory.ItemStack;
+
 
 
 public interface Database {
@@ -17,6 +21,8 @@ public interface Database {
 	boolean deleteShopAtLocation(Location loc) throws SQLException;
 
 	boolean setInStock(int id, int inStock) throws SQLException;
+	
+	List<Shop> findItemNearby(ItemStack stock, Location loc) throws SQLException;
 	
 	
 }

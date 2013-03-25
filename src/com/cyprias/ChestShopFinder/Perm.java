@@ -16,8 +16,9 @@ public enum Perm {
 	RELOAD("csf.reload"),
 	LIST("csf.list"), 
 	RESET("csf.reset"),
-	EQUALIZE("csf.equalize"), 
-	PARENT_ADMIN("csf.admin", EQUALIZE, VERSION, LIST, RELOAD, RESET);
+	SEARCH("csf.search"), 
+	LOOK("csf.look"), 
+	PARENT_ADMIN("csf.admin", SEARCH, LOOK, VERSION, LIST, RELOAD, RESET);
 
 	private Perm(String value, Perm... childrenArray) {
 		this(value, String.format(DEFAULT_ERROR_MESSAGE, value), childrenArray);

@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
@@ -153,6 +154,12 @@ public class SQLite implements Database {
 	public boolean setInStock(int id, int inStock) throws SQLException {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public List<Shop> findItemNearby(ItemStack stock, Location loc) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 
