@@ -23,6 +23,9 @@ properties:
   # Auto add shop upon creation to our database.
   auto-register: true
   
+  #Decimal places to round prices.
+  price-rounding: 2
+  
 # MySQL DB info.
 mysql:
   hostname: localhost

@@ -255,7 +255,11 @@ public class Plugin extends JavaPlugin {
 	}
 
 	public static String Round(double val, int pl) {
-		String format = "#.";
+		String format = "#";
+		
+		if (1 <= pl)
+			format += ".";
+		
 		for (int i = 1; i <= pl; i++)
 			format += "#";
 

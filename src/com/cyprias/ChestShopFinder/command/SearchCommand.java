@@ -14,13 +14,14 @@ import com.cyprias.ChestShopFinder.ChatUtils;
 import com.cyprias.ChestShopFinder.Logger;
 import com.cyprias.ChestShopFinder.Perm;
 import com.cyprias.ChestShopFinder.Plugin;
+import com.cyprias.ChestShopFinder.configuration.Config;
 import com.cyprias.ChestShopFinder.database.Shop;
 import com.cyprias.ChestShopFinder.utils.MathUtil;
 
 public class SearchCommand implements Command {
 	public static HashMap<String, List<Shop>> previousResults = new HashMap<String, List<Shop>>();
 	
-	public boolean execute(final CommandSender sender, org.bukkit.command.Command cmd, String[] args) throws SQLException {
+	public boolean execute(final CommandSender sender, org.bukkit.command.Command cmd, final String[] args) throws SQLException {
 		
 		if (args.length < 1 || args.length > 2){
 			getCommands(sender, cmd);
@@ -53,19 +54,29 @@ public class SearchCommand implements Command {
 					ChatUtils.send(sender, "No shops found with that item.");
 					return;
 				}
+				
+				ChatUtils.send(sender,String.format("§f%s §7results for §f%s§7.", shops.size(), args[0]));
+				
 				previousResults.put(sender.getName(), shops);
 				// [1] Cyprias has 16 for $2 22 blocks north of you.
-				String shopFormat = "§7[§f%s§7] §f%s §7has §f%s §7for $§f%s§7, §f%s §7blocks §f%s";
+				String shopFormat = "§7[§f%s§7] §f%s §7has §f%s §7for $§f%s §7($§f%s§7e), §f%s §7blocks §f%s";
 				String sDir;
 				
 				Shop shop;
+				int pl = Config.getInt("properties.price-rounding");
+				String each;
 				for (int i=0; i<shops.size(); i++){
 					shop = shops.get(i);
 					
+					each = Plugin.Round(shop.buyPrice/shop.amount,pl);
+					
 					sDir = MathUtil.DegToDirection(MathUtil.AngleCoordsToCoords(pX, pZ, shop.location.getBlockX(), shop.location.getBlockZ()));
 
-					ChatUtils.send(sender, String.format(shopFormat, i+1, shop.owner, shop.amount, shop.buyPrice, Plugin.Round(p.getLocation().distance(shop.location)), sDir));
+					
+					
+					ChatUtils.send(sender, String.format(shopFormat, i+1, shop.owner, shop.amount, Plugin.Round(shop.buyPrice, pl), each, Plugin.Round(p.getLocation().distance(shop.location)), sDir));
 
+					
 				}
 				
 			}

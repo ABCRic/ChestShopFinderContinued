@@ -25,12 +25,12 @@ import com.cyprias.ChestShopFinder.database.Shop;
 public class InventoryListener implements Listener {
 	
 	static public void unregisterEvents(JavaPlugin instance){
-		EntityDeathEvent.getHandlerList().unregister(instance);
+		InventoryCloseEvent.getHandlerList().unregister(instance);
 	}
 	
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onInventoryClose(InventoryCloseEvent event) throws SQLException  {
-		Logger.info(event.getEventName());
+	//	Logger.debug(event.getEventName());
 
 		
         if (event.getInventory().getHolder() instanceof Chest || event.getInventory().getHolder() instanceof DoubleChest){
@@ -45,40 +45,59 @@ public class InventoryListener implements Listener {
         	
         	//Logger.info("findAnyNearbyShopSign: " + uBlock.findAnyNearbyShopSign(b));
         	
-        	Sign sign = uBlock.getConnectedSign(c);
+        	final Sign sign = uBlock.getConnectedSign(c);
         	
         	if (sign != null){
-        		Logger.info("getConnectedSign: " + sign);
+        		//Logger.debug("getConnectedSign: " + sign);
         	
         		
-        		Shop shop = Plugin.database.getShopAtLocation(sign.getLocation());
-        		
-        		if (shop != null){
-        			
-        			Logger.info("Sign is shop!");
-        			
-        			int inStock = 0;
+    			Plugin.getInstance().getServer().getScheduler().runTaskAsynchronously(Plugin.getInstance(), new Runnable() {
+    				public void run() {
+    					try {
+    					
+    		        		Shop shop = Plugin.database.getShopAtLocation(sign.getLocation());
+    		        		
+    		        		if (shop == null){
+    		        			//Shop's not in our db yet.
+    		        			ChestShopListener.registerShop(sign);
+    		        			
+    		        		}else{
+    		        			
+    		        			//Logger.info("Sign is shop!");
+    		        			
+    		        			int inStock = 0;
 
-        			String owner = sign.getLines()[0];
-        			ItemStack stock = MaterialUtil.getItem(sign.getLines()[3]);
-        			
-        			if (ChestShopSign.isAdminShop(owner)){
-        				inStock = 64*9*6; //Full chest. :P
-        			}else{
-        				Chest chest = uBlock.findConnectedChest(sign.getBlock());
-        				if (chest != null) {
-        					inStock = InventoryUtil.getAmount(stock, chest.getInventory());
-        				}
-        			}
-        			
-        			
-        			Logger.info("inStock: " + inStock);
-        			
-        			shop.setInStock(inStock);
-        			
-        			
-        			
-        		}
+    		        			String owner = sign.getLines()[0];
+    		        			ItemStack stock = MaterialUtil.getItem(sign.getLines()[3]);
+    		        			
+    		        			if (ChestShopSign.isAdminShop(owner)){
+    		        				inStock = 64*9*6; //Full chest. :P
+    		        			}else{
+    		        				Chest chest = uBlock.findConnectedChest(sign.getBlock());
+    		        				if (chest != null) {
+    		        					inStock = InventoryUtil.getAmount(stock, chest.getInventory());
+    		        				}
+    		        			}
+    		        			
+    		        			
+    		        			Logger.debug("Setting shop " + shop.id + "'s stock to " + inStock);
+    		        			
+    		        			shop.setInStock(inStock);
+    	
+    		        		}
+    						
+    						
+    					}catch (SQLException e) {
+    						Logger.warning("Exception caught while updating shop stock.");
+    						e.printStackTrace();
+    					}
+    					
+    				}
+    			});
+        		
+        		
+        		
+
         		
         		
         	}

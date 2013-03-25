@@ -26,7 +26,7 @@ public class EntityListener implements Listener {
 
 	
 	static public void unregisterEvents(JavaPlugin instance){
-		EntityDeathEvent.getHandlerList().unregister(instance);
+	//	EntityDeathEvent.getHandlerList().unregister(instance);
 	}
 	
 	/*

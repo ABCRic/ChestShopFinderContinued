@@ -2,22 +2,21 @@ package com.cyprias.ChestShopFinder.listeners;
 
 import java.sql.SQLException;
 
-import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.Acrobot.Breeze.Utils.InventoryUtil;
 import com.Acrobot.Breeze.Utils.MaterialUtil;
 import com.Acrobot.Breeze.Utils.PriceUtil;
-import com.Acrobot.ChestShop.Containers.AdminInventory;
 import com.Acrobot.ChestShop.Events.ShopCreatedEvent;
 import com.Acrobot.ChestShop.Events.ShopDestroyedEvent;
+import com.Acrobot.ChestShop.Events.TransactionEvent;
+import com.Acrobot.ChestShop.Events.PreTransactionEvent;
 import com.Acrobot.ChestShop.Signs.ChestShopSign;
 import com.Acrobot.ChestShop.Utils.uBlock;
 import com.cyprias.ChestShopFinder.Logger;
@@ -30,6 +29,8 @@ public class ChestShopListener implements Listener {
 
 	static public void unregisterEvents(JavaPlugin instance) {
 		ShopCreatedEvent.getHandlerList().unregister(instance);
+		ShopDestroyedEvent.getHandlerList().unregister(instance);
+		TransactionEvent.getHandlerList().unregister(instance);
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -42,28 +43,86 @@ public class ChestShopListener implements Listener {
 		// Shop shop =
 		// Plugin.database.getShopAtLocation(event.getSign().getLocation());
 
-		Logger.info("onShopDestroyed " + Plugin.database.deleteShopAtLocation(event.getSign().getLocation()));
+		Logger.debug("onShopDestroyed " + Plugin.database.deleteShopAtLocation(event.getSign().getLocation()));
 
 	}
 
+	
+	/*
 	@EventHandler(priority = EventPriority.NORMAL)
-	public void onShopCreated(ShopCreatedEvent event) throws SQLException {
+	public void onPreTransaction(PreTransactionEvent event) throws SQLException {
+		Logger.debug(event.getEventName());
+	}
+	*/
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onTransaction(TransactionEvent event) throws SQLException {
+		
+		Logger.debug(event.getEventName());
+		
+		final Sign sign = event.getSign();
+		
+		
+		Plugin.getInstance().getServer().getScheduler().runTaskAsynchronously(Plugin.getInstance(), new Runnable() {
+			public void run() {
+				try {
+				
+					Shop shop = Plugin.database.getShopAtLocation(sign.getLocation());
+					
+					if (shop == null){
+						//Shop's not in our db yet.
+						ChestShopListener.registerShop(sign);
+						
+					}else{
+						
+						//Logger.debug("Sign is shop!");
+						
+						int inStock = 0;
 
-		Logger.info("onShopCreated: ");
+						String owner = sign.getLines()[0];
+						ItemStack stock = MaterialUtil.getItem(sign.getLines()[3]);
+						
+						if (ChestShopSign.isAdminShop(owner)){
+							inStock = 64*9*6; //Full chest. :P
+						}else{
+							Chest chest = uBlock.findConnectedChest(sign.getBlock());
+							if (chest != null) {
+								inStock = InventoryUtil.getAmount(stock, chest.getInventory());
+							}
+						}
+						
+						
+						//Logger.debug("onTransaction inStock: " + inStock);
+						Logger.debug("Setting shop #" + shop.id + "'s stock to " + inStock);
+						shop.setInStock(inStock);
+						
+					}	
+					
+					
+				} catch (SQLException e) {
+					Logger.warning("Exception caught updating stock on transaction.");
+					e.printStackTrace();
+				}
+				
+			}
+		});
+		
+		
 
-		// for (int i=0; i<event.getSignLines().length; i++){
-		// Logger.info(event.getSignLines()[i]);
-		// }
+		
+	}
+	
+	public static void registerShopLines(String[] lines, final Sign sign) throws SQLException{
 
-		String owner = event.getSignLines()[0];
-		Logger.info("owner: " + owner);
+		final String owner = lines[0];
+		
 
-		int amount = Integer.valueOf(event.getSignLines()[1]);
-		Logger.info("amount: " + amount);
+		final int amount = Integer.valueOf(lines[1]);
+		//Logger.debug("amount: " + amount);
 
-		String sPrice = event.getSignLines()[2];
-		double buyPrice = PriceUtil.getBuyPrice(sPrice);
-		double sellPrice = PriceUtil.getSellPrice(sPrice);
+		String sPrice = lines[2];
+		final double buyPrice = PriceUtil.getBuyPrice(sPrice);
+		final double sellPrice = PriceUtil.getSellPrice(sPrice);
 		Logger.info("buyPrice: " + buyPrice + ", sellPrice: " + sellPrice);
 
 		// if (!PriceUtil.hasBuyPrice(sPrice) &&
@@ -71,11 +130,11 @@ public class ChestShopListener implements Listener {
 		// event.setOutcome(INVALID_PRICE);
 		// }
 
-		ItemStack stock = MaterialUtil.getItem(event.getSignLines()[3]);
+		final ItemStack stock = MaterialUtil.getItem(lines[3]);
 
-		Logger.info("stock: " + stock.getTypeId() + " " + stock.getDurability());
-		String enchantments = MaterialUtil.Enchantment.encodeEnchantment(stock);
-		Logger.info("enchantments: " + enchantments);
+		//Logger.debug("stock: " + stock.getTypeId() + " " + stock.getDurability());
+		final String enchantments = MaterialUtil.Enchantment.encodeEnchantment(stock);
+		//Logger.debug("enchantments: " + enchantments);
 
 
 
@@ -84,12 +143,10 @@ public class ChestShopListener implements Listener {
 		// Logger.info("rBlock: " + rBlock.getType());
 
 		int inStock = 0;
-
-		
 		if (ChestShopSign.isAdminShop(owner)){
 			inStock = 64*9*6; //Full chest. :P
 		}else{
-			Chest chest = uBlock.findConnectedChest(event.getSign().getBlock());
+			Chest chest = uBlock.findConnectedChest(sign.getBlock());
 
 			if (chest != null) {
 		
@@ -97,12 +154,40 @@ public class ChestShopListener implements Listener {
 
 			}
 		}
+		final int finStock = inStock;
+		
+		Logger.debug("registerShop inStock: " + inStock);
+		
+		
+		if (Config.getBoolean("properties.auto-register")){
+		//	Plugin.database.insert(owner, stock, enchantments, amount, buyPrice, sellPrice, sign.getLocation(), inStock);
+			
+			Plugin.database.insert(owner, stock, enchantments, amount, buyPrice, sellPrice, sign.getLocation(), finStock);
 
-		Logger.info("inStock: " + inStock);
+		}
+		
+	}
+
+	public static void registerShop(final Sign sign) throws SQLException{
+		registerShopLines(sign.getLines(), sign);
+	}
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onShopCreated(final ShopCreatedEvent event) throws SQLException {
+
 		
 		
-		if (Config.getBoolean("properties.auto-register"))
-			Plugin.database.insert(owner, stock, enchantments, amount, buyPrice, sellPrice, event.getSign().getLocation(), inStock);
 		
+		Plugin.getInstance().getServer().getScheduler().runTaskAsynchronously(Plugin.getInstance(), new Runnable() {
+			public void run() {
+				try {
+					registerShopLines( event.getSignLines(), event.getSign());
+				}catch (SQLException e) {
+					Logger.warning("Exception caught while registering new shop");
+					e.printStackTrace();
+				}
+			}});
+		
+		//registerShop(event.getSign());
 	}
 }

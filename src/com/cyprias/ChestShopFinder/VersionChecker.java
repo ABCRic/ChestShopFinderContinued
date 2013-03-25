@@ -21,8 +21,9 @@ public class VersionChecker {
 		Document doc = null;
 		try {
 			doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(url.openConnection().getInputStream());
-		} catch (SAXException e) {
+		} catch (Exception e) {
 			//Socket error, forgo giving an error. 
+			Logger.warning("Error checking version update");
 			return;
 		}
 		doc.getDocumentElement().normalize();
