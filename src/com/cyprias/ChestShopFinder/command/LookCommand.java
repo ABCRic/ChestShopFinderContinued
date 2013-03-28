@@ -38,7 +38,7 @@ public class LookCommand  implements Command {
 		
 		List<Shop> shops = SearchCommand.previousResults.get(sender.getName());
 		
-		if (index > shops.size()){
+		if (index >= shops.size()){
 			ChatUtils.send(sender, "§7That index does not exist in your previous query.");
 			return true;
 		}
