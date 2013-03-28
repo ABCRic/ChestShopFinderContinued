@@ -123,7 +123,7 @@ public class ChestShopListener implements Listener {
 		String sPrice = lines[2];
 		final double buyPrice = PriceUtil.getBuyPrice(sPrice);
 		final double sellPrice = PriceUtil.getSellPrice(sPrice);
-		Logger.info("buyPrice: " + buyPrice + ", sellPrice: " + sellPrice);
+		//Logger.debug("buyPrice: " + buyPrice + ", sellPrice: " + sellPrice);
 
 		// if (!PriceUtil.hasBuyPrice(sPrice) &&
 		// !PriceUtil.hasSellPrice(sPrice)) {
