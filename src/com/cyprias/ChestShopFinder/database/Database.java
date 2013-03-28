@@ -1,11 +1,9 @@
 package com.cyprias.ChestShopFinder.database;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
 import org.bukkit.Location;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.inventory.ItemStack;
 
 

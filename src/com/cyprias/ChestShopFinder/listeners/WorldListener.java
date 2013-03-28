@@ -97,15 +97,8 @@ public class WorldListener implements Listener {
 	}
 
 	public boolean shopExists(Shop shop){
-	//	Location loc = shop.getLocation();
-		
-		//Plugin.getInstance().getServer().getworld
-		
-		World world = shop.getWorld();
-		
-		Block block = world.getBlockAt(shop.getLocation());
-		
-		//Logger.debug("shopExists " + block.getType());
+
+		Block block = shop.getWorld().getBlockAt(shop.getLocation());
 		
 		if (block.getType() == block.getType().WALL_SIGN){
 			
