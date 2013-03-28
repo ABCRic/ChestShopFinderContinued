@@ -236,6 +236,16 @@ public class MySQL implements Database {
 		return shops;
 	}
 
+	/*
+SELECT * FROM `CSF_Shops` AS q
+LEFT JOIN `iConomy` AS i ON (
+    q.owner LIKE i.username
+)
+WHERE `sellPrice` > 0 AND `balance` >= `sellPrice`;
+
+	Shows only sell shops where the account's balance is above the shop's sell price, so you're guarenteed to to sell an item there.
+
+	 */
 
 	public List<Shop> findBuySellItemNearby(ItemStack stock, Location loc, boolean isBuy) throws SQLException {
 		List<Shop> shops =  new ArrayList<Shop>();
@@ -243,19 +253,27 @@ public class MySQL implements Database {
 		int pX = loc.getBlockX();
 		int pZ = loc.getBlockZ();
 		
-		String itemSearch = " AND `typeId` = ? AND `durability` = ? AND `enchantments` = ?";
-		
 		String enchantments = MaterialUtil.Enchantment.encodeEnchantment(stock);
 		if (enchantments == null)
 			enchantments = "";
 
-		//
-		String buyFilter = (isBuy == true) ? " AND `buyPrice` > 0 AND `inStock` >= `amount`" : " AND `sellPrice` > 0";
 		
-		String qry = "SELECT *, SQRT(("+pX+"-x)*("+pX+"-x) + ("+pZ+"-z)*("+pZ+"-z)) as distance FROM "+shops_table+" WHERE `world` LIKE ? "+itemSearch + buyFilter+ " ORDER BY distance LIMIT 0 , " + Config.getInt("properties.search-results");
+		
+		String qry = "SELECT *";	//Select all columns
+		qry += ", SQRT(("+pX+"-x)*("+pX+"-x) + ("+pZ+"-z)*("+pZ+"-z)) as distance";	//Create column `distance` with our relative distance
+		qry += "  FROM `CSF_Shops` AS q";	// From the shops table, save it as q.
+		qry += " LEFT JOIN `"+Config.getString("mysql.iConomy_table")+"` AS i ON (q.owner LIKE i.username)";	// Include the iConomy table, binded by the owner and username columns.
+		qry += " WHERE `world` LIKE ?";	// Only include the world we're in.
+		qry += " AND `typeId` = ? AND `durability` = ? AND `enchantments` = ?";	// Only show the item we're searching for.
+		if (isBuy == true){
+			qry += " AND `buyPrice` > 0 AND `inStock` >= `amount`"; // Only show shops with a buy price, and only if their stock is more than their amount on sign.
+		}else{
+			qry += " AND `sellPrice` > 0 AND `balance` >= `sellPrice`";	// Only show shops with a sell price, and only if the owner's money balance is more than their sell price.
+		}
+		qry += " ORDER BY distance"; // Sort listing by the distance column we made.
+		qry += " LIMIT 0 , " + Config.getInt("properties.search-results"); //Only pull the first 10.
+		
 
-		Logger.debug("qry: " + qry);
-		
 		queryReturn results = executeQuery(qry, loc.getWorld().getName(), stock.getTypeId(), stock.getDurability(), enchantments);
 		ResultSet r = results.result;
 

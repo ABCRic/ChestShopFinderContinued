@@ -63,7 +63,7 @@ public class TestCommand implements Command {
 	}
 
 	public void getCommands(CommandSender sender, org.bukkit.command.Command cmd) {
-		ChatUtils.sendCommandHelp(sender, Perm.RESET, "/%s test", cmd);
+		ChatUtils.sendCommandHelp(sender, Perm.TEST, "/%s test", cmd);
 	}
 
 	public boolean hasValues() {
@@ -71,7 +71,7 @@ public class TestCommand implements Command {
 	}
 
 	public void listCommands(CommandSender sender, List<String> list) {
-		if (Plugin.hasPermission(sender, Perm.RESET))
+		if (Plugin.hasPermission(sender, Perm.TEST))
 			list.add("/%s test");
 	}
 }

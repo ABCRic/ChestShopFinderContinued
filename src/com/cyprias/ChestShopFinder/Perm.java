@@ -20,9 +20,10 @@ public enum Perm {
 	
 	VERSION("csf.version"), 
 	RELOAD("csf.reload"),
-	RESET("csf.reset"),
-	PARENT_ADMIN("csf.admin", VERSION, RELOAD, RESET);
+	PARENT_ADMIN("csf.admin", VERSION, RELOAD),
 
+	TEST("csf.test");
+	
 	private Perm(String value, Perm... childrenArray) {
 		this(value, String.format(DEFAULT_ERROR_MESSAGE, value), childrenArray);
 	}

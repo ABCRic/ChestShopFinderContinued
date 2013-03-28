@@ -40,3 +40,4 @@ mysql:
   port: 3306
   database: minecraft
   prefix: CSF_
+  iConomy_table: iConomy

@@ -32,14 +32,14 @@ public class LookCommand  implements Command {
 		
 		if (!SearchCommand.previousResults.containsKey(sender.getName())){
 			
-			ChatUtils.send(sender, "You have not made any searches recently.");
+			ChatUtils.send(sender, "§7You have not searched anything.");
 			return true;
 		}
 		
 		List<Shop> shops = SearchCommand.previousResults.get(sender.getName());
 		
 		if (index > shops.size()){
-			ChatUtils.send(sender, "That index does nt exist in your previous search.");
+			ChatUtils.send(sender, "§7That index does not exist in your previous query.");
 			return true;
 		}
 

@@ -33,6 +33,7 @@ import com.cyprias.ChestShopFinder.command.ReloadCommand;
 import com.cyprias.ChestShopFinder.command.SearchCommand;
 import com.cyprias.ChestShopFinder.command.SellCommand;
 import com.cyprias.ChestShopFinder.command.TestCommand;
+import com.cyprias.ChestShopFinder.command.VersionCommand;
 import com.cyprias.ChestShopFinder.configuration.Config;
 import com.cyprias.ChestShopFinder.configuration.YML;
 import com.cyprias.ChestShopFinder.database.Database;
@@ -101,6 +102,7 @@ public class Plugin extends JavaPlugin {
 		cm.registerCommand("search", new SearchCommand());
 		cm.registerCommand("look", new LookCommand());
 		cm.registerCommand("reload", new ReloadCommand());
+		cm.registerCommand("version", new VersionCommand());
 		cm.registerCommand("sell", new SellCommand());
 		cm.registerCommand("buy", new BuyCommand());
 		
