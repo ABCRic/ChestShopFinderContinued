@@ -35,7 +35,7 @@ public class SellCommand implements Command {
 
 	public void listCommands(CommandSender sender, List<String> list) {
 		if (Plugin.hasPermission(sender, Perm.SELL))
-			list.add("/%s sell");
+			list.add("/%s sell - Find where to sell an item.");
 	}
 
 	public boolean execute(final CommandSender sender, org.bukkit.command.Command cmd, final String[] args) throws SQLException {
@@ -68,7 +68,7 @@ public class SellCommand implements Command {
 					return;
 				}
 				if (shops == null || shops.size() == 0){
-					ChatUtils.send(sender, "No shops found with that item.");
+					ChatUtils.send(sender, "§7No shop buys that item.");
 					return;
 				}
 				

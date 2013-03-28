@@ -92,7 +92,7 @@ public class LookCommand  implements Command {
 	}
 
 	public void listCommands(CommandSender sender, List<String> list) {
-		if (Plugin.hasPermission(sender, Perm.LOOK))
-			list.add("/%s look");
+		if (Plugin.hasPermission(sender, Perm.LOOK) && SearchCommand.previousResults.containsKey(sender.getName()))
+			list.add("/%s look - Look in the direction of a shop index.");
 	}
 }

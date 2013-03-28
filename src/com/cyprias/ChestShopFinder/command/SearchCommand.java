@@ -118,6 +118,6 @@ public class SearchCommand implements Command {
 
 	public void listCommands(CommandSender sender, List<String> list) {
 		if (Plugin.hasPermission(sender, Perm.SEARCH))
-			list.add("/%s search");
+			list.add("/%s search - Search for an item nearby.");
 	}
 }
