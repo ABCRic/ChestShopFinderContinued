@@ -26,6 +26,12 @@ properties:
   #Decimal places to round prices.
   price-rounding: 2
   
+  # When a chunk is loaded for the first time, check if we have any known shops in the chunk and check the chunk if they're still there. Delete if not.
+  verify-chunk-shops: true
+  
+  # Number of shops to display in the search/buy/sell commands.
+  search-results: 10
+  
 # MySQL DB info.
 mysql:
   hostname: localhost

@@ -18,25 +18,22 @@ import com.cyprias.ChestShopFinder.utils.MathUtil;
 public class TestCommand implements Command {
 
 	public boolean execute(final CommandSender sender, org.bukkit.command.Command cmd, String[] args) throws SQLException {
-		
+		/*
 		Player p = (Player) sender;
 		
 		
 		List<Shop> shops = MySQL.findShopsNear(sender, p.getLocation());
 		
-		//double pX = p.getLocation().getX();
-		//double pZ = p.getLocation().getZ();
-		
-		//String sDir = MathUtil.DegToDirection(MathUtil.AngleCoordsToCoords(pX, pZ, shops.get(0).location.getBlockX(), shops.get(0).location.getBlockZ()));
 
 		if (shops.size()>0){
+			Location sLoc = shops.get(0).getLocation();
 			
-			double x = shops.get(0).location.getBlockX();
-			double y = shops.get(0).location.getBlockY() - 1;
-			double z = shops.get(0).location.getBlockZ();
+			double x = sLoc.getBlockX();
+			double y = sLoc.getBlockY() - 1;
+			double z = sLoc.getBlockZ();
 					
 			Location pLoc = p.getLocation();
-			float yaw = MathUtil.getLookAtYaw(pLoc, shops.get(0).location) + 90;
+			float yaw = MathUtil.getLookAtYaw(pLoc, sLoc) + 90;
 			pLoc.setYaw(yaw);
 			
 			double motX = (x) - p.getLocation().getX();
@@ -51,12 +48,12 @@ public class TestCommand implements Command {
 			
 			for (int i=0; i<shops.size(); i++){
 				
-				sender.sendMessage(i + ": " + shops.get(i).id + " has " + shops.get(i).inStock + " " + pLoc.distance(shops.get(i).location) + " blocks away");
+				sender.sendMessage(i + ": " + shops.get(i).id + " has " + shops.get(i).inStock + " " + pLoc.distance(sLoc) + " blocks away");
 				
 			}
 			
 		}
-		
+		*/
 		
 		return true;
 	}

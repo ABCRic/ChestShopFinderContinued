@@ -23,6 +23,13 @@ public interface Database {
 	boolean setInStock(int id, int inStock) throws SQLException;
 	
 	List<Shop> findItemNearby(ItemStack stock, Location loc) throws SQLException;
+	List<Shop> findBuySellItemNearby(ItemStack stock, Location loc, boolean isBuy) throws SQLException;
+	
+	List<Shop> getShopsInCoords(String worldName, int xStart, int xEnd, int zStart, int zEnd) throws SQLException;
+	
+	boolean deleteShop(int id)  throws SQLException;
+	
+	
 	
 	
 }

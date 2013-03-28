@@ -38,6 +38,7 @@ public class MySQL implements Database {
 		try {
 			createTables();
 		} catch (SQLException e) {
+			Logger.warning("Caught error while creating DB tables. ");
 			e.printStackTrace();
 			return false;
 		}
@@ -157,7 +158,7 @@ public class MySQL implements Database {
 	}
 
 
-	@Override
+	// Return a shop if it exists at a location. 
 	public Shop getShopAtLocation(Location loc) throws SQLException {
 		
 		Shop foundShop = null;
@@ -168,100 +169,36 @@ public class MySQL implements Database {
 
 		
 		if (r.next()) {
-			//String owner, ItemStack stock, String enchantments, int amount, double buyPrice, double sellPrice, Location location
-			
-			ItemStack stock = new ItemStack(r.getInt("typeId"),r.getShort("durability"));
-			
-			stock.addEnchantments(MaterialUtil.Enchantment.getEnchantments(r.getString("enchantments")));
-			
-			
-			
-			foundShop = new Shop(r.getString("owner"), stock, r.getString("enchantments"), r.getInt("amount"), r.getDouble("buyPrice"), r.getDouble("sellPrice"), loc, r.getInt("inStock"));
-
+			foundShop = new Shop(r.getString("owner"), r.getInt("typeId"),r.getShort("durability"), r.getString("enchantments"), r.getInt("amount"), r.getDouble("buyPrice"), r.getDouble("sellPrice"), r.getInt("inStock"));
+			foundShop.setLocation(loc);
 			foundShop.setId(r.getInt("id"));
-			
-			
 		}
-		
+		results.close();
 		return foundShop;
 	}
 
 
-	@Override
+	// Delete a shop at a given location. 
 	public boolean deleteShopAtLocation(Location loc) throws SQLException {
-		// TODO Auto-generated method stub
-		
-		//DELETE FROM `minecraft`.`CSF_Shops` WHERE `CSF_Shops`.`id` = 3
-		
 		String query = "DELETE FROM `"+shops_table+"` WHERE `world` = ? AND `x` = ? AND `y` = ? AND `z` = ?";
 		int success = executeUpdate(query, loc.getWorld().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
 		return (success > 0) ? true : false;
-		
 	}
 
 
-	@Override
+	//Update how much a shop has in stock. 
 	public boolean setInStock(int id, int inStock) throws SQLException {
-		// 
-		
 		String query = "UPDATE `"+shops_table+"` SET `inStock` = ? WHERE `id` = ?;";
 		int success = executeUpdate(query, inStock, id);
 		return (success > 0) ? true : false;
 	}
 
 	//http://forums.phpfreaks.com/topic/84811-solved-sorting-distance-from-a-point-in-a-coordinate-system-from-a-mysql-table/
-	public static List<Shop> findShopsNear(CommandSender sender, Location loc) throws SQLException{
-		
-		
-		int latitude = loc.getBlockX();
-		int longitude = loc.getBlockZ();
-		int distance = 10;
-		
-		//String qry = "SELECT *,(((acos(sin((" + latitude + "*pi()/180)) * sin((`x`*pi()/180))+cos((" + latitude + "*pi()/180)) * cos((`x`*pi()/180)) * cos(((" + longitude + "- `z`)*pi()/180))))*180/pi())*60*1.1515) as distance FROM `"+shops_table+"` HAVING distance >= " + distance;
-		
-		
-		String qry = "SELECT *, SQRT(("+latitude+"-x)*("+latitude+"-x) + ("+longitude+"-z)*("+longitude+"-z)) as distance FROM "+shops_table+" WHERE `inStock` > 0 ORDER BY distance ";
+	//String qry = "SELECT *,(((acos(sin((" + latitude + "*pi()/180)) * sin((`x`*pi()/180))+cos((" + latitude + "*pi()/180)) * cos((`x`*pi()/180)) * cos(((" + longitude + "- `z`)*pi()/180))))*180/pi())*60*1.1515) as distance FROM `"+shops_table+"` HAVING distance >= " + distance;
 
-		queryReturn results = executeQuery(qry);
-		ResultSet r = results.result;
-		Location tLoc;
-		
-		List<Shop> shops = new ArrayList<Shop>();
-		
-		Shop shop;
-		ItemStack stock;
-		while (r.next()) {
-			
-			tLoc = new Location(Plugin.getInstance().getServer().getWorld(r.getString("world")), r.getDouble("x"), r.getDouble("y"), r.getDouble("z"));
-			
-			
-			
-			//Logger.info(r.getInt("id") + " " + loc.distance(tLoc));
-			
-			//sender.sendMessage(r.getInt("id") + " " + loc.distance(tLoc));
-			
-			stock = new ItemStack(r.getInt("typeId"),r.getShort("durability"));
-			stock.addEnchantments(MaterialUtil.Enchantment.getEnchantments(r.getString("enchantments")));
-			
-			shop = new Shop(r.getString("owner"), stock, r.getString("enchantments"), r.getInt("amount"), r.getDouble("buyPrice"), r.getDouble("sellPrice"), tLoc, r.getInt("inStock"));
-			shop.setId(r.getInt("id"));
-			
-			shops.add(shop);
-			
-		}
-		
-		
-		return shops;
-		//queryReturn results = executeQuery("SELECT *, ( 3959 * acos( cos( radians(78.3232) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(65.3234) ) + sin( radians(65.3234) ) * sin( radians( lat ) ) ) ) AS distance FROM markers HAVING distance < 30 ORDER BY distance");
-		
-		
-		
-		
-		
-	}
-
-
-	@Override
+	/*
+	 Return the 10 nearest shops to a location. 
+	 */
 	public List<Shop> findItemNearby(ItemStack stock, Location loc) throws SQLException {
 		List<Shop> shops =  new ArrayList<Shop>();
 		
@@ -274,26 +211,109 @@ public class MySQL implements Database {
 		if (enchantments == null)
 			enchantments = "";
 
-		String qry = "SELECT *, SQRT(("+pX+"-x)*("+pX+"-x) + ("+pZ+"-z)*("+pZ+"-z)) as distance FROM "+shops_table+" WHERE `inStock` >= `amount` AND `world` LIKE ? "+itemSearch+ " ORDER BY distance ";
+		String qry = "SELECT *, SQRT(("+pX+"-x)*("+pX+"-x) + ("+pZ+"-z)*("+pZ+"-z)) as distance FROM "+shops_table+" WHERE `inStock` >= `amount` AND `world` LIKE ? "+itemSearch+ " ORDER BY distance LIMIT 0 , " + Config.getInt("properties.search-results");
 
 		queryReturn results = executeQuery(qry, loc.getWorld().getName(), stock.getTypeId(), stock.getDurability(), enchantments);
 		ResultSet r = results.result;
-		Location tLoc;
 
 		Shop shop;
 		while (r.next()) {
 			
-			tLoc = new Location(Plugin.getInstance().getServer().getWorld(r.getString("world")), r.getDouble("x"), r.getDouble("y"), r.getDouble("z"));
+			//tLoc = new Location(Plugin.getInstance().getServer().getWorld(r.getString("world")), r.getDouble("x"), r.getDouble("y"), r.getDouble("z"));
 
-			shop = new Shop(r.getString("owner"), stock, r.getString("enchantments"), r.getInt("amount"), r.getDouble("buyPrice"), r.getDouble("sellPrice"), tLoc, r.getInt("inStock"));
+			shop = new Shop(r.getString("owner"), stock.getTypeId(), stock.getDurability(), r.getString("enchantments"), r.getInt("amount"), r.getDouble("buyPrice"), r.getDouble("sellPrice"), r.getInt("inStock"));
 			shop.setId(r.getInt("id"));
+			shop.setWorldName(r.getString("world"));
+			shop.setX(r.getInt("x"));
+			shop.setY(r.getInt("y"));
+			shop.setZ(r.getInt("z"));
+			
 			
 			shops.add(shop);
 			
 		}
-
+		results.close();
 		return shops;
 	}
 
+
+	public List<Shop> findBuySellItemNearby(ItemStack stock, Location loc, boolean isBuy) throws SQLException {
+		List<Shop> shops =  new ArrayList<Shop>();
+		
+		int pX = loc.getBlockX();
+		int pZ = loc.getBlockZ();
+		
+		String itemSearch = " AND `typeId` = ? AND `durability` = ? AND `enchantments` = ?";
+		
+		String enchantments = MaterialUtil.Enchantment.encodeEnchantment(stock);
+		if (enchantments == null)
+			enchantments = "";
+
+		//
+		String buyFilter = (isBuy == true) ? " AND `buyPrice` > 0 AND `inStock` >= `amount`" : " AND `sellPrice` > 0";
+		
+		String qry = "SELECT *, SQRT(("+pX+"-x)*("+pX+"-x) + ("+pZ+"-z)*("+pZ+"-z)) as distance FROM "+shops_table+" WHERE `world` LIKE ? "+itemSearch + buyFilter+ " ORDER BY distance LIMIT 0 , " + Config.getInt("properties.search-results");
+
+		Logger.debug("qry: " + qry);
+		
+		queryReturn results = executeQuery(qry, loc.getWorld().getName(), stock.getTypeId(), stock.getDurability(), enchantments);
+		ResultSet r = results.result;
+
+		Shop shop;
+		while (r.next()) {
+			
+			//tLoc = new Location(Plugin.getInstance().getServer().getWorld(r.getString("world")), r.getDouble("x"), r.getDouble("y"), r.getDouble("z"));
+
+			shop = new Shop(r.getString("owner"), stock.getTypeId(), stock.getDurability(), r.getString("enchantments"), r.getInt("amount"), r.getDouble("buyPrice"), r.getDouble("sellPrice"), r.getInt("inStock"));
+			shop.setId(r.getInt("id"));
+			shop.setWorldName(r.getString("world"));
+			shop.setX(r.getInt("x"));
+			shop.setY(r.getInt("y"));
+			shop.setZ(r.getInt("z"));
+			
+			shops.add(shop);
+			
+		}
+		results.close();
+		return shops;
+	}
 	
+	/*
+	 Return all shops between a set of coords, used when a chunk is loaded to check if any registers shops are missing from the world.
+	 */
+	public List<Shop> getShopsInCoords(String worldName, int xStart, int xEnd, int zStart, int zEnd) throws SQLException {
+		List<Shop> shops =  new ArrayList<Shop>();
+		
+		String qry = "SELECT * FROM `"+shops_table+"` WHERE `world` LIKE ? AND `x` >= ? AND `x` <= ? AND `z` >= ? AND `z` <= ?";
+		
+
+		queryReturn results = executeQuery(qry, worldName, xStart, xEnd, zStart, zEnd);
+		ResultSet r = results.result;
+
+		Shop shop;
+		while (r.next()) {
+			
+			shop = new Shop(r.getString("owner"), r.getInt("typeId"), r.getShort("durability"), r.getString("enchantments"), r.getInt("amount"), r.getDouble("buyPrice"), r.getDouble("sellPrice"), r.getInt("inStock"));
+			shop.setId(r.getInt("id"));
+			shop.setWorldName(r.getString("world"));
+			shop.setX(r.getInt("x"));
+			shop.setY(r.getInt("y"));
+			shop.setZ(r.getInt("z"));
+			
+			
+			shops.add(shop);
+			
+		}
+		
+		results.close();
+		return shops;
+	}
+
+
+	public boolean deleteShop(int id) throws SQLException {
+		String query = "DELETE FROM `"+shops_table+"` WHERE `id` = ?";
+		int success = executeUpdate(query, id);
+		return (success > 0) ? true : false;
+	}
+
 }

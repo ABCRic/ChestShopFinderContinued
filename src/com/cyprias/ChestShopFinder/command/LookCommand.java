@@ -42,26 +42,39 @@ public class LookCommand  implements Command {
 			ChatUtils.send(sender, "That index does nt exist in your previous search.");
 			return true;
 		}
+
+		Shop shop = shops.get(index);
 		
-		double x = shops.get(index).location.getBlockX();
-		double y = shops.get(index).location.getBlockY() - 1;
-		double z = shops.get(index).location.getBlockZ();
+		
+		Location sLoc = shop.getLocation();
+		double x = shop.getX();
+		double y = shop.getY() - 1;
+		double z = shop.getZ();
 		
 		Player p = (Player) sender;
 		
 		Location pLoc = p.getLocation();
-		float yaw = MathUtil.getLookAtYaw(pLoc, shops.get(index).location) + 90;
+		float yaw = MathUtil.getLookAtYaw(pLoc, sLoc) + 90;
 		pLoc.setYaw(yaw);
 		
+		final double pX = p.getLocation().getX();
+		final double pZ = p.getLocation().getZ();
 		
-		double motX = (x) - p.getLocation().getX();
-		double motY = (y) - p.getLocation().getY();
-		double motZ = (z) - p.getLocation().getZ();
+		double motX = x - pX;
+		double motY = y - p.getLocation().getY();
+		double motZ = z - pZ;
 		
 		float pitch = MathUtil.getLookAtPitch(motX, motY, motZ);
 	
 		pLoc.setPitch(pitch);
 		p.teleport(pLoc);
+		
+		
+		
+		String msg = "§7Looking at §f%s§7's shop, §f%s §7blocks §f%s";
+		String sDir = MathUtil.DegToDirection(MathUtil.AngleCoordsToCoords(pX, pZ, sLoc.getBlockX(), sLoc.getBlockZ()));
+		
+		ChatUtils.send(sender, String.format(msg, shop.owner, Plugin.Round(p.getLocation().distance(sLoc)), sDir));
 		
 		return true;
 	}
@@ -71,7 +84,7 @@ public class LookCommand  implements Command {
 	}
 
 	public void getCommands(CommandSender sender, org.bukkit.command.Command cmd) {
-		ChatUtils.sendCommandHelp(sender, Perm.LOOK, "/%s look", cmd);
+		ChatUtils.sendCommandHelp(sender, Perm.LOOK, "/%s look <index>", cmd);
 	}
 
 	public boolean hasValues() {

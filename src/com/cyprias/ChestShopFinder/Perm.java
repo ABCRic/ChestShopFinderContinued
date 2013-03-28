@@ -12,13 +12,16 @@ import com.cyprias.ChestShopFinder.configuration.Config;
 
 public enum Perm {
 
-	VERSION("csf.version"), 
-	RELOAD("csf.reload"),
-	LIST("csf.list"), 
-	RESET("csf.reset"),
 	SEARCH("csf.search"), 
 	LOOK("csf.look"), 
-	PARENT_ADMIN("csf.admin", SEARCH, LOOK, VERSION, LIST, RELOAD, RESET);
+	BUY("csf.buy"), 
+	SELL("csf.sell"),
+	PARENT_USER("csf.user", SEARCH, LOOK, BUY, SELL),
+	
+	VERSION("csf.version"), 
+	RELOAD("csf.reload"),
+	RESET("csf.reset"),
+	PARENT_ADMIN("csf.admin", VERSION, RELOAD, RESET);
 
 	private Perm(String value, Perm... childrenArray) {
 		this(value, String.format(DEFAULT_ERROR_MESSAGE, value), childrenArray);

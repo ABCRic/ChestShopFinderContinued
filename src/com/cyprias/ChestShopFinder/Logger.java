@@ -71,6 +71,6 @@ public class Logger {
 	}
 
 	public static final String getLogPrefix() {
-		return String.format("[%s] v%s: ", plugin.getName(), plugin.getDescription().getVersion());
+		return String.format("[%s] ", plugin.getName());
 	}
 }

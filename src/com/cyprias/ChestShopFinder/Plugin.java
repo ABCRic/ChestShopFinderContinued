@@ -17,6 +17,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -25,9 +26,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
 
 import com.Acrobot.Breeze.Utils.MaterialUtil;
+import com.cyprias.ChestShopFinder.command.BuyCommand;
 import com.cyprias.ChestShopFinder.command.CommandManager;
 import com.cyprias.ChestShopFinder.command.LookCommand;
+import com.cyprias.ChestShopFinder.command.ReloadCommand;
 import com.cyprias.ChestShopFinder.command.SearchCommand;
+import com.cyprias.ChestShopFinder.command.SellCommand;
 import com.cyprias.ChestShopFinder.command.TestCommand;
 import com.cyprias.ChestShopFinder.configuration.Config;
 import com.cyprias.ChestShopFinder.configuration.YML;
@@ -37,6 +41,7 @@ import com.cyprias.ChestShopFinder.database.SQLite;
 import com.cyprias.ChestShopFinder.listeners.ChestShopListener;
 import com.cyprias.ChestShopFinder.listeners.EntityListener;
 import com.cyprias.ChestShopFinder.listeners.InventoryListener;
+import com.cyprias.ChestShopFinder.listeners.WorldListener;
 
 public class Plugin extends JavaPlugin {
 	// static PluginDescriptionFile description;
@@ -63,6 +68,15 @@ public class Plugin extends JavaPlugin {
 			}
 		}
 		
+		//Check if the config on disk is missing any settings, tell console if so.
+		try {
+			Config.checkForMissingProperties();
+		} catch (IOException e4) {
+			e4.printStackTrace();
+		} catch (InvalidConfigurationException e4) {
+			e4.printStackTrace();
+		}
+		
 		// Check which DB we should be using in config.
 		if (Config.getString("properties.db-type").equalsIgnoreCase("mysql")) {
 			database = new MySQL();
@@ -86,13 +100,17 @@ public class Plugin extends JavaPlugin {
 		cm.registerCommand("test", new TestCommand());
 		cm.registerCommand("search", new SearchCommand());
 		cm.registerCommand("look", new LookCommand());
+		cm.registerCommand("reload", new ReloadCommand());
+		cm.registerCommand("sell", new SellCommand());
+		cm.registerCommand("buy", new BuyCommand());
+		
 		this.getCommand("csf").setExecutor(cm);
 
 		// Load our permission nodes.
 		loadPermissions();
 
 		//Register our event listeners. 
-		registerListeners(new EntityListener(), new ChestShopListener(), new InventoryListener());
+		registerListeners(new EntityListener(), new ChestShopListener(), new InventoryListener(), new WorldListener());
 		
 		
 		// Load our itemnames file into memory, run in async task to not slow down startup. 
