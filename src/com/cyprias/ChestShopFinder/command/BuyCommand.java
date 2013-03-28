@@ -79,7 +79,7 @@ public class BuyCommand implements Command {
 				ChatUtils.send(sender,String.format("§f%s §7results for §f%s§7.", shops.size(), args[0]));
 				SearchCommand.previousResults.put(sender.getName(), shops);
 				// [1] Cyprias has 16 for $2 22 blocks north of you.
-				String shopFormat = "§7[§f%s§7] §f%s §7sells §f%s §7sells $§f%s §7($§f%s§7e), §f%s §7blocks §f%s";
+				String shopFormat = "§7[§f%s§7] §f%s §7sells §f%s §7for $§f%s §7($§f%s§7e), §f%s §7blocks §f%s";
 				String sDir;
 				
 				Shop shop;
