@@ -270,6 +270,10 @@ WHERE `sellPrice` > 0 AND `balance` >= `sellPrice`;
 		}else{
 			qry += " AND `sellPrice` > 0 AND `balance` >= `sellPrice`";	// Only show shops with a sell price, and only if the owner's money balance is more than their sell price.
 		}
+		
+		if (Config.getBoolean("properties.one-owner-per-results"))
+			qry += " GROUP BY `owner`";
+		
 		qry += " ORDER BY distance"; // Sort listing by the distance column we made.
 		qry += " LIMIT 0 , " + Config.getInt("properties.search-results"); //Only pull the first 10.
 		

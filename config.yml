@@ -32,6 +32,9 @@ properties:
   # Number of shops to display in the search/buy/sell commands.
   search-results: 10
   
+  # If a shop owner has multiple shops for the same item, show only one.
+  one-owner-per-results: true
+  
 # MySQL DB info.
 mysql:
   hostname: localhost
