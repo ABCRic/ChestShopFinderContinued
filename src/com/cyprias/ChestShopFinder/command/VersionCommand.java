@@ -38,7 +38,7 @@ public class VersionCommand implements Command {
 			instance.getServer().getScheduler().runTaskAsynchronously(instance, new Runnable() {
 				public void run() {
 					try {
-						VersionChecker version = new VersionChecker("http://dev.bukkit.org/server-mods/dynamicdroprate/files.rss");
+						VersionChecker version = new VersionChecker("http://dev.bukkit.org/server-mods/chestshopfinder/files.rss");
 						versionInfo info = (version.versions.size() > 0) ? version.versions.get(0) : null;
 						String curVersion = instance.getDescription().getVersion();
 						if (info != null) {
