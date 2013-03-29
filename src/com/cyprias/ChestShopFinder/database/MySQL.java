@@ -262,13 +262,20 @@ WHERE `sellPrice` > 0 AND `balance` >= `sellPrice`;
 		String qry = "SELECT *";	//Select all columns
 		qry += ", SQRT(("+pX+"-x)*("+pX+"-x) + ("+pZ+"-z)*("+pZ+"-z)) as distance";	//Create column `distance` with our relative distance
 		qry += "  FROM `CSF_Shops` AS q";	// From the shops table, save it as q.
-		qry += " LEFT JOIN `"+Config.getString("mysql.iConomy_table")+"` AS i ON (q.owner LIKE i.username)";	// Include the iConomy table, binded by the owner and username columns.
+		if (Config.getString("mysql.iConomy_table") != "false")
+			qry += " LEFT JOIN `"+Config.getString("mysql.iConomy_table")+"` AS i ON (q.owner LIKE i.username)";	// Include the iConomy table, binded by the owner and username columns.
+		
+		
 		qry += " WHERE `world` LIKE ?";	// Only include the world we're in.
 		qry += " AND `typeId` = ? AND `durability` = ? AND `enchantments` = ?";	// Only show the item we're searching for.
 		if (isBuy == true){
 			qry += " AND `buyPrice` > 0 AND `inStock` >= `amount`"; // Only show shops with a buy price, and only if their stock is more than their amount on sign.
 		}else{
-			qry += " AND `sellPrice` > 0 AND `balance` >= `sellPrice`";	// Only show shops with a sell price, and only if the owner's money balance is more than their sell price.
+			if (Config.getString("mysql.iConomy_table") != "false"){
+				qry += " AND `sellPrice` > 0 AND `balance` >= `sellPrice`";	// Only show shops with a sell price, and only if the owner's money balance is more than their sell price.
+			}else{
+				qry += " AND `sellPrice` > 0";	// Only show shops with a sell price, and only if the owner's money balance is more than their sell price.
+			}
 		}
 		
 		if (Config.getBoolean("properties.one-owner-per-results"))
@@ -278,6 +285,8 @@ WHERE `sellPrice` > 0 AND `balance` >= `sellPrice`;
 		qry += " LIMIT 0 , " + Config.getInt("properties.search-results"); //Only pull the first 10.
 		
 
+		//Logger.debug("qry: " + qry);
+		
 		queryReturn results = executeQuery(qry, loc.getWorld().getName(), stock.getTypeId(), stock.getDurability(), enchantments);
 		ResultSet r = results.result;
 

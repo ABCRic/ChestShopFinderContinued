@@ -43,4 +43,6 @@ mysql:
   port: 3306
   database: minecraft
   prefix: CSF_
+  
+  # Your iConomy db table, to confirm a shop can afford to an item. Set to false if you don't want to use iConomy with MySQL.
   iConomy_table: iConomy
