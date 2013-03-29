@@ -35,6 +35,8 @@ properties:
   # If a shop owner has multiple shops for the same item, show only one.
   one-owner-per-results: true
   
+  admin-shop: "Admin Shop"
+  
 # MySQL DB info.
 mysql:
   hostname: localhost

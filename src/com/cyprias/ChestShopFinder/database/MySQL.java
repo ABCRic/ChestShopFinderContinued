@@ -269,10 +269,13 @@ WHERE `sellPrice` > 0 AND `balance` >= `sellPrice`;
 		qry += " WHERE `world` LIKE ?";	// Only include the world we're in.
 		qry += " AND `typeId` = ? AND `durability` = ? AND `enchantments` = ?";	// Only show the item we're searching for.
 		if (isBuy == true){
-			qry += " AND `buyPrice` > 0 AND `inStock` >= `amount`"; // Only show shops with a buy price, and only if their stock is more than their amount on sign.
+			qry += " AND `buyPrice` > 0 AND (`owner` LIKE '" + Config.getString("properties.admin-shop") + "' OR  `inStock` >= `amount`)"; // Only show shops with a buy price, and only if their stock is more than their amount on sign.
 		}else{
+			
+			
+			
 			if (Config.getString("mysql.iConomy_table") != "false"){
-				qry += " AND `sellPrice` > 0 AND `balance` >= `sellPrice`";	// Only show shops with a sell price, and only if the owner's money balance is more than their sell price.
+				qry += " AND `sellPrice` > 0 AND (`owner` LIKE '" + Config.getString("properties.admin-shop") + "' OR `balance` >= `sellPrice`)";	// Only show shops with a sell price, and only if the owner's money balance is more than their sell price.
 			}else{
 				qry += " AND `sellPrice` > 0";	// Only show shops with a sell price, and only if the owner's money balance is more than their sell price.
 			}
@@ -285,7 +288,7 @@ WHERE `sellPrice` > 0 AND `balance` >= `sellPrice`;
 		qry += " LIMIT 0 , " + Config.getInt("properties.search-results"); //Only pull the first 10.
 		
 
-		//Logger.debug("qry: " + qry);
+		Logger.debug("qry: " + qry);
 		
 		queryReturn results = executeQuery(qry, loc.getWorld().getName(), stock.getTypeId(), stock.getDurability(), enchantments);
 		ResultSet r = results.result;
