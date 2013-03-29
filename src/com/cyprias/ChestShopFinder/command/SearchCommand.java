@@ -24,17 +24,16 @@ public class SearchCommand implements Command {
 	
 	private String getPriceText(double buyPrice, double sellPrice){
 		String t = "";
-		//Plugin.Round(shop.buyPrice, pl)
-		
+
 		if (buyPrice> 0){
-			t = "B " + buyPrice;
+			t = "B " + Plugin.Round(buyPrice, Config.getInt("properties.price-rounding"));
 		}
 		if (sellPrice > 0){
 			if (t != "")
 				t += ":";
-			t += sellPrice + " S";
+			t += Plugin.Round(sellPrice, Config.getInt("properties.price-rounding")) + " S";
 		}
-		
+
 		return t;
 	}
 	
