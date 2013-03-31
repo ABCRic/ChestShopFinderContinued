@@ -42,6 +42,7 @@ import com.cyprias.ChestShopFinder.database.SQLite;
 import com.cyprias.ChestShopFinder.listeners.ChestShopListener;
 import com.cyprias.ChestShopFinder.listeners.EntityListener;
 import com.cyprias.ChestShopFinder.listeners.InventoryListener;
+import com.cyprias.ChestShopFinder.listeners.PlayerListener;
 import com.cyprias.ChestShopFinder.listeners.WorldListener;
 
 public class Plugin extends JavaPlugin {
@@ -51,7 +52,8 @@ public class Plugin extends JavaPlugin {
 	//public void onLoad() {}
 
 	public static Database database;
-
+	public static HashMap<String, String> aliases = new HashMap<String, String>();
+	
 	public void onEnable() {
 		instance = this;
 
@@ -105,14 +107,27 @@ public class Plugin extends JavaPlugin {
 		cm.registerCommand("version", new VersionCommand());
 		cm.registerCommand("sell", new SellCommand());
 		cm.registerCommand("buy", new BuyCommand());
-		
 		this.getCommand("csf").setExecutor(cm);
 
+		// Load our command aliases.
+		try {
+			YML yml = new YML(getResource("aliases.yml"), getDataFolder(), "aliases.yml");
+			for (String key : yml.getKeys(false)) {
+				aliases.put(key, yml.getString(key));
+			}
+		} catch (FileNotFoundException e2) {
+			e2.printStackTrace();
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		} catch (InvalidConfigurationException e2) {
+			e2.printStackTrace();
+		}
+		
 		// Load our permission nodes.
 		loadPermissions();
 
 		//Register our event listeners. 
-		registerListeners(new EntityListener(), new ChestShopListener(), new InventoryListener(), new WorldListener());
+		registerListeners(new EntityListener(), new ChestShopListener(), new InventoryListener(), new WorldListener(), new PlayerListener());
 		
 		
 		// Load our itemnames file into memory, run in async task to not slow down startup. 
