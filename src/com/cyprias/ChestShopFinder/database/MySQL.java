@@ -146,7 +146,6 @@ public class MySQL implements Database {
 
 
 	public boolean insert(String owner, ItemStack stock, String enchantments, int amount, double buyPrice, double sellPrice, Location location, int inStock) throws SQLException {
-		// TODO Auto-generated method stub
 		if (enchantments == null)
 			enchantments = "";
 		
@@ -261,7 +260,7 @@ WHERE `sellPrice` > 0 AND `balance` >= `sellPrice`;
 		
 		String qry = "SELECT *";	//Select all columns
 		qry += ", SQRT(("+pX+"-x)*("+pX+"-x) + ("+pZ+"-z)*("+pZ+"-z)) as distance";	//Create column `distance` with our relative distance
-		qry += "  FROM `CSF_Shops` AS q";	// From the shops table, save it as q.
+		qry += "  FROM `"+shops_table+"` AS q";	// From the shops table, save it as q.
 		if (Config.getString("mysql.iConomy_table") != "false")
 			qry += " LEFT JOIN `"+Config.getString("mysql.iConomy_table")+"` AS i ON (q.owner LIKE i.username)";	// Include the iConomy table, binded by the owner and username columns.
 		

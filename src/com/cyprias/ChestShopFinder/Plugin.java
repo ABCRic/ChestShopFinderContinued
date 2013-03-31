@@ -83,8 +83,8 @@ public class Plugin extends JavaPlugin {
 		// Check which DB we should be using in config.
 		if (Config.getString("properties.db-type").equalsIgnoreCase("mysql")) {
 			database = new MySQL();
-		//} else if (Config.getString("properties.db-type").equalsIgnoreCase("sqlite")) {
-		//	database = new SQLite();
+		} else if (Config.getString("properties.db-type").equalsIgnoreCase("sqlite")) {
+			database = new SQLite();
 		} else {
 			Logger.severe("No database selected (" + Config.getString("properties.db-type") + "), unloading plugin...");
 			instance.getPluginLoader().disablePlugin(instance);

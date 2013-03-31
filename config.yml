@@ -3,7 +3,7 @@ properties:
   chat-prefix: '&7[&dCSF&7] '
   
   #Database to use, sqlite or mysql. 
-  db-type: mysql
+  db-type: sqlite
   
   #Default permission access. If you don't want ops access set to false.
   permission-default: op
