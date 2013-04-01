@@ -39,6 +39,8 @@ public class SellCommand implements Command {
 	}
 
 	public boolean execute(final CommandSender sender, org.bukkit.command.Command cmd, final String[] args) throws SQLException {
+		if (!Plugin.checkPermission(sender, Perm.SELL))
+			return false;
 		
 		if (args.length < 1 || args.length > 2){
 			getCommands(sender, cmd);

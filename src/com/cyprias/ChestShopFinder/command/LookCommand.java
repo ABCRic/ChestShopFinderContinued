@@ -16,6 +16,8 @@ import com.cyprias.ChestShopFinder.utils.MathUtil;
 public class LookCommand  implements Command {
 	
 	public boolean execute(final CommandSender sender, org.bukkit.command.Command cmd, String[] args) throws SQLException {
+		if (!Plugin.checkPermission(sender, Perm.LOOK))
+			return false;
 		
 		if (args.length < 1 || args.length > 2){
 			getCommands(sender, cmd);

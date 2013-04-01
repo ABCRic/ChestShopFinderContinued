@@ -26,8 +26,5 @@ public interface Database {
 	List<Shop> getShopsInCoords(String worldName, int xStart, int xEnd, int zStart, int zEnd) throws SQLException;
 	
 	boolean deleteShop(int id)  throws SQLException;
-	
-	
-	
-	
+
 }

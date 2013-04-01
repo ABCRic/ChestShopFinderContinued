@@ -15,9 +15,9 @@ public class ReloadCommand implements Command {
 	}
 
 	public boolean execute(final CommandSender sender, org.bukkit.command.Command cmd, String[] args) {
-		if (!Plugin.checkPermission(sender, Perm.RELOAD)) {
+		if (!Plugin.checkPermission(sender, Perm.RELOAD))
 			return false;
-		}
+		
 
 		Plugin instance = Plugin.getInstance();
 		

@@ -24,9 +24,9 @@ public class VersionCommand implements Command {
 	}
 
 	public boolean execute(final CommandSender sender, org.bukkit.command.Command cmd, String[] args) {
-		if (!Plugin.checkPermission(sender, Perm.VERSION)) {
+		if (!Plugin.checkPermission(sender, Perm.VERSION))
 			return false;
-		}
+		
 		/*
 		 * if (args.length == 0){ getCommands(sender, cmd); return true; }
 		 */

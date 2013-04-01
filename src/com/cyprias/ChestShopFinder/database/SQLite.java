@@ -306,5 +306,4 @@ public class SQLite implements Database {
 		return shops;
 	}
 
-
 }
