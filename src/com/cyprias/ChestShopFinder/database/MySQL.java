@@ -272,8 +272,6 @@ WHERE `sellPrice` > 0 AND `balance` >= `sellPrice`;
 		}else{
 			
 			qry += " AND `sellPrice` > 0";
-			
-			//qry += " AND (`inStock` < '1728' OR `inStock` > '1728' AND `inStock` < '3456')";
 			qry += " AND (`inStock` != '1728' AND `inStock` != '3456')";
 			
 			if (Config.getString("mysql.iConomy_table") != "false")
