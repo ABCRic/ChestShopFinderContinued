@@ -388,12 +388,10 @@ public class Plugin extends JavaPlugin {
 
 		String line;
 
-		int l = 0;
 		ItemStack stock;
 		String id_dur;
 		while ((line = r.readLine()) != null) {
-			l = l + 1;
-			if (l > 3) {
+			if (!line.substring(0,1).equals("#")){
 				String[] values = line.split(",");
 				stock = getItemStack(Integer.parseInt(values[1]), Short.parseShort(values[2]));
 				nameToStack.put(values[0], stock);
@@ -404,12 +402,6 @@ public class Plugin extends JavaPlugin {
 
 				if (!stockToName.containsKey(id_dur))
 					stockToName.put(id_dur, values[0]);
-				/*
-				 * sID = values[1];// + ":" + values[2]; if
-				 * (!values[2].equalsIgnoreCase("0")) sID+=values[2];
-				 * 
-				 * if (!idToName.containsKey(sID)) idToName.put(sID, values[0]);
-				 */
 			}
 		}
 
