@@ -275,7 +275,9 @@ public class SQLite implements Database {
 			qry += " AND `buyPrice` > 0 AND (`owner` LIKE '" + Config.getString("properties.admin-shop") + "' OR  `inStock` >= `amount`)"; // Only show shops with a buy price, and only if their stock is more than their amount on sign.
 		}else{
 			qry += " AND `sellPrice` > 0";
-			qry += " AND (`inStock` != '1728' AND `inStock` != '3456')";
+			
+			if (Config.getBoolean("properties.exclude-full-chests-from-sell"))
+				qry += " AND (`inStock` != '1728' AND `inStock` != '3456')";
 
 		}
 		

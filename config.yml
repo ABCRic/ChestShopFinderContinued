@@ -5,7 +5,7 @@ properties:
   #Database to use, sqlite or mysql. 
   db-type: sqlite
   
-  #Default permission access. If you don't want ops access set to false.
+  #Default permission access. op=ops get full access by default, true=everyone gets full access by default, false=noone gets access by default (permissions only).
   permission-default: op
   
   # Check for new version on startup.
@@ -13,9 +13,6 @@ properties:
   
   # Help the developer know how popular the plugin is.
   use-metrics: true
-  
-  # When possible, run db queries in seperate thread to reduce lag.
-  async-db-queries: true
   
   # Show debug messages.
   debug-messages: false
@@ -37,6 +34,8 @@ properties:
   
   # Name of your admin shop, to bypass our supply/balance check.
   admin-shop: "Admin Shop"
+  
+  exclude-full-chests-from-sell: true
   
 # MySQL DB info.
 mysql:
