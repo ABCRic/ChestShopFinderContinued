@@ -271,13 +271,17 @@ WHERE `sellPrice` > 0 AND `balance` >= `sellPrice`;
 			qry += " AND `buyPrice` > 0 AND (`owner` LIKE '" + Config.getString("properties.admin-shop") + "' OR  `inStock` >= `amount`)"; // Only show shops with a buy price, and only if their stock is more than their amount on sign.
 		}else{
 			
+			qry += " AND `sellPrice` > 0";
+			
+			//qry += " AND (`inStock` < '1728' OR `inStock` > '1728' AND `inStock` < '3456')";
+			qry += " AND (`inStock` != '1728' AND `inStock` != '3456')";
+			
+			if (Config.getString("mysql.iConomy_table") != "false")
+				qry += " AND (`owner` LIKE '" + Config.getString("properties.admin-shop") + "' OR `balance` >= `sellPrice`)";	// Only show shops with a sell price, and only if the owner's money balance is more than their sell price.
 			
 			
-			if (Config.getString("mysql.iConomy_table") != "false"){
-				qry += " AND `sellPrice` > 0 AND (`owner` LIKE '" + Config.getString("properties.admin-shop") + "' OR `balance` >= `sellPrice`)";	// Only show shops with a sell price, and only if the owner's money balance is more than their sell price.
-			}else{
-				qry += " AND `sellPrice` > 0";	// Only show shops with a sell price, and only if the owner's money balance is more than their sell price.
-			}
+			
+			
 		}
 		
 		if (Config.getBoolean("properties.one-owner-per-results"))
