@@ -78,14 +78,15 @@ public class ArbitrageCommand implements Command {
 		ChatUtils.send(sender, String.format(buyFormat, 1, highestSell.owner, highestSell.amount, Plugin.Round(highestSell.sellPrice, pl), each, Plugin.Round(p.getLocation().distance(sLoc)), sDir));
 
 		
+		double profitEach = (highestSell.sellPrice/highestSell.amount) - (lowestBuy.buyPrice/lowestBuy.amount);
 		
 
+		ChatUtils.send(sender, ChatColor.GRAY+"Profit: $" + ChatColor.WHITE + Plugin.Round(profitEach,pl) + ChatColor.GRAY + "e");
 		
 		
+		//ChatUtils.send(sender, "profit64: " + Plugin.Round(profitEach * 64,pl));
 		
-		//ChatUtils.send(sender, lowestBuy.owner + " sells " + args[0] + " for " + lowestBuy.buyPrice);
-		//ChatUtils.send(sender, highestSell.owner + " buys " + args[0] + " for " + highestSell.sellPrice);
-		
+
 		return true;
 	}
 

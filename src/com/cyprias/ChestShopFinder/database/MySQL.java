@@ -391,7 +391,7 @@ WHERE `sellPrice` > 0 AND `balance` >= `sellPrice`;
 		if (lowestBuy == null)
 			return null;
 		
-		Logger.debug("lowestBuy: " + lowestBuy.buyPrice);
+		//Logger.debug("lowestBuy: " + lowestBuy.buyPrice);
 		
 		qry = "SELECT * FROM `"+shops_table+"` AS q";
 		
@@ -430,13 +430,13 @@ WHERE `sellPrice` > 0 AND `balance` >= `sellPrice`;
 		if (highestSell == null)
 			return null;
 		
-		Logger.debug("highestSell: " + highestSell.sellPrice);
+		//Logger.debug("highestSell: " + highestSell.sellPrice);
 		
 		
 		if ((lowestBuy.buyPrice / lowestBuy.amount) > (highestSell.sellPrice / highestSell.amount))
 			return null;
 		
-		Logger.debug("Deal found?");
+		//Logger.debug("Deal found?");
 		List<Shop> shops =  new ArrayList<Shop>();
 		shops.add(lowestBuy);
 		shops.add(highestSell);
