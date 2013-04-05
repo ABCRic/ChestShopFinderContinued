@@ -28,7 +28,7 @@ import org.mcstats.Metrics;
 import com.Acrobot.Breeze.Utils.MaterialUtil;
 import com.cyprias.ChestShopFinder.command.CommandManager;
 import com.cyprias.ChestShopFinder.commands.BuyCommand;
-import com.cyprias.ChestShopFinder.commands.DealsCommand;
+import com.cyprias.ChestShopFinder.commands.ArbitrageCommand;
 import com.cyprias.ChestShopFinder.commands.LookCommand;
 import com.cyprias.ChestShopFinder.commands.ReloadCommand;
 import com.cyprias.ChestShopFinder.commands.SearchCommand;
@@ -108,7 +108,7 @@ public class Plugin extends JavaPlugin {
 		cm.registerCommand("version", new VersionCommand());
 		cm.registerCommand("sell", new SellCommand());
 		cm.registerCommand("buy", new BuyCommand());
-		cm.registerCommand("deals", new DealsCommand());
+		cm.registerCommand("arbitrage", new ArbitrageCommand());
 		this.getCommand("csf").setExecutor(cm);
 
 		// Load our command aliases.

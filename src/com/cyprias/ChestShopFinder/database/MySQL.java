@@ -354,4 +354,96 @@ WHERE `sellPrice` > 0 AND `balance` >= `sellPrice`;
 	}
 
 
+	@Override
+	public List<Shop> findArbitrage(ItemStack stock, Location loc) throws SQLException {
+		
+		
+		String enchantments = MaterialUtil.Enchantment.encodeEnchantment(stock);
+		if (enchantments == null)
+			enchantments = "";
+		
+		String worldName = loc.getWorld().getName();
+		
+		String qry = "SELECT * FROM `"+shops_table+"`";
+		qry += " WHERE `typeId` = ? AND `durability` = ? AND `enchantments` = ?";
+		qry += " AND `world` LIKE ?";
+		//qry += " AND `buyPrice` > 0";
+
+		qry += " AND `buyPrice` > 0 AND (`owner` LIKE '" + Config.getString("properties.admin-shop") + "' OR  `inStock` >= `amount`)"; // Only show shops with a buy price, and only if their stock is more than their amount on sign.
+		
+		
+		qry += " ORDER BY (`buyPrice` / `amount`) ASC";
+		qry += " LIMIT 0 , 1";
+		queryReturn results = executeQuery(qry, stock.getTypeId(), stock.getDurability(), enchantments, worldName);
+		ResultSet r = results.result;
+		Shop lowestBuy = null;
+		Shop highestSell = null;
+		if (r.next()) {
+			lowestBuy = new Shop(r.getString("owner"), r.getInt("typeId"),r.getShort("durability"), r.getString("enchantments"), r.getInt("amount"), r.getDouble("buyPrice"), r.getDouble("sellPrice"), r.getInt("inStock"));
+			lowestBuy.setWorldName(r.getString("world"));
+			lowestBuy.setX(r.getInt("x"));
+			lowestBuy.setY(r.getInt("y"));
+			lowestBuy.setZ(r.getInt("z"));
+			
+			lowestBuy.setId(r.getInt("id"));
+		
+		}
+		if (lowestBuy == null)
+			return null;
+		
+		Logger.debug("lowestBuy: " + lowestBuy.buyPrice);
+		
+		qry = "SELECT * FROM `"+shops_table+"` AS q";
+		
+		if (Config.getString("mysql.iConomy_table") != "false")
+			qry += " LEFT JOIN `"+Config.getString("mysql.iConomy_table")+"` AS i ON (q.owner LIKE i.username)";	// Include the iConomy table, binded by the owner and username columns.
+		
+		
+		qry += " WHERE `typeId` = ? AND `durability` = ? AND `enchantments` = ?";
+		qry += " AND `world` LIKE ?";
+		//qry += " AND `sellPrice` > 0";
+		
+		//Exclude full shops.
+		if (Config.getBoolean("properties.exclude-full-chests-from-sell"))
+			qry += " AND (`owner` LIKE '" + Config.getString("properties.admin-shop") + "' OR (`inStock` != '1728' AND `inStock` != '3456'))";
+		
+		// Make sure shop owner can afford the item.
+		if (Config.getString("mysql.iConomy_table") != "false")
+			qry += " AND (`owner` LIKE '" + Config.getString("properties.admin-shop") + "' OR `balance` >= `sellPrice`)";	// Only show shops with a sell price, and only if the owner's money balance is more than their sell price.
+		
+		
+		qry += " ORDER BY (`sellPrice` / `amount`) DESC";
+		qry += " LIMIT 0 , 1";
+		
+		results = executeQuery(qry, stock.getTypeId(), stock.getDurability(), enchantments, worldName);
+		r = results.result;
+		
+		if (r.next()) {
+			highestSell = new Shop(r.getString("owner"), r.getInt("typeId"),r.getShort("durability"), r.getString("enchantments"), r.getInt("amount"), r.getDouble("buyPrice"), r.getDouble("sellPrice"), r.getInt("inStock"));
+			highestSell.setWorldName(r.getString("world"));
+			highestSell.setX(r.getInt("x"));
+			highestSell.setY(r.getInt("y"));
+			highestSell.setZ(r.getInt("z"));
+			
+			highestSell.setId(r.getInt("id"));
+		}
+		if (highestSell == null)
+			return null;
+		
+		Logger.debug("highestSell: " + highestSell.sellPrice);
+		
+		
+		if ((lowestBuy.buyPrice / lowestBuy.amount) > (highestSell.sellPrice / highestSell.amount))
+			return null;
+		
+		Logger.debug("Deal found?");
+		List<Shop> shops =  new ArrayList<Shop>();
+		shops.add(lowestBuy);
+		shops.add(highestSell);
+		
+		
+		return shops;
+	}
+
+
 }

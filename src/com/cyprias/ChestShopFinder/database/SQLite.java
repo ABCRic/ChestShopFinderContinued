@@ -312,4 +312,10 @@ public class SQLite implements Database {
 		return shops;
 	}
 
+	@Override
+	public List<Shop> findArbitrage(ItemStack stock, Location loc) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

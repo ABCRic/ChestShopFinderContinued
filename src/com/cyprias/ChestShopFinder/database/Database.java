@@ -27,4 +27,6 @@ public interface Database {
 	
 	boolean deleteShop(int id)  throws SQLException;
 
+	List<Shop> findArbitrage(ItemStack stock, Location loc)  throws SQLException;
+	
 }

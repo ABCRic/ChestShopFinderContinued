@@ -76,7 +76,7 @@ public class WorldListener implements Listener {
 					for (int i=0; i<shops.size(); i++){
 						
 						if (!shopExists(shops.get(i))){
-							Logger.debug("Shop #" + shops.get(i).id + " no longer exists, removing from DB.");
+							Logger.warning("Shop #" + shops.get(i).id + " no longer exists, removing from DB.");
 							shops.get(i).delete();
 						}
 					}
