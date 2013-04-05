@@ -17,13 +17,13 @@ properties:
   # Show debug messages.
   debug-messages: false
   
-  # Auto add shop upon creation to our database.
+  # Auto add shop upon creation to our database. (only means of adding shops atm)
   auto-register: true
   
   #Decimal places to round prices.
   price-rounding: 2
   
-  # When a chunk is loaded for the first time, check if we have any known shops in the chunk and check the chunk if they're still there. Delete if not.
+  # When a chunk is loaded for the first time, check if any known shops are missing, delete if so.
   verify-chunk-shops: true
   
   # Number of shops to display in the search/buy/sell commands.
@@ -35,6 +35,7 @@ properties:
   # Name of your admin shop, to bypass our supply/balance check.
   admin-shop: "Admin Shop"
   
+  # Prevent full chests from being listed in the sell command. 
   exclude-full-chests-from-sell: true
   
 # MySQL DB info.
@@ -47,4 +48,4 @@ mysql:
   prefix: CSF_
   
   # Your iConomy db table, to confirm a shop can afford to an item. Set to false if you don't want to use iConomy with MySQL.
-  iConomy_table: iConomy
+  iConomy_table: false

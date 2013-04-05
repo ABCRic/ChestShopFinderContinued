@@ -276,8 +276,10 @@ public class SQLite implements Database {
 		}else{
 			qry += " AND `sellPrice` > 0";
 			
+			//Exclude full shops.
 			if (Config.getBoolean("properties.exclude-full-chests-from-sell"))
-				qry += " AND (`inStock` != '1728' AND `inStock` != '3456')";
+				qry += " AND (`owner` LIKE '" + Config.getString("properties.admin-shop") + "' OR (`inStock` != '1728' AND `inStock` != '3456'))";
+			
 
 		}
 		

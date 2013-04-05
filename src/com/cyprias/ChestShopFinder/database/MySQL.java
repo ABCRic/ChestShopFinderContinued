@@ -180,16 +180,14 @@ public class MySQL implements Database {
 	// Delete a shop at a given location. 
 	public boolean deleteShopAtLocation(Location loc) throws SQLException {
 		String query = "DELETE FROM `"+shops_table+"` WHERE `world` = ? AND `x` = ? AND `y` = ? AND `z` = ?";
-		int success = executeUpdate(query, loc.getWorld().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
-		return (success > 0) ? true : false;
+		return (executeUpdate(query, loc.getWorld().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()) > 0) ? true : false;
 	}
 
 
 	//Update how much a shop has in stock. 
 	public boolean setInStock(int id, int inStock) throws SQLException {
 		String query = "UPDATE `"+shops_table+"` SET `inStock` = ? WHERE `id` = ?;";
-		int success = executeUpdate(query, inStock, id);
-		return (success > 0) ? true : false;
+		return (executeUpdate(query, inStock, id) > 0) ? true : false;
 	}
 
 	//http://forums.phpfreaks.com/topic/84811-solved-sorting-distance-from-a-point-in-a-coordinate-system-from-a-mysql-table/
@@ -271,12 +269,14 @@ WHERE `sellPrice` > 0 AND `balance` >= `sellPrice`;
 			qry += " AND `buyPrice` > 0 AND (`owner` LIKE '" + Config.getString("properties.admin-shop") + "' OR  `inStock` >= `amount`)"; // Only show shops with a buy price, and only if their stock is more than their amount on sign.
 		}else{
 			
+			//Only include those with a sell price./whois 
 			qry += " AND `sellPrice` > 0";
 			
-			
+			//Exclude full shops.
 			if (Config.getBoolean("properties.exclude-full-chests-from-sell"))
-				qry += " AND (`inStock` != '1728' AND `inStock` != '3456')";
+				qry += " AND (`owner` LIKE '" + Config.getString("properties.admin-shop") + "' OR (`inStock` != '1728' AND `inStock` != '3456'))";
 			
+			// Make sure shop owner can afford the item.
 			if (Config.getString("mysql.iConomy_table") != "false")
 				qry += " AND (`owner` LIKE '" + Config.getString("properties.admin-shop") + "' OR `balance` >= `sellPrice`)";	// Only show shops with a sell price, and only if the owner's money balance is more than their sell price.
 			
@@ -350,8 +350,7 @@ WHERE `sellPrice` > 0 AND `balance` >= `sellPrice`;
 
 	public boolean deleteShop(int id) throws SQLException {
 		String query = "DELETE FROM `"+shops_table+"` WHERE `id` = ?";
-		int success = executeUpdate(query, id);
-		return (success > 0) ? true : false;
+		return (executeUpdate(query, id) > 0) ? true : false;
 	}
 
 
