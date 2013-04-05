@@ -37,12 +37,20 @@ public class ArbitrageCommand implements Command {
 		final double pX = p.getLocation().getX();
 		final double pZ = p.getLocation().getZ();
 		
-		
-		List<Shop> shops = Plugin.database.findArbitrage(stock, p.getLocation());
+		Plugin.getInstance().getServer().getScheduler().runTaskAsynchronously(Plugin.getInstance(), new Runnable() {
+			public void run() {
+		List<Shop> shops;
+		try {
+			shops = Plugin.database.findArbitrage(stock, p.getLocation());
+		} catch (SQLException e) {
+			ChatUtils.error(sender, "Exception caught while executing this command.");
+			e.printStackTrace();
+			return;
+		}
 		
 		if (shops == null || shops.size() == 0){
 			ChatUtils.send(sender, ChatColor.GRAY+"There's no profits to be made.");
-			return true;
+			return;
 			
 		}
 		SearchCommand.previousResults.put(sender.getName(), shops);
@@ -86,7 +94,9 @@ public class ArbitrageCommand implements Command {
 		
 		//ChatUtils.send(sender, "profit64: " + Plugin.Round(profitEach * 64,pl));
 		
-
+			}
+		});
+		
 		return true;
 	}
 
