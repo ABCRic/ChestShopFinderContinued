@@ -26,14 +26,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
 
 import com.Acrobot.Breeze.Utils.MaterialUtil;
-import com.cyprias.ChestShopFinder.command.BuyCommand;
 import com.cyprias.ChestShopFinder.command.CommandManager;
-import com.cyprias.ChestShopFinder.command.LookCommand;
-import com.cyprias.ChestShopFinder.command.ReloadCommand;
-import com.cyprias.ChestShopFinder.command.SearchCommand;
-import com.cyprias.ChestShopFinder.command.SellCommand;
-import com.cyprias.ChestShopFinder.command.TestCommand;
-import com.cyprias.ChestShopFinder.command.VersionCommand;
+import com.cyprias.ChestShopFinder.commands.BuyCommand;
+import com.cyprias.ChestShopFinder.commands.DealsCommand;
+import com.cyprias.ChestShopFinder.commands.LookCommand;
+import com.cyprias.ChestShopFinder.commands.ReloadCommand;
+import com.cyprias.ChestShopFinder.commands.SearchCommand;
+import com.cyprias.ChestShopFinder.commands.SellCommand;
+import com.cyprias.ChestShopFinder.commands.TestCommand;
+import com.cyprias.ChestShopFinder.commands.VersionCommand;
 import com.cyprias.ChestShopFinder.configuration.Config;
 import com.cyprias.ChestShopFinder.configuration.YML;
 import com.cyprias.ChestShopFinder.database.Database;
@@ -107,6 +108,7 @@ public class Plugin extends JavaPlugin {
 		cm.registerCommand("version", new VersionCommand());
 		cm.registerCommand("sell", new SellCommand());
 		cm.registerCommand("buy", new BuyCommand());
+		cm.registerCommand("deals", new DealsCommand());
 		this.getCommand("csf").setExecutor(cm);
 
 		// Load our command aliases.

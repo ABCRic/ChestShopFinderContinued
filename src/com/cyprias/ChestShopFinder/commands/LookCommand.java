@@ -1,4 +1,4 @@
-package com.cyprias.ChestShopFinder.command;
+package com.cyprias.ChestShopFinder.commands;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -10,6 +10,8 @@ import org.bukkit.entity.Player;
 import com.cyprias.ChestShopFinder.ChatUtils;
 import com.cyprias.ChestShopFinder.Perm;
 import com.cyprias.ChestShopFinder.Plugin;
+import com.cyprias.ChestShopFinder.command.Command;
+import com.cyprias.ChestShopFinder.command.CommandAccess;
 import com.cyprias.ChestShopFinder.database.Shop;
 import com.cyprias.ChestShopFinder.utils.MathUtil;
 

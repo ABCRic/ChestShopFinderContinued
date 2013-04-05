@@ -1,4 +1,4 @@
-package com.cyprias.ChestShopFinder.command;
+package com.cyprias.ChestShopFinder.commands;
 
 import java.io.IOException;
 import java.util.List;
@@ -15,6 +15,8 @@ import com.cyprias.ChestShopFinder.Perm;
 import com.cyprias.ChestShopFinder.Plugin;
 import com.cyprias.ChestShopFinder.VersionChecker;
 import com.cyprias.ChestShopFinder.VersionChecker.versionInfo;
+import com.cyprias.ChestShopFinder.command.Command;
+import com.cyprias.ChestShopFinder.command.CommandAccess;
 import com.cyprias.ChestShopFinder.configuration.Config;
 
 public class VersionCommand implements Command {

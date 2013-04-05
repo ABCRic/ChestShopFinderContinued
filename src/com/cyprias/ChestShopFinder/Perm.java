@@ -17,7 +17,8 @@ public enum Perm {
 	BUY("csf.buy"), 
 	SELL("csf.sell"),
 	PRICE("csf.price"),
-	PARENT_USER("csf.user", SEARCH, LOOK, BUY, SELL, PRICE),
+	DEALS("csf.deals"),
+	PARENT_USER("csf.user", SEARCH, LOOK, BUY, SELL, PRICE, DEALS),
 	
 	VERSION("csf.version"), 
 	RELOAD("csf.reload"),
