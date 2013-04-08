@@ -433,7 +433,7 @@ WHERE `sellPrice` > 0 AND `balance` >= `sellPrice`;
 		//Logger.debug("highestSell: " + highestSell.sellPrice);
 		
 		
-		if ((lowestBuy.buyPrice / lowestBuy.amount) > (highestSell.sellPrice / highestSell.amount))
+		if ((lowestBuy.buyPrice / lowestBuy.amount) >= (highestSell.sellPrice / highestSell.amount))
 			return null;
 		
 		//Logger.debug("Deal found?");

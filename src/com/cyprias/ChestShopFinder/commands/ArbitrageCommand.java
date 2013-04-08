@@ -47,7 +47,7 @@ public class ArbitrageCommand implements Command {
 			e.printStackTrace();
 			return;
 		}
-		
+
 		if (shops == null || shops.size() == 0){
 			ChatUtils.send(sender, ChatColor.GRAY+"There's no profits to be made.");
 			return;
@@ -61,39 +61,23 @@ public class ArbitrageCommand implements Command {
 		Shop highestSell = shops.get(1);
 		
 		String sellFormat = "§7[§f%s§7] §f%s §7sells §f%s §7for $§f%s §7($§f%s§7e), §f%s §7blocks §f%s";
-		
-		
 		String each = Plugin.Round(lowestBuy.buyPrice/lowestBuy.amount,pl);
 		Location sLoc = lowestBuy.getLocation();
 		String sDir = MathUtil.DegToDirection(MathUtil.AngleCoordsToCoords(pX, pZ, sLoc.getBlockX(), sLoc.getBlockZ()));
+		ChatUtils.send(sender, String.format(sellFormat, 1, Plugin.getPlayerName(lowestBuy.owner), lowestBuy.amount, Plugin.Round(lowestBuy.buyPrice, pl), each, Plugin.Round(p.getLocation().distance(sLoc)), sDir));
 
 		
 		
-		ChatUtils.send(sender, String.format(sellFormat, 2, lowestBuy.owner, lowestBuy.amount, Plugin.Round(lowestBuy.buyPrice, pl), each, Plugin.Round(p.getLocation().distance(sLoc)), sDir));
-
-		
-		
-		//lowestBuy
 		String buyFormat = "§7[§f%s§7] §f%s §7buys §f%s §7for $§f%s §7($§f%s§7e), §f%s §7blocks §f%s";
-		
-		
 		 each = Plugin.Round(highestSell.sellPrice/highestSell.amount,pl);
 		 sLoc = highestSell.getLocation();
 		 sDir = MathUtil.DegToDirection(MathUtil.AngleCoordsToCoords(pX, pZ, sLoc.getBlockX(), sLoc.getBlockZ()));
-
-		
-		
-		ChatUtils.send(sender, String.format(buyFormat, 1, highestSell.owner, highestSell.amount, Plugin.Round(highestSell.sellPrice, pl), each, Plugin.Round(p.getLocation().distance(sLoc)), sDir));
+		ChatUtils.send(sender, String.format(buyFormat, 2, Plugin.getPlayerName(highestSell.owner), highestSell.amount, Plugin.Round(highestSell.sellPrice, pl), each, Plugin.Round(p.getLocation().distance(sLoc)), sDir));
 
 		
 		double profitEach = (highestSell.sellPrice/highestSell.amount) - (lowestBuy.buyPrice/lowestBuy.amount);
-		
-
 		ChatUtils.send(sender, ChatColor.GRAY+"Profit: $" + ChatColor.WHITE + Plugin.Round(profitEach,pl) + ChatColor.GRAY + "e");
-		
-		
-		//ChatUtils.send(sender, "profit64: " + Plugin.Round(profitEach * 64,pl));
-		
+
 			}
 		});
 		

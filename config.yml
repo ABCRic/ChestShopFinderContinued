@@ -24,10 +24,10 @@ properties:
   price-rounding: 2
   
   # When a chunk is loaded for the first time, check if any known shops are missing, delete if so.
-  verify-chunk-shops: true
+  verify-chunk-shops: false
   
   # Number of shops to display in the search/buy/sell commands.
-  search-results: 10
+  search-results: 5
   
   # If a shop owner has multiple shops for the same item, show only one.
   one-owner-per-results: true
@@ -37,6 +37,9 @@ properties:
   
   # Prevent full chests from being listed in the sell command. 
   exclude-full-chests-from-sell: true
+  
+  #If a player is online, use their nickname. 
+  show-nicknames: true
   
 # MySQL DB info.
 mysql:

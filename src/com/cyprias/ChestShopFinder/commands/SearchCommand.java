@@ -96,7 +96,7 @@ public class SearchCommand implements Command {
 
 					
 					
-					ChatUtils.send(sender, String.format(shopFormat, i+1, shop.owner, shop.amount, getPriceText(shop.buyPrice, shop.sellPrice),  Plugin.Round(p.getLocation().distance(sLoc)), sDir));
+					ChatUtils.send(sender, String.format(shopFormat, i+1, Plugin.getPlayerName(shop.owner), shop.amount, getPriceText(shop.buyPrice, shop.sellPrice),  Plugin.Round(p.getLocation().distance(sLoc)), sDir));
 
 					
 				}

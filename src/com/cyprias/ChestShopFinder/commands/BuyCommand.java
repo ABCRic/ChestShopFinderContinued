@@ -99,9 +99,8 @@ public class BuyCommand implements Command {
 
 					
 					
-					ChatUtils.send(sender, String.format(shopFormat, i+1, shop.owner, shop.amount, Plugin.Round(shop.buyPrice, pl), each, Plugin.Round(p.getLocation().distance(sLoc)), sDir));
+					ChatUtils.send(sender, String.format(shopFormat, i+1, Plugin.getPlayerName(shop.owner), shop.amount, Plugin.Round(shop.buyPrice, pl), each, Plugin.Round(p.getLocation().distance(sLoc)), sDir));
 
-					
 				}
 				
 			}

@@ -78,7 +78,7 @@ public class LookCommand  implements Command {
 		String msg = "§7Looking at §f%s§7's shop, §f%s §7blocks §f%s";
 		String sDir = MathUtil.DegToDirection(MathUtil.AngleCoordsToCoords(pX, pZ, sLoc.getBlockX(), sLoc.getBlockZ()));
 		
-		ChatUtils.send(sender, String.format(msg, shop.owner, Plugin.Round(p.getLocation().distance(sLoc)), sDir));
+		ChatUtils.send(sender, String.format(msg, Plugin.getPlayerName(shop.owner), Plugin.Round(p.getLocation().distance(sLoc)), sDir));
 		
 		return true;
 	}

@@ -15,10 +15,12 @@ import java.util.Locale;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
@@ -54,10 +56,12 @@ public class Plugin extends JavaPlugin {
 
 	public static Database database;
 	public static HashMap<String, String> aliases = new HashMap<String, String>();
+	public static Server server ;
 	
 	public void onEnable() {
 		instance = this;
-
+		server = this.getServer();
+		
 		// Check if config.yml exists on disk, copy it over if not. This keeps our comments intact.
 		if (!(new File(getDataFolder(), "config.yml").exists())) {
 			Logger.info("Copying config.yml to disk.");
@@ -419,5 +423,13 @@ public class Plugin extends JavaPlugin {
 		in.close();
 	}
 	
+	public static String getPlayerName(String playerName){
+		if (Config.getBoolean("properties.show-nicknames")){
+			Player player = server.getPlayerExact(playerName);
+			if (player != null)
+				return player.getDisplayName();
+		}
 	
+		return playerName;
+	}
 }
