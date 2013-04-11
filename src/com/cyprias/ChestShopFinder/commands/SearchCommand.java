@@ -78,7 +78,7 @@ public class SearchCommand implements Command {
 					return;
 				}
 				
-				ChatUtils.send(sender,String.format("§f%s §7results for §f%s§7.", shops.size(), args[0]));
+				ChatUtils.send(sender,String.format("§f%s §7results for §f%s§7.", shops.size(), StringUtil.joinArray(args)));
 				
 				previousResults.put(sender.getName(), shops);
 				// [1] Cyprias has 16 for $2 22 blocks north of you.
