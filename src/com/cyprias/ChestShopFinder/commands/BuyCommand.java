@@ -44,7 +44,7 @@ public class BuyCommand implements Command {
 		if (!Plugin.checkPermission(sender, Perm.BUY))
 			return false;
 		
-		if (args.length < 1 || args.length > 2){
+		if (args.length < 1 || args.length > 1){
 			getCommands(sender, cmd);
 			return true;
 		}

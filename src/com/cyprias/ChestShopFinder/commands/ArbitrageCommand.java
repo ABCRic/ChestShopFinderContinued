@@ -23,7 +23,7 @@ public class ArbitrageCommand implements Command {
 	public boolean execute(final CommandSender sender, org.bukkit.command.Command cmd, String[] args) throws SQLException {
 		if (!Plugin.checkPermission(sender, Perm.ARBITRAGE))
 			return false;
-		if (args.length < 1 || args.length > 2){
+		if (args.length < 1 || args.length > 1){
 			getCommands(sender, cmd);
 			return true;
 		}
