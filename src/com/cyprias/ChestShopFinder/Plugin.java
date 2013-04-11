@@ -134,22 +134,7 @@ public class Plugin extends JavaPlugin {
 
 		//Register our event listeners. 
 		registerListeners(new EntityListener(), new ChestShopListener(), new InventoryListener(), new WorldListener(), new PlayerListener());
-		
-		
-		// Load our itemnames file into memory, run in async task to not slow down startup. 
-		getServer().getScheduler().runTaskAsynchronously(instance, new Runnable() {
-			public void run() {
-				try {
-					Logger.debug("Loading item names from items.csv file...");
-					loadItemIds();
-				} catch (NumberFormatException e1) {
-					e1.printStackTrace();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-			}
-		});
-			
+
 		// Start plugin metrics, see how popular our plugin is.
 		if (Config.getBoolean("properties.use-metrics")){
 			try {
@@ -310,117 +295,6 @@ public class Plugin extends JavaPlugin {
 
 	public static String Round(double val) {
 		return Round(val, 0);
-	}
-
-	public static ItemStack getItemStack(int itemID, short itemDur, int amount, String enchants) {
-		ItemStack itemStack = new ItemStack(itemID, amount);
-		itemStack.setDurability(itemDur);
-
-		if (enchants != null && !enchants.equalsIgnoreCase(""))
-			itemStack.addEnchantments(MaterialUtil.Enchantment.getEnchantments(enchants));
-
-		return itemStack;
-	}
-
-	public static ItemStack getItemStack(int itemID, short itemDur, String enchants) {
-		return getItemStack(itemID, itemDur, 1, enchants);
-	}
-
-	public static ItemStack getItemStack(int itemID, short itemDur) {
-		return getItemStack(itemID, itemDur, 1, null);
-	}
-
-	public static ItemStack getItemStack(ItemStack stock, String enchants) {
-		if (enchants != null && !enchants.equalsIgnoreCase(""))
-			stock.addEnchantments(MaterialUtil.Enchantment.getEnchantments(enchants));
-		return stock;
-	}
-	
-	public static ItemStack getItemStack(String id) {
-		int itemid = 0;
-		String itemname = null;
-		short metaData = 0;
-
-		String[] split = id.trim().split("-");
-		String enchant = null;
-		if (split.length > 1) {
-			id = split[0];
-			enchant = split[1];
-		}
-		if (id.matches("^\\d+[:+',;.]\\d+$")) {
-			itemid = Integer.parseInt(id.split("[:+',;.]")[0]);
-			metaData = Short.parseShort(id.split("[:+',;.]")[1]);
-		} else if (id.matches("^\\d+$")) {
-			itemid = Integer.parseInt(id);
-		} else if (id.matches("^[^:+',;.]+[:+',;.]\\d+$")) {
-			itemname = id.split("[:+',;.]")[0].toLowerCase(Locale.ENGLISH);
-			metaData = Short.parseShort(id.split("[:+',;.]")[1]);
-		} else {
-			itemname = id.toLowerCase(Locale.ENGLISH);
-		}
-
-		if (itemid > 0) {
-			return getItemStack(itemid, metaData, enchant);
-		}
-		if (itemname != null) {
-		//	Logger.info("getItemStack", itemname, enchant);
-			if (nameToStack.containsKey(itemname)) 
-				return getItemStack(nameToStack.get(itemname), enchant);
-			
-			ItemStack mat = MaterialUtil.getItem(id);
-			if (mat != null){
-				if (enchant != null)
-					mat.addEnchantments(MaterialUtil.Enchantment.getEnchantments(enchant));
-				
-				return mat;
-			}
-		}
-
-		return null;
-	}
-	
-	static HashMap<String, ItemStack> nameToStack = new HashMap<String, ItemStack>();
-	static HashMap<String, String> stockToName = new HashMap<String, String>();
-	
-	private void loadItemIds() throws NumberFormatException, IOException {
-
-		File file = new File(instance.getDataFolder(), "items.csv");
-		if (!file.exists()) {
-			file.getParentFile().mkdirs();
-			copy(getResource("items.csv"), file);
-		}
-		@SuppressWarnings("resource")
-		BufferedReader r = new BufferedReader(new FileReader(file));
-
-		String line;
-
-		ItemStack stock;
-		String id_dur;
-		while ((line = r.readLine()) != null) {
-			if (!line.substring(0,1).equals("#")){
-				String[] values = line.split(",");
-				stock = getItemStack(Integer.parseInt(values[1]), Short.parseShort(values[2]));
-				nameToStack.put(values[0], stock);
-
-				id_dur = String.valueOf(stock.getTypeId());
-				if (stock.getDurability() > 0)
-					id_dur += ":" + stock.getDurability();
-
-				if (!stockToName.containsKey(id_dur))
-					stockToName.put(id_dur, values[0]);
-			}
-		}
-
-	}
-	public void copy(InputStream in, File file) throws IOException {
-		OutputStream out = new FileOutputStream(file);
-		byte[] buf = new byte[1024];
-		int len;
-		while ((len = in.read(buf)) > 0) {
-			out.write(buf, 0, len);
-		}
-		out.close();
-		in.close();
 	}
 	
 	public static String getPlayerName(String playerName){

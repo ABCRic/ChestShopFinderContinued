@@ -10,6 +10,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import com.Acrobot.Breeze.Utils.MaterialUtil;
+import com.Acrobot.Breeze.Utils.StringUtil;
 import com.cyprias.ChestShopFinder.ChatUtils;
 import com.cyprias.ChestShopFinder.Perm;
 import com.cyprias.ChestShopFinder.Plugin;
@@ -44,15 +46,15 @@ public class BuyCommand implements Command {
 		if (!Plugin.checkPermission(sender, Perm.BUY))
 			return false;
 		
-		if (args.length < 1 || args.length > 1){
+		if (args.length < 1){
 			getCommands(sender, cmd);
 			return true;
 		}
 		
-		final ItemStack stock = Plugin.getItemStack(args[0]);
-		if (stock == null || stock.getTypeId() == 0) {
-			ChatUtils.error(sender, "Unknown item: " + args[0]);
-			return true;
+		final ItemStack stock = MaterialUtil.getItem(StringUtil.joinArray(args));
+		if (MaterialUtil.isEmpty(stock)) {
+				ChatUtils.error(sender, "Unknown item: " + StringUtil.joinArray(args));
+				return true;
 		}
 		
 		final Player p = (Player) sender;
@@ -72,7 +74,7 @@ public class BuyCommand implements Command {
 					return;
 				}
 				if (shops == null || shops.size() == 0){
-					ChatUtils.send(sender, "§7No shop sells that item.");
+					ChatUtils.send(sender, "§7No shop sells §f" + StringUtil.joinArray(args) + "§7.");
 					return;
 				}
 				
