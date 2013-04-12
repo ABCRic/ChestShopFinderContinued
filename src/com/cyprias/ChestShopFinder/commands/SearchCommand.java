@@ -74,11 +74,11 @@ public class SearchCommand implements Command {
 					return;
 				}
 				if (shops == null || shops.size() == 0){
-					ChatUtils.send(sender, "§7No shop for §f" + StringUtil.joinArray(args) + "§7 found.");
+					ChatUtils.send(sender, "§7No shop for §f" + MaterialUtil.getName(stock) + "§7 found.");
 					return;
 				}
 				
-				ChatUtils.send(sender,String.format("§f%s §7results for §f%s§7.", shops.size(), StringUtil.joinArray(args)));
+				ChatUtils.send(sender,String.format("§f%s §7results for §f%s§7.", shops.size(), MaterialUtil.getName(stock)));
 				
 				previousResults.put(sender.getName(), shops);
 				// [1] Cyprias has 16 for $2 22 blocks north of you.

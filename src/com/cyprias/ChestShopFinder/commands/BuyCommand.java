@@ -74,7 +74,7 @@ public class BuyCommand implements Command {
 					return;
 				}
 				if (shops == null || shops.size() == 0){
-					ChatUtils.send(sender, "§7No shop sells §f" + StringUtil.joinArray(args) + "§7.");
+					ChatUtils.send(sender, "§7No shop sells §f" + MaterialUtil.getName(stock) + "§7.");
 					return;
 				}
 				
@@ -82,7 +82,8 @@ public class BuyCommand implements Command {
 				Collections.sort(shops, comparator);
 				
 				
-				ChatUtils.send(sender,String.format("§f%s §7results for §f%s§7.", shops.size(), StringUtil.joinArray(args)));
+				
+				ChatUtils.send(sender,String.format("§f%s §7results for §f%s§7.", shops.size(), MaterialUtil.getName(stock)));
 				SearchCommand.previousResults.put(sender.getName(), shops);
 				// [1] Cyprias has 16 for $2 22 blocks north of you.
 				String shopFormat = "§7[§f%s§7] §f%s §7sells §f%s §7for $§f%s §7($§f%s§7e), §f%s §7blocks §f%s";
