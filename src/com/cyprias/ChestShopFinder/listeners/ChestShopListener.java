@@ -113,7 +113,7 @@ public class ChestShopListener implements Listener {
 	}
 	
 	public static void registerShopLines(String[] lines, final Sign sign) throws SQLException{
-
+		if (Config.getBoolean("properties.auto-register")){
 		final String owner = lines[0];
 		
 
@@ -159,9 +159,9 @@ public class ChestShopListener implements Listener {
 		Logger.debug("registerShop inStock: " + inStock);
 		
 		
-		if (Config.getBoolean("properties.auto-register")){
+		
 		//	Plugin.database.insert(owner, stock, enchantments, amount, buyPrice, sellPrice, sign.getLocation(), inStock);
-			
+			Plugin.database.deleteShopAtLocation(sign.getLocation());
 			Plugin.database.insert(owner, stock, enchantments, amount, buyPrice, sellPrice, sign.getLocation(), finStock);
 
 		}
