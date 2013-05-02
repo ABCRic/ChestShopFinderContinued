@@ -139,23 +139,14 @@ public class InventoryListener implements Listener {
 	public static HashMap<Sign, Double> checkThrottle = new HashMap<Sign, Double>();
 	
 	private void checkSign(final Sign fsign) {
-
-		
-		if (checkThrottle.containsKey(fsign)){
-			
-			
-			if ((Plugin.getUnixTime() - checkThrottle.get(fsign))  < 5){
-				Logger.debug("Too soon!");
-				
+		//Exit if we've checked this shop in the past 5 seconds, the event seems to fire a few times.
+		if (checkThrottle.containsKey(fsign))
+			if ((Plugin.getUnixTime() - checkThrottle.get(fsign))  < 5)
 				return;
-			}
-			
-		}
-		
 		checkThrottle.put(fsign, Plugin.getUnixTime());
-		
-		
-		
+
+		// Run in async thread so our DB call doesn't lockup the thread. It isn't perfect since we shouldn't
+		// be doing block lookups asyncly, hopefully no harm comes about.
 		Plugin.getInstance().getServer().getScheduler().runTaskAsynchronously(Plugin.getInstance(), new Runnable() {
 			public void run() {
 				try {
