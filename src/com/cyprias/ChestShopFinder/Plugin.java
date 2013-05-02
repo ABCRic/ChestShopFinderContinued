@@ -9,12 +9,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -304,6 +307,24 @@ public class Plugin extends JavaPlugin {
 				return player.getDisplayName();
 		}
 	
+		
 		return playerName;
 	}
+
+	static List<ChatColor> distanceColours = new ArrayList<ChatColor>();// = new List<ChatColor>;
+
+	static {
+		distanceColours.add(ChatColor.GREEN);
+		distanceColours.add(ChatColor.YELLOW);
+		distanceColours.add(ChatColor.GOLD);
+		distanceColours.add(ChatColor.RED);
+	}
+	
+	public static ChatColor getDistanceColour(double num){
+		if (num > 1)
+			num = num / 100;
+
+		return distanceColours.get((int) Math.round((distanceColours.size()-1) * num));
+	}
+	
 }

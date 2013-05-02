@@ -292,7 +292,7 @@ WHERE `sellPrice` > 0 AND `balance` >= `sellPrice`;
 		qry += " LIMIT 0 , " + Config.getInt("properties.search-results"); //Only pull the first 10.
 		
 
-		Logger.debug("qry: " + qry);
+	//	Logger.debug("qry: " + qry);
 		
 		queryReturn results = executeQuery(qry, loc.getWorld().getName(), stock.getTypeId(), stock.getDurability(), enchantments);
 		ResultSet r = results.result;

@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import com.Acrobot.Breeze.Utils.MaterialUtil;
 import com.Acrobot.Breeze.Utils.StringUtil;
 import com.cyprias.ChestShopFinder.ChatUtils;
+import com.cyprias.ChestShopFinder.Logger;
 import com.cyprias.ChestShopFinder.Perm;
 import com.cyprias.ChestShopFinder.Plugin;
 import com.cyprias.ChestShopFinder.command.Command;
@@ -78,6 +79,12 @@ public class BuyCommand implements Command {
 					return;
 				}
 				
+				
+				double closest = p.getLocation().distance(shops.get(0).getLocation());
+				double farthest = p.getLocation().distance(shops.get(shops.size()-1).getLocation());
+				
+				double between = farthest - closest;
+
 				compareShops comparator = new compareShops();
 				Collections.sort(shops, comparator);
 				
@@ -93,6 +100,8 @@ public class BuyCommand implements Command {
 				int pl = Config.getInt("properties.price-rounding");
 				String each;
 				Location sLoc;
+				double dist;
+				double distP;
 				for (int i=0; i<shops.size(); i++){
 					shop = shops.get(i);
 					
@@ -100,9 +109,16 @@ public class BuyCommand implements Command {
 					sLoc = shop.getLocation();
 					sDir = MathUtil.DegToDirection(MathUtil.AngleCoordsToCoords(pX, pZ, sLoc.getBlockX(), sLoc.getBlockZ()));
 
+					dist = p.getLocation().distance(sLoc);
+					
+	
+					distP = ((dist - closest) / between) * 100;
+					
+					//Logger.debug(i + "dist: " + dist + ", b: " + distP);
+		
 					
 					
-					ChatUtils.send(sender, String.format(shopFormat, i+1, Plugin.getPlayerName(shop.owner), shop.amount, Plugin.Round(shop.buyPrice, pl), each, Plugin.Round(p.getLocation().distance(sLoc)), sDir));
+					ChatUtils.send(sender, String.format(shopFormat, i+1, Plugin.getPlayerName(shop.owner), shop.amount, Plugin.Round(shop.buyPrice, pl), each, Plugin.getDistanceColour(distP) + Plugin.Round(dist), sDir));
 
 				}
 				

@@ -79,6 +79,10 @@ public class SellCommand implements Command {
 					return;
 				}
 				
+				double closest = p.getLocation().distance(shops.get(0).getLocation());
+				double farthest = p.getLocation().distance(shops.get(shops.size()-1).getLocation());
+				double between = farthest - closest;
+				
 				compareShops comparator = new compareShops();
 				Collections.sort(shops, comparator);
 				
@@ -92,6 +96,8 @@ public class SellCommand implements Command {
 				int pl = Config.getInt("properties.price-rounding");
 				String each;
 				Location sLoc;
+				double dist, distP;
+				
 				for (int i=0; i<shops.size(); i++){
 					shop = shops.get(i);
 					
@@ -99,9 +105,10 @@ public class SellCommand implements Command {
 					sLoc = shop.getLocation();
 					sDir = MathUtil.DegToDirection(MathUtil.AngleCoordsToCoords(pX, pZ, sLoc.getBlockX(), sLoc.getBlockZ()));
 
+					dist = p.getLocation().distance(sLoc);
+					distP = ((dist - closest) / between) * 100;
 					
-					
-					ChatUtils.send(sender, String.format(shopFormat, i+1, Plugin.getPlayerName(shop.owner), shop.amount, Plugin.Round(shop.sellPrice, pl), each, Plugin.Round(p.getLocation().distance(sLoc)), sDir));
+					ChatUtils.send(sender, String.format(shopFormat, i+1, Plugin.getPlayerName(shop.owner), shop.amount, Plugin.Round(shop.sellPrice, pl), each, Plugin.getDistanceColour(distP) + Plugin.Round(dist), sDir));
 
 					
 				}
