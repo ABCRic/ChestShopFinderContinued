@@ -41,6 +41,9 @@ properties:
   #If a player is online, use their nickname. 
   show-nicknames: true
   
+  # Monitor hopper events to update shop stock.
+  hopper-detection: true
+  
 # MySQL DB info.
 mysql:
   hostname: localhost

@@ -1,6 +1,7 @@
 package com.cyprias.ChestShopFinder.listeners;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 
 import org.bukkit.block.Chest;
 import org.bukkit.block.DoubleChest;
@@ -9,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -19,26 +21,37 @@ import com.Acrobot.ChestShop.Signs.ChestShopSign;
 import com.Acrobot.ChestShop.Utils.uBlock;
 import com.cyprias.ChestShopFinder.Logger;
 import com.cyprias.ChestShopFinder.Plugin;
+import com.cyprias.ChestShopFinder.configuration.Config;
 import com.cyprias.ChestShopFinder.database.Shop;
+
 
 public class InventoryListener implements Listener {
 
 	static public void unregisterEvents(JavaPlugin instance) {
 		InventoryCloseEvent.getHandlerList().unregister(instance);
+		InventoryMoveItemEvent.getHandlerList().unregister(instance);
 	}
 
+	
+	
 	@EventHandler(priority = EventPriority.NORMAL)
-	public void onInventoryClose(InventoryCloseEvent event) throws SQLException {
-		// Logger.debug(event.getEventName());
+	public void onInventoryMoveItem(InventoryMoveItemEvent event) throws SQLException {
+		if (event.isCancelled())
+			return;
+		
+		if (!Config.getBoolean("properties.hopper-detection"))
+			return;
 
-		if (event.getInventory().getHolder() instanceof Chest || event.getInventory().getHolder() instanceof DoubleChest) {
-			InventoryHolder holder = event.getInventory().getHolder();
+		if (event.getDestination().getHolder() instanceof Chest || event.getDestination().getHolder() instanceof DoubleChest) {
+			InventoryHolder holder = event.getDestination().getHolder();
 
+			
+			
 			if (holder instanceof Chest) {
 				Sign sign = uBlock.getConnectedSign((Chest) holder);
 
 				if (sign != null)
-					registerSign(sign);
+					checkSign(sign);
 			} else if (holder instanceof DoubleChest) {
 
 				DoubleChest dc = (DoubleChest) holder;
@@ -47,13 +60,75 @@ public class InventoryListener implements Listener {
 				if (dc.getLeftSide() instanceof Chest) {
 					lsign = uBlock.getConnectedSign((Chest) dc.getLeftSide());
 					if (lsign != null)
-						registerSign(lsign);
+						checkSign(lsign);
 				}
 
 				if (dc.getRightSide() instanceof Chest) {
 					rsign = uBlock.getConnectedSign((Chest) dc.getRightSide());
 					if (rsign != null && (!rsign.equals(lsign)))
-						registerSign(rsign);
+						checkSign(rsign);
+				}
+			}
+			
+			
+			
+		}else	if (event.getSource().getHolder() instanceof Chest || event.getSource().getHolder() instanceof DoubleChest) {
+			InventoryHolder holder = event.getSource().getHolder();
+			//Logger.debug("onInventoryMoveItem 5");
+			
+			if (holder instanceof Chest) {
+				Sign sign = uBlock.getConnectedSign((Chest) holder);
+
+				if (sign != null)
+					checkSign(sign);
+			} else if (holder instanceof DoubleChest) {
+
+				DoubleChest dc = (DoubleChest) holder;
+
+				Sign lsign = null, rsign;
+				if (dc.getLeftSide() instanceof Chest) {
+					lsign = uBlock.getConnectedSign((Chest) dc.getLeftSide());
+					if (lsign != null)
+						checkSign(lsign);
+				}
+
+				if (dc.getRightSide() instanceof Chest) {
+					rsign = uBlock.getConnectedSign((Chest) dc.getRightSide());
+					if (rsign != null && (!rsign.equals(lsign)))
+						checkSign(rsign);
+				}
+			}
+			
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onInventoryClose(InventoryCloseEvent event) throws SQLException {
+		// Logger.debug(event.getEventName());
+		
+		if (event.getInventory().getHolder() instanceof Chest || event.getInventory().getHolder() instanceof DoubleChest) {
+			InventoryHolder holder = event.getInventory().getHolder();
+
+			if (holder instanceof Chest) {
+				Sign sign = uBlock.getConnectedSign((Chest) holder);
+
+				if (sign != null)
+					checkSign(sign);
+			} else if (holder instanceof DoubleChest) {
+
+				DoubleChest dc = (DoubleChest) holder;
+
+				Sign lsign = null, rsign;
+				if (dc.getLeftSide() instanceof Chest) {
+					lsign = uBlock.getConnectedSign((Chest) dc.getLeftSide());
+					if (lsign != null)
+						checkSign(lsign);
+				}
+
+				if (dc.getRightSide() instanceof Chest) {
+					rsign = uBlock.getConnectedSign((Chest) dc.getRightSide());
+					if (rsign != null && (!rsign.equals(lsign)))
+						checkSign(rsign);
 				}
 			}
 
@@ -61,8 +136,26 @@ public class InventoryListener implements Listener {
 
 	}
 
-	private void registerSign(final Sign fsign) {
+	public static HashMap<Sign, Double> checkThrottle = new HashMap<Sign, Double>();
+	
+	private void checkSign(final Sign fsign) {
 
+		
+		if (checkThrottle.containsKey(fsign)){
+			
+			
+			if ((Plugin.getUnixTime() - checkThrottle.get(fsign))  < 5){
+				Logger.debug("Too soon!");
+				
+				return;
+			}
+			
+		}
+		
+		checkThrottle.put(fsign, Plugin.getUnixTime());
+		
+		
+		
 		Plugin.getInstance().getServer().getScheduler().runTaskAsynchronously(Plugin.getInstance(), new Runnable() {
 			public void run() {
 				try {
@@ -71,12 +164,13 @@ public class InventoryListener implements Listener {
 
 					if (shop == null) {
 						// Shop's not in our db yet.
-						ChestShopListener.registerShop(fsign);
+						
+						if (Config.getBoolean("properties.auto-register"))
+							ChestShopListener.registerShop(fsign);
 
 					} else {
 
 						// Logger.info("Sign is shop!");
-
 						int inStock = 0;
 
 						String owner = fsign.getLines()[0];
@@ -95,6 +189,7 @@ public class InventoryListener implements Listener {
 
 						shop.setInStock(inStock);
 
+
 					}
 
 				} catch (SQLException e) {
@@ -106,4 +201,6 @@ public class InventoryListener implements Listener {
 		});
 
 	}
+	
+	
 }

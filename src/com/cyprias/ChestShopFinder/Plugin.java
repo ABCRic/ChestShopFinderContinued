@@ -46,7 +46,6 @@ import com.cyprias.ChestShopFinder.database.Database;
 import com.cyprias.ChestShopFinder.database.MySQL;
 import com.cyprias.ChestShopFinder.database.SQLite;
 import com.cyprias.ChestShopFinder.listeners.ChestShopListener;
-import com.cyprias.ChestShopFinder.listeners.EntityListener;
 import com.cyprias.ChestShopFinder.listeners.InventoryListener;
 import com.cyprias.ChestShopFinder.listeners.PlayerListener;
 import com.cyprias.ChestShopFinder.listeners.WorldListener;
@@ -136,7 +135,7 @@ public class Plugin extends JavaPlugin {
 		loadPermissions();
 
 		//Register our event listeners. 
-		registerListeners(new EntityListener(), new ChestShopListener(), new InventoryListener(), new WorldListener(), new PlayerListener());
+		registerListeners(new ChestShopListener(), new InventoryListener(), new WorldListener(), new PlayerListener());
 
 		// Start plugin metrics, see how popular our plugin is.
 		if (Config.getBoolean("properties.use-metrics")){
@@ -209,8 +208,11 @@ public class Plugin extends JavaPlugin {
 		
 		
 		instance.getServer().getScheduler().cancelAllTasks();
-		
-		EntityListener.unregisterEvents(instance);
+
+		ChestShopListener.unregisterEvents(this);
+		InventoryListener.unregisterEvents(this);
+		WorldListener.unregisterEvents(this);
+		PlayerListener.unregisterEvents(this);
 
 		instance = null;
 		Logger.info("disabled.");
