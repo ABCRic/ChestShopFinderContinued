@@ -109,6 +109,10 @@ public class ChestShopListener implements Listener {
 
 		final String owner = lines[0];
 
+		if (!(Plugin.isInt(lines[1]))){
+			Logger.debug("registerShopLines amount is not int");
+			return;
+		}
 		final int amount = Integer.valueOf(lines[1]);
 		// Logger.debug("amount: " + amount);
 
