@@ -23,8 +23,8 @@ properties:
   #Decimal places to round prices.
   price-rounding: 2
   
-  # When a chunk is loaded for the first time, check if any known shops are missing, delete if so.
-  verify-chunk-shops: false
+  # When a chunk is loaded for the first time this session, check if any known shops are missing, delete if so, update stock count if not.
+  verify-chunk-shops: true
   
   # Number of shops to display in the search/buy/sell commands.
   search-results: 5
