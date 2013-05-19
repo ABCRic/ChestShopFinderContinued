@@ -257,8 +257,8 @@ public class Plugin extends JavaPlugin {
 		return instance;
 	}
 
-	public static double getUnixTime() {
-		return (System.currentTimeMillis() / 1000D);
+	public static long getUnixTime() {
+		return (System.currentTimeMillis() / 1000L);
 	}
 
 	public static String getFinalArg(final String[] args, final int start) {
@@ -332,6 +332,32 @@ public class Plugin extends JavaPlugin {
 			num = num / 100;
 
 		return distanceColours.get((int) Math.round((distanceColours.size()-1) * num));
+	}
+	
+	static String g = ChatColor.GRAY.toString();
+	static String w = ChatColor.WHITE.toString();
+	
+	
+	public static String secondsToString(long totalSeconds) {
+
+		long days = totalSeconds / 86400;
+		long remainder = totalSeconds % 86400;
+
+		long hours = remainder / 3600;
+		remainder = totalSeconds % 3600;
+		long minutes = remainder / 60;
+		long seconds = remainder % 60;
+
+		
+		
+		if (days > 0)
+			return w+days + g+"d" + w+hours + g+"h" + w+minutes + g+"m" + w+seconds + g+"s"+ChatColor.RESET;
+		else if (hours > 0)
+			return w+hours + g+"h" + w+minutes + g+"m" + w+seconds + g+"s"+ChatColor.RESET;
+		else if (minutes > 0)
+			return w+minutes + g+"m" + w+seconds + g+"s" +ChatColor.RESET;
+		else
+			return w+seconds + g+"s"+ChatColor.RESET;
 	}
 	
 }

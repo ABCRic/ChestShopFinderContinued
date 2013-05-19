@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -427,7 +428,7 @@ public class SQLite implements Database {
 	}
 
 	@Override
-	public List<Transaction> getOwnerTransactions(String playerName) throws SQLException {
+	public List<Transaction> getOwnerTransactions(CommandSender sender, String playerName, int page) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}

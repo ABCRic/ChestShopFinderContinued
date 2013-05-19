@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
 
 
@@ -34,7 +35,7 @@ public interface Database {
 	boolean insertTransaction(Transaction transaction) throws SQLException;
 	
 	
-	List<Transaction> getOwnerTransactions(String playerName) throws SQLException;
+	List<Transaction> getOwnerTransactions(CommandSender sender, String playerName, int page) throws SQLException;
 	
 	
 }

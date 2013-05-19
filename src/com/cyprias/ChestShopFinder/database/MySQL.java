@@ -22,6 +22,7 @@ import com.Acrobot.ChestShop.Events.TransactionEvent.TransactionType;
 import com.cyprias.ChestShopFinder.Logger;
 import com.cyprias.ChestShopFinder.Plugin;
 import com.cyprias.ChestShopFinder.configuration.Config;
+import com.cyprias.ChestShopFinder.utils.ChatUtils;
 import com.cyprias.ChestShopFinder.utils.MathUtil;
 
 public class MySQL implements Database {
@@ -474,11 +475,47 @@ WHERE `sellPrice` > 0 AND `balance` >= `sellPrice`;
 		return (success > 0) ? true : false;
 	}
 
-
-	public List<Transaction> getOwnerTransactions(String ownerName) throws SQLException {
-		List<Transaction> transactions =  new ArrayList<Transaction>();
+	
+	
+	public List<Transaction> getOwnerTransactions(CommandSender sender, String ownerName, int page) throws SQLException {
 		
-		String qry = "SELECT * FROM `"+transactions_table+"` WHERE `owner` LIKE ?";
+		
+		int rows;
+		
+		rows = getResultCount("SELECT COUNT(*) FROM " + transactions_table + " WHERE `owner` LIKE ?", ownerName);
+				
+		//Logger.debug("rows: " +rows);
+		
+		int perPage = Config.getInt("properties.transaction-results");
+
+		int max = (rows / perPage);// + 1;
+		//Logger.debug("max 1: " +max);
+		
+		if (rows % perPage == 0)
+			max--;
+		//Logger.debug("max 2: " +max);
+		//Logger.debug("page 1: " +page);
+		if (page < 0){
+			page = max - (Math.abs(page) - 1);
+		//	Logger.debug("page 2: " +page);
+		}else{
+			if (page > max)
+				page = max;
+			
+		//	Logger.debug("page 13: " +page);
+		}
+		
+		
+		
+		if (sender != null)
+			ChatUtils.send(sender, "§7Page: §f" + (page+1) + "§7/§f" + (max+1));
+		
+		if (rows == 0)
+			return null;
+		
+		
+		List<Transaction> transactions =  new ArrayList<Transaction>();
+		String qry = "SELECT * FROM `"+transactions_table+"` WHERE `owner` LIKE ? ORDER BY `id` LIMIT "+(perPage * page)+" , " + perPage;
 
 		queryReturn results = executeQuery(qry, ownerName);
 		ResultSet r = results.result;
@@ -506,11 +543,11 @@ WHERE `sellPrice` > 0 AND `balance` >= `sellPrice`;
 				r.getShort("durability"),
 				r.getString("enchantments"),
 				r.getInt("amount"),
-				r.getDouble("time")
+				r.getLong("time")
 			);
 		
 			
-			
+			transaction.setId(r.getInt("id"));
 		
 			
 			

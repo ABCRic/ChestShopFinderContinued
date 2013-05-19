@@ -136,7 +136,7 @@ public class InventoryListener implements Listener {
 
 	}
 
-	public static HashMap<Sign, Double> checkThrottle = new HashMap<Sign, Double>();
+	public static HashMap<Sign, Long> checkThrottle = new HashMap<Sign, Long>();
 	
 	static void checkSign(final Sign fsign) {
 		//Exit if we've checked this shop in the past 5 seconds, the event seems to fire a few times.
