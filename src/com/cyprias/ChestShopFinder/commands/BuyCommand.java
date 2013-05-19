@@ -12,7 +12,6 @@ import org.bukkit.inventory.ItemStack;
 
 import com.Acrobot.Breeze.Utils.MaterialUtil;
 import com.Acrobot.Breeze.Utils.StringUtil;
-import com.cyprias.ChestShopFinder.ChatUtils;
 import com.cyprias.ChestShopFinder.Logger;
 import com.cyprias.ChestShopFinder.Perm;
 import com.cyprias.ChestShopFinder.Plugin;
@@ -20,6 +19,7 @@ import com.cyprias.ChestShopFinder.command.Command;
 import com.cyprias.ChestShopFinder.command.CommandAccess;
 import com.cyprias.ChestShopFinder.configuration.Config;
 import com.cyprias.ChestShopFinder.database.Shop;
+import com.cyprias.ChestShopFinder.utils.ChatUtils;
 import com.cyprias.ChestShopFinder.utils.MathUtil;
 
 public class BuyCommand implements Command {

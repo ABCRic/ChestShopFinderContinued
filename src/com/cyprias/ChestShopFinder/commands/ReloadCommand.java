@@ -4,11 +4,11 @@ import java.util.List;
 
 import org.bukkit.command.CommandSender;
 
-import com.cyprias.ChestShopFinder.ChatUtils;
 import com.cyprias.ChestShopFinder.Perm;
 import com.cyprias.ChestShopFinder.Plugin;
 import com.cyprias.ChestShopFinder.command.Command;
 import com.cyprias.ChestShopFinder.command.CommandAccess;
+import com.cyprias.ChestShopFinder.utils.ChatUtils;
 
 public class ReloadCommand implements Command {
 	public void listCommands(CommandSender sender, List<String> list) {

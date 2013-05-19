@@ -86,18 +86,36 @@ public class WorldListener implements Listener {
 					Plugin.getInstance().getServer().getScheduler().runTask(Plugin.getInstance(), new Runnable() {
 						public void run() {
 							Sign sign;
+							
 							for (int i=0; i<shops.size(); i++){
+								final Shop shop = shops.get(i);
+								final int id = shops.get(i).id;
 								
 								sign = shopExists(shops.get(i));
 								
 								if (sign == null){
 									Logger.warning("Shop #" + shops.get(i).id + " no longer exists, removing from DB.");
+									
+									/*
 									try {
 										Plugin.database.deleteShop(shops.get(i).id);
 									} catch (SQLException e) {
 										Logger.warning("Exception caught while lookign up shops in chunk.");
 										e.printStackTrace();
 									}
+									*/
+									
+									Plugin.getInstance().getServer().getScheduler().runTaskAsynchronously(Plugin.getInstance(), new Runnable() {
+										public void run() {
+											try {
+												Plugin.database.deleteShop(id);
+											} catch (SQLException e) {
+												// TODO Auto-generated catch block
+												e.printStackTrace();
+											}
+										}});
+									
+									
 									
 								}else{
 									
@@ -111,14 +129,20 @@ public class WorldListener implements Listener {
 									} else {
 										Chest chest = uBlock.findConnectedChest(sign.getBlock());
 										if (chest != null) {
-											inStock = InventoryUtil.getAmount(stock, chest.getInventory());
+											try{
+												inStock = InventoryUtil.getAmount(stock, chest.getInventory());
+											} catch (NullPointerException e) {
+												inStock = 0;
+											}
 										}
 									}
 
+									final int finStock = inStock;
+									
 									// Logger.debug("onTransaction inStock: " + inStock);
-									Logger.debug("Setting shop #" + shops.get(i).id + "'s stock to " + inStock);
+									
 									try {
-										shops.get(i).setInStock(inStock);
+										shop.setInStock(finStock);
 									} catch (SQLException e) {
 										// TODO Auto-generated catch block
 										e.printStackTrace();
@@ -147,10 +171,9 @@ public class WorldListener implements Listener {
 
 		Block block = shop.getWorld().getBlockAt(shop.getLocation());
 		
-		if (block.getType() == block.getType().WALL_SIGN){
-			
+		if (block.getType() == block.getType().WALL_SIGN)
 			return (Sign) block.getState();
-		}
+		
 		
 		return null;
 	}

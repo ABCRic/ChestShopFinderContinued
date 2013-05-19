@@ -172,14 +172,16 @@ public class InventoryListener implements Listener {
 						} else {
 							Chest chest = uBlock.findConnectedChest(fsign.getBlock());
 							if (chest != null) {
-								inStock = InventoryUtil.getAmount(stock, chest.getInventory());
+								try{
+									inStock = InventoryUtil.getAmount(stock, chest.getInventory());
+								} catch (NullPointerException e) {
+									inStock = 0;
+								}
 							}
 						}
 
-						Logger.debug("Setting shop " + shop.id + "'s stock to " + inStock);
-
+							
 						shop.setInStock(inStock);
-
 
 					}
 

@@ -106,4 +106,17 @@ public class MathUtil {
 		return String.valueOf(deg);
 	}
 
+    public static boolean hasMask(int flags, int mask) {
+        return ((flags & mask) == mask);
+    }
+	
+    public static int addMask(int flags, int mask){
+    	return (flags |= mask);
+    }
+    public static int delMask(int flags, int mask){
+    	return (flags &= ~mask);
+    }
+	
+
+    
 }

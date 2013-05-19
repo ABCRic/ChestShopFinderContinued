@@ -29,4 +29,12 @@ public interface Database {
 
 	List<Shop> findArbitrage(ItemStack stock, Location loc)  throws SQLException;
 	
+	//void queueForStockUpdate(int id, int inStock);
+	
+	boolean insertTransaction(Transaction transaction) throws SQLException;
+	
+	
+	List<Transaction> getOwnerTransactions(String playerName) throws SQLException;
+	
+	
 }

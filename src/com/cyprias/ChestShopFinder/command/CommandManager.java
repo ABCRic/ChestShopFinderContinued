@@ -12,8 +12,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import com.cyprias.ChestShopFinder.ChatUtils;
 import com.cyprias.ChestShopFinder.Plugin;
+import com.cyprias.ChestShopFinder.utils.ChatUtils;
 
 
 public class CommandManager implements CommandExecutor, Listable {

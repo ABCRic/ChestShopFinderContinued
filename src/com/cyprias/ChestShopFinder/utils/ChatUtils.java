@@ -1,10 +1,12 @@
-package com.cyprias.ChestShopFinder;
+package com.cyprias.ChestShopFinder.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.cyprias.ChestShopFinder.Perm;
+import com.cyprias.ChestShopFinder.Plugin;
 import com.cyprias.ChestShopFinder.configuration.Config;
 
 public class ChatUtils {

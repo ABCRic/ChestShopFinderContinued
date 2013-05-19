@@ -8,10 +8,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitTask;
 
 import com.Acrobot.Breeze.Utils.MaterialUtil;
 import com.cyprias.ChestShopFinder.Logger;
@@ -23,6 +27,9 @@ public class SQLite implements Database {
 	private static String sqlDB;
 	
 	static String shops_table = "Shops";
+	static String transactions_table = "Transactions";
+	
+	
 	
 	@Override
 	public Boolean init() {
@@ -69,6 +76,11 @@ public class SQLite implements Database {
 		if (tableExists(shops_table) == false) {
 			Logger.info("Creating SQLite " + shops_table + " table.");
 			stat.executeUpdate("CREATE TABLE `"+shops_table+"` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `owner` VARCHAR(16) NOT NULL, `typeId` INT NOT NULL, `durability` INT NOT NULL, `enchantments` VARCHAR(16) NOT NULL, `amount` INT NOT NULL, `buyPrice` DOUBLE NOT NULL, `sellPrice` DOUBLE NOT NULL, `world` VARCHAR(16) NOT NULL, `x` INT NOT NULL, `y` INT NOT NULL, `z` INT NOT NULL, `inStock` INT NOT NULL)");
+		}
+		
+		if (tableExists(transactions_table) == false) {
+			Logger.info("Creating "+transactions_table+" table.");
+			con.prepareStatement("CREATE TABLE "+transactions_table+" (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `owner` VARCHAR(32) NOT NULL, `client` VARCHAR(32) NOT NULL, `flags` INT NOT NULL, `price` DOUBLE NOT NULL, `typeId` INT NOT NULL, `durability` INT NOT NULL, `enchantments` VARCHAR(16) NOT NULL, `amount` INT NOT NULL, `time` DOUBLE NOT NULL)").executeUpdate();
 		}
 		
 		stat.close();
@@ -398,4 +410,80 @@ public class SQLite implements Database {
 		return shops;
 	}
 
+	public boolean insertTransaction(Transaction transaction) throws SQLException {
+		String query = "INSERT INTO "+transactions_table + " (`id` ,`owner` ,`client` ,`flags` ,`price` ,`typeId` ,`durability` ,`enchantments` ,`amount` ,`time`)VALUES (NULL , ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		int success = executeUpdate(query, 
+			transaction.getOwner(), 
+			transaction.getClient(),
+			transaction.getFlags(),
+			transaction.getPrice(),
+			transaction.getTypeId(),
+			transaction.getDurability(),
+			transaction.getEnchantments(),
+			transaction.getAmount(),
+			transaction.getTime()
+		);
+		return (success > 0) ? true : false;
+	}
+
+	@Override
+	public List<Transaction> getOwnerTransactions(String playerName) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
+	/*
+	public static HashMap<Integer, Integer> updateStock = new HashMap<Integer, Integer>();
+	
+	BukkitTask stockUpdateTask = null;
+	
+	public void queueForStockUpdate(int id, int inStock) {
+		updateStock.put(id, inStock);
+		
+		if (stockUpdateTask != null)
+			return;
+		
+		stockUpdateTask = Plugin.getInstance().getServer().getScheduler().runTaskAsynchronously(Plugin.getInstance(), new Runnable() {
+			public void run() {
+				Connection con;
+				PreparedStatement statement;
+				try {
+					con = getConnection();
+					
+					Iterator it = updateStock.entrySet().iterator();
+					
+				    while (it.hasNext()) {
+				        Map.Entry pairs = (Map.Entry)it.next();
+				       // System.out.println(pairs.getKey() + " = " + pairs.getValue());
+				        statement =  con.prepareStatement("UPDATE `"+shops_table+"` SET `inStock` = ? WHERE `id` = ?;");
+				        
+				        statement.setInt(1, (Integer) pairs.getKey());
+				        statement.setInt(2, (Integer) pairs.getValue());
+				        
+				        Logger.debug("queueForStockUpdate " + pairs.getKey() + " = " + pairs.getValue());
+				        
+				        statement.executeUpdate();
+				        
+				        it.remove(); // avoids a ConcurrentModificationException
+				    }
+				    con.close();
+					
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
+				stockUpdateTask = null;
+
+			    
+			    
+			}});
+		
+	}
+*/
+	
+	
+	
 }

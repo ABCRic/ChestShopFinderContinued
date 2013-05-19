@@ -7,6 +7,7 @@ import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
 
 import com.Acrobot.Breeze.Utils.MaterialUtil;
+import com.cyprias.ChestShopFinder.Logger;
 import com.cyprias.ChestShopFinder.Plugin;
 
 
@@ -94,9 +95,12 @@ public class Shop {
 		this.id = id;
 	}
 	public void setInStock(int inStock2) throws SQLException {
-		this.inStock = inStock2;
-		Plugin.database.setInStock(id, inStock2);
-		
+		if (this.inStock != inStock2){
+			Logger.debug("Setting shop " + id + "'s stock to " + inStock);
+			this.inStock = inStock2;
+			Plugin.database.setInStock(id, inStock2);
+			//Plugin.database.queueForStockUpdate(id, inStock2);
+		}
 	}
 	
 	public World getWorld(){

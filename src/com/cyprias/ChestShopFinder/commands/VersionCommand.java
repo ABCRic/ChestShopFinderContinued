@@ -9,7 +9,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.xml.sax.SAXException;
 
-import com.cyprias.ChestShopFinder.ChatUtils;
 import com.cyprias.ChestShopFinder.Logger;
 import com.cyprias.ChestShopFinder.Perm;
 import com.cyprias.ChestShopFinder.Plugin;
@@ -18,6 +17,7 @@ import com.cyprias.ChestShopFinder.VersionChecker.versionInfo;
 import com.cyprias.ChestShopFinder.command.Command;
 import com.cyprias.ChestShopFinder.command.CommandAccess;
 import com.cyprias.ChestShopFinder.configuration.Config;
+import com.cyprias.ChestShopFinder.utils.ChatUtils;
 
 public class VersionCommand implements Command {
 	public void listCommands(CommandSender sender, List<String> list) {

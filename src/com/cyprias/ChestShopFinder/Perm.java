@@ -24,7 +24,8 @@ public enum Perm {
 	RELOAD("csf.reload"),
 	PARENT_ADMIN("csf.admin", VERSION, RELOAD),
 
-	TEST("csf.test");
+	TRANSACTIONS("csf.transactions"),
+	PARENT_TEST("csf.test", TRANSACTIONS);
 	
 	private Perm(String value, Perm... childrenArray) {
 		this(value, String.format(DEFAULT_ERROR_MESSAGE, value), childrenArray);

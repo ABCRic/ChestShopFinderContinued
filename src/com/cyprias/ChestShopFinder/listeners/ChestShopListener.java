@@ -16,12 +16,15 @@ import com.Acrobot.Breeze.Utils.PriceUtil;
 import com.Acrobot.ChestShop.Events.ShopCreatedEvent;
 import com.Acrobot.ChestShop.Events.ShopDestroyedEvent;
 import com.Acrobot.ChestShop.Events.TransactionEvent;
+import com.Acrobot.ChestShop.Events.TransactionEvent.TransactionType;
 import com.Acrobot.ChestShop.Signs.ChestShopSign;
 import com.Acrobot.ChestShop.Utils.uBlock;
 import com.cyprias.ChestShopFinder.Logger;
 import com.cyprias.ChestShopFinder.Plugin;
 import com.cyprias.ChestShopFinder.configuration.Config;
 import com.cyprias.ChestShopFinder.database.Shop;
+import com.cyprias.ChestShopFinder.database.Transaction;
+import com.cyprias.ChestShopFinder.utils.MathUtil;
 
 // http://dev.bukkit.org/server-mods/chestshop/pages/chest-shops-api/
 public class ChestShopListener implements Listener {
@@ -55,10 +58,10 @@ public class ChestShopListener implements Listener {
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onTransaction(TransactionEvent event) throws SQLException {
 
-		Logger.debug(event.getEventName());
+		// Logger.debug(event.getEventName());
 
+		// Check the shop how much is remaining and update our DB's stock.
 		final Sign sign = event.getSign();
-
 		Plugin.getInstance().getServer().getScheduler().runTaskAsynchronously(Plugin.getInstance(), new Runnable() {
 			public void run() {
 				try {
@@ -67,7 +70,7 @@ public class ChestShopListener implements Listener {
 
 					if (shop == null) {
 						// Shop's not in our db yet.
-						
+
 						if (Config.getBoolean("properties.auto-register"))
 							ChestShopListener.registerShop(sign);
 
@@ -85,12 +88,16 @@ public class ChestShopListener implements Listener {
 						} else {
 							Chest chest = uBlock.findConnectedChest(sign.getBlock());
 							if (chest != null) {
-								inStock = InventoryUtil.getAmount(stock, chest.getInventory());
+								try {
+									inStock = InventoryUtil.getAmount(stock, chest.getInventory());
+								} catch (NullPointerException e) {
+									inStock = 0;
+								}
 							}
 						}
 
 						// Logger.debug("onTransaction inStock: " + inStock);
-						Logger.debug("Setting shop #" + shop.id + "'s stock to " + inStock);
+
 						shop.setInStock(inStock);
 
 					}
@@ -103,13 +110,41 @@ public class ChestShopListener implements Listener {
 			}
 		});
 
+		// event.getPrice()
+		// event.getTransactionType().name()
+		// event.getClient().getName()
+		// event.getOwner().getName()
+
+		//Logger.debug("onTransaction Price: " + event.getPrice());
+		//Logger.debug("onTransaction getClient: " + event.getClient().getName());
+		//Logger.debug("onTransaction getOwner: " + event.getOwner().getName());
+		//Logger.debug("onTransaction getTransactionType: " + event.getTransactionType());
+		//Logger.debug("getUnixTime: "+ Plugin.getUnixTime());
+		
+		if (Config.getBoolean("properties.log-transactions") == true){
+			Transaction trans;
+			int flags;
+			for (int i = 0; i < event.getStock().length; i++) {
+
+				flags = 0;
+				if (event.getTransactionType() == TransactionType.BUY)
+					flags  = MathUtil.addMask(flags, Transaction.mask_BUY);
+				if (event.getTransactionType() == TransactionType.SELL)
+					flags = MathUtil.addMask(flags, Transaction.mask_SELL);
+
+				(new Transaction(event.getOwner().getName(), event.getClient().getName(), flags, event.getPrice(),
+					event.getStock()[i].getTypeId(), event.getStock()[i].getDurability(),  MaterialUtil.Enchantment.encodeEnchantment(event.getStock()[i]), event.getStock()[i].getAmount(), Plugin.getUnixTime())).sendToDB();
+			}
+		}
+		//
+
 	}
 
 	public static void registerShopLines(String[] lines, final Sign sign) throws SQLException {
 
 		final String owner = lines[0];
 
-		if (!(Plugin.isInt(lines[1]))){
+		if (!(Plugin.isInt(lines[1]))) {
 			Logger.debug("registerShopLines amount is not int");
 			return;
 		}
@@ -126,7 +161,6 @@ public class ChestShopListener implements Listener {
 		// stock.getDurability());
 		final String enchantments = MaterialUtil.Enchantment.encodeEnchantment(stock);
 
-
 		int inStock = 0;
 		if (ChestShopSign.isAdminShop(owner)) {
 			inStock = 64 * 9 * 6; // Full chest. :P
@@ -141,7 +175,7 @@ public class ChestShopListener implements Listener {
 		}
 		final int finStock = inStock;
 
-		//Logger.debug("registerShop inStock: " + inStock);
+		// Logger.debug("registerShop inStock: " + inStock);
 
 		Plugin.database.deleteShopAtLocation(sign.getLocation());
 		Plugin.database.insert(owner, stock, enchantments, amount, buyPrice, sellPrice, sign.getLocation(), finStock);

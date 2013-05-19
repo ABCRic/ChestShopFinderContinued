@@ -44,6 +44,9 @@ properties:
   # Monitor hopper events to update shop stock.
   hopper-detection: true
   
+  # Log transactions to DB
+  log-transactions: true
+  
 # MySQL DB info.
 mysql:
   hostname: localhost

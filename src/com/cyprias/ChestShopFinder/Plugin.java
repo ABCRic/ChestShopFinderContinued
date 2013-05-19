@@ -39,6 +39,7 @@ import com.cyprias.ChestShopFinder.commands.ReloadCommand;
 import com.cyprias.ChestShopFinder.commands.SearchCommand;
 import com.cyprias.ChestShopFinder.commands.SellCommand;
 import com.cyprias.ChestShopFinder.commands.TestCommand;
+import com.cyprias.ChestShopFinder.commands.TransactionsCommand;
 import com.cyprias.ChestShopFinder.commands.VersionCommand;
 import com.cyprias.ChestShopFinder.configuration.Config;
 import com.cyprias.ChestShopFinder.configuration.YML;
@@ -50,6 +51,7 @@ import com.cyprias.ChestShopFinder.listeners.ChestShopListener;
 import com.cyprias.ChestShopFinder.listeners.InventoryListener;
 import com.cyprias.ChestShopFinder.listeners.PlayerListener;
 import com.cyprias.ChestShopFinder.listeners.WorldListener;
+import com.cyprias.ChestShopFinder.utils.ChatUtils;
 
 public class Plugin extends JavaPlugin {
 	// static PluginDescriptionFile description;
@@ -116,6 +118,7 @@ public class Plugin extends JavaPlugin {
 		cm.registerCommand("sell", new SellCommand());
 		cm.registerCommand("buy", new BuyCommand());
 		cm.registerCommand("arbitrage", new ArbitrageCommand());
+		cm.registerCommand("transactions", new TransactionsCommand());
 		this.getCommand("csf").setExecutor(cm);
 
 		// Load our command aliases.

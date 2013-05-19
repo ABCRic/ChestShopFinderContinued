@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -13,11 +15,14 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitTask;
 
 import com.Acrobot.Breeze.Utils.MaterialUtil;
+import com.Acrobot.ChestShop.Events.TransactionEvent.TransactionType;
 import com.cyprias.ChestShopFinder.Logger;
 import com.cyprias.ChestShopFinder.Plugin;
 import com.cyprias.ChestShopFinder.configuration.Config;
+import com.cyprias.ChestShopFinder.utils.MathUtil;
 
 public class MySQL implements Database {
 
@@ -26,6 +31,8 @@ public class MySQL implements Database {
 
 	static String prefix;
 	static String shops_table;
+	static String transactions_table;
+	
 	public Boolean init() {
 		if (!canConnect()){
 			Logger.info("Failed to connect to MySQL!");
@@ -33,7 +40,7 @@ public class MySQL implements Database {
 		}
 		prefix = Config.getString("mysql.prefix");
 		shops_table = prefix+ "Shops";
-		
+		transactions_table = prefix+ "Transactions";
 		
 		try {
 			createTables();
@@ -53,6 +60,11 @@ public class MySQL implements Database {
 		if (tableExists(shops_table) == false) {
 			Logger.info("Creating "+shops_table+" table.");
 			con.prepareStatement("CREATE TABLE `"+shops_table+"` (`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `owner` VARCHAR(16) NOT NULL, `typeId` INT NOT NULL, `durability` INT NOT NULL, `enchantments` VARCHAR(16) NOT NULL, `amount` INT NOT NULL, `buyPrice` DOUBLE NOT NULL, `sellPrice` DOUBLE NOT NULL, `world` VARCHAR(16) NOT NULL, `x` INT NOT NULL, `y` INT NOT NULL, `z` INT NOT NULL, `inStock` INT NOT NULL) ENGINE = InnoDB").executeUpdate();
+		}
+		
+		if (tableExists(transactions_table) == false) {
+			Logger.info("Creating "+transactions_table+" table.");
+			con.prepareStatement("CREATE TABLE "+transactions_table+" (`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `owner` VARCHAR(32) NOT NULL, `client` VARCHAR(32) NOT NULL, `flags` INT NOT NULL, `price` DOUBLE NOT NULL, `typeId` INT NOT NULL, `durability` INT NOT NULL, `enchantments` VARCHAR(16) NOT NULL, `amount` INT NOT NULL, `time` DOUBLE NOT NULL) ENGINE = InnoDB").executeUpdate();
 		}
 		
 	}
@@ -446,4 +458,121 @@ WHERE `sellPrice` > 0 AND `balance` >= `sellPrice`;
 	}
 
 
+	public boolean insertTransaction(Transaction transaction) throws SQLException {
+		String query = "INSERT INTO "+transactions_table + " (`id` ,`owner` ,`client` ,`flags` ,`price` ,`typeId` ,`durability` ,`enchantments` ,`amount` ,`time`)VALUES (NULL , ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		int success = executeUpdate(query, 
+			transaction.getOwner(), 
+			transaction.getClient(),
+			transaction.getFlags(),
+			transaction.getPrice(),
+			transaction.getTypeId(),
+			transaction.getDurability(),
+			transaction.getEnchantments(),
+			transaction.getAmount(),
+			transaction.getTime()
+		);
+		return (success > 0) ? true : false;
+	}
+
+
+	public List<Transaction> getOwnerTransactions(String ownerName) throws SQLException {
+		List<Transaction> transactions =  new ArrayList<Transaction>();
+		
+		String qry = "SELECT * FROM `"+transactions_table+"` WHERE `owner` LIKE ?";
+
+		queryReturn results = executeQuery(qry, ownerName);
+		ResultSet r = results.result;
+
+		Transaction transaction;
+		while (r.next()) {
+			
+			//tLoc = new Location(Plugin.getInstance().getServer().getWorld(r.getString("world")), r.getDouble("x"), r.getDouble("y"), r.getDouble("z"));
+			//String owner, String client, TransactionType transactionType, double price, int typeId, short durability, String enchantments, int amount, double time
+			/*
+			TransactionType transactionType;
+			
+			if (MathUtil.hasMask(r.getInt("flags"), Transaction.mask_BUY))
+				transactionType = TransactionType.BUY;
+			if (MathUtil.hasMask(r.getInt("flags"), Transaction.mask_SELL))
+				transactionType = TransactionType.SELL;
+			*/
+			
+			transaction = new Transaction(
+				r.getString("owner"), 
+				r.getString("client"), 
+				r.getInt("flags"), 
+				r.getDouble("price"), 
+				r.getInt("typeId"),
+				r.getShort("durability"),
+				r.getString("enchantments"),
+				r.getInt("amount"),
+				r.getDouble("time")
+			);
+		
+			
+			
+		
+			
+			
+			transactions.add(transaction);
+			
+		}
+		results.close();
+		return transactions;
+	}
+
+
+	/*
+	public static HashMap<Integer, Integer> updateStock = new HashMap<Integer, Integer>();
+	
+	BukkitTask stockUpdateTask = null;
+	
+	public void queueForStockUpdate(int id, int inStock) {
+		updateStock.put(id, inStock);
+		
+		if (stockUpdateTask != null)
+			return;
+		
+		stockUpdateTask = Plugin.getInstance().getServer().getScheduler().runTaskAsynchronously(Plugin.getInstance(), new Runnable() {
+			public void run() {
+				Connection con;
+				PreparedStatement statement;
+				try {
+					con = getConnection();
+					
+					Iterator it = updateStock.entrySet().iterator();
+					
+				    while (it.hasNext()) {
+				        Map.Entry pairs = (Map.Entry)it.next();
+				       // System.out.println(pairs.getKey() + " = " + pairs.getValue());
+				        statement =  con.prepareStatement("UPDATE `"+shops_table+"` SET `inStock` = ? WHERE `id` = ?;");
+				        
+				        statement.setInt(1, (Integer) pairs.getKey());
+				        statement.setInt(2, (Integer) pairs.getValue());
+				        
+				        Logger.debug("queueForStockUpdate " + pairs.getKey() + " = " + pairs.getValue());
+				        
+				        statement.executeUpdate();
+				        
+				        it.remove(); // avoids a ConcurrentModificationException
+				    }
+				    con.close();
+					
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
+				stockUpdateTask = null;
+
+			    
+			    
+			}});
+		
+	}
+	 */
+
+	
+	
 }
