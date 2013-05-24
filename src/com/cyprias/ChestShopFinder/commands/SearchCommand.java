@@ -63,7 +63,7 @@ public class SearchCommand implements Command {
 		
 
 		
-		Plugin.getInstance().getServer().getScheduler().runTaskAsynchronously(Plugin.getInstance(), new Runnable() {
+		Plugin.runTaskAsynchronously(new Runnable() {
 			public void run() {
 				List<Shop> shops = null;
 				try {

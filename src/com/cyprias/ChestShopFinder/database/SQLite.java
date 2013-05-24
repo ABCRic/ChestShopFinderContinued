@@ -433,6 +433,30 @@ public class SQLite implements Database {
 		return null;
 	}
 
+	@Override
+	public List<popularOwner> getTopPopularShopOwner() throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ownerCount> getTopOwnersByItemsSold() throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ownerCount> getTopOwnerByProfit() throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<itemTraded> topItemBought(String orderBy) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
 	/*
 	public static HashMap<Integer, Integer> updateStock = new HashMap<Integer, Integer>();

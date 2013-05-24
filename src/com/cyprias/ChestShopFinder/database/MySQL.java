@@ -559,6 +559,71 @@ WHERE `sellPrice` > 0 AND `balance` >= `sellPrice`;
 	}
 
 
+	@Override
+	public List<popularOwner> getTopPopularShopOwner() throws SQLException {
+		List<popularOwner> owners =  new ArrayList<popularOwner>();
+		String qry = "SELECT owner, count(distinct client) as uniqueClients FROM `"+transactions_table+"` WHERE `owner` != '"+Config.getString("properties.admin-shop")+"' GROUP BY `owner` ORDER BY `uniqueClients` DESC LIMIT 0 , "+Config.getInt("properties.transaction-results");
+
+		queryReturn results = executeQuery(qry);
+		ResultSet r = results.result;
+		while (r.next()) {
+			owners.add(new popularOwner(r.getString("owner"), r.getInt("uniqueClients")));
+		}
+		results.close();
+		return owners;
+	}
+
+
+	@Override
+	public List<ownerCount> getTopOwnersByItemsSold() throws SQLException {
+
+		String qry = "SELECT owner, SUM(`amount`) as amountTotal FROM `"+transactions_table+"` WHERE `flags` = 1 AND `owner` != '"+Config.getString("properties.admin-shop")+"' GROUP BY `owner` ORDER BY `amountTotal` DESC LIMIT 0 , "+Config.getInt("properties.transaction-results");
+		List<ownerCount> owners =  new ArrayList<ownerCount>();
+		
+		queryReturn results = executeQuery(qry);
+		ResultSet r = results.result;
+		while (r.next()) {
+			owners.add(new ownerCount(r.getString("owner"), r.getInt("amountTotal")));
+		}
+		results.close();
+		return owners;
+	}
+
+
+	@Override
+	public List<ownerCount> getTopOwnerByProfit() throws SQLException {
+		String qry = "SELECT owner, SUM(`price`) as topProfit FROM `"+transactions_table+"` WHERE `flags` = 1 AND `owner` != '"+Config.getString("properties.admin-shop")+"' GROUP BY `owner` ORDER BY `topProfit` DESC LIMIT 0 , " + Config.getInt("properties.transaction-results");
+		List<ownerCount> owners =  new ArrayList<ownerCount>();
+		
+		queryReturn results = executeQuery(qry);
+		ResultSet r = results.result;
+		while (r.next()) {
+			owners.add(new ownerCount(r.getString("owner"), r.getDouble("topProfit")));
+		}
+		results.close();
+		return owners;
+	}
+
+
+	@Override
+	public List<itemTraded> topItemBought(String orderBy) throws SQLException {
+		String qry = "SELECT count(*) as totalTransactions, typeId, durability, enchantments, SUM(`amount`) as totalAmount, SUM(`price`) as totalPrice FROM `"+transactions_table+"` WHERE `flags` = 1 AND `owner` != '"+Config.getString("properties.admin-shop")+"' GROUP BY `typeId`, `durability`, `enchantments` ORDER BY `"+orderBy+"` DESC LIMIT 0 , 10";
+		
+		List<itemTraded> items =  new ArrayList<itemTraded>();
+		
+		queryReturn results = executeQuery(qry);
+		ResultSet r = results.result;
+		while (r.next()) {
+
+			items.add(new itemTraded(r.getInt("typeId"), r.getInt("durability"), r.getString("enchantments"), r.getInt("totalTransactions"), r.getInt("totalAmount"),r.getDouble("totalPrice")));
+			
+			
+		}
+		results.close();
+		return items;
+	}
+
+
 	/*
 	public static HashMap<Integer, Integer> updateStock = new HashMap<Integer, Integer>();
 	

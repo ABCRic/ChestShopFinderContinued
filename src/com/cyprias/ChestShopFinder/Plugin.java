@@ -28,6 +28,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 import org.mcstats.Metrics;
 
 import com.Acrobot.Breeze.Utils.MaterialUtil;
@@ -359,5 +360,11 @@ public class Plugin extends JavaPlugin {
 		else
 			return w+seconds + g+"s"+ChatColor.RESET;
 	}
+	
+	public static BukkitTask runTaskAsynchronously(Runnable arg1){
+		return Plugin.getInstance().getServer().getScheduler().runTaskAsynchronously(instance, arg1);
+	}
+	
+	
 	
 }

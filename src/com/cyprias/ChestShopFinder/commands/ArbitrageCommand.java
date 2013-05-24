@@ -39,7 +39,7 @@ public class ArbitrageCommand implements Command {
 		final double pX = p.getLocation().getX();
 		final double pZ = p.getLocation().getZ();
 		
-		Plugin.getInstance().getServer().getScheduler().runTaskAsynchronously(Plugin.getInstance(), new Runnable() {
+		Plugin.runTaskAsynchronously(new Runnable() {
 			public void run() {
 		List<Shop> shops;
 		try {

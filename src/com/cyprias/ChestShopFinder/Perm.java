@@ -25,8 +25,10 @@ public enum Perm {
 	PARENT_ADMIN("csf.admin", VERSION, RELOAD),
 
 	TRANSACTIONS_MINE("csf.transactions.mine"),
+	TRANSACTIONS_OWNER("csf.transactions.owner"),
+	TRANSACTIONS_ITEM("csf.transactions.item"),
 	
-	TRANSACTIONS("csf.transactions", TRANSACTIONS_MINE),
+	TRANSACTIONS("csf.transactions", TRANSACTIONS_MINE, TRANSACTIONS_OWNER, TRANSACTIONS_ITEM),
 	PARENT_TEST("csf.test", TRANSACTIONS);
 	
 	private Perm(String value, Perm... childrenArray) {
