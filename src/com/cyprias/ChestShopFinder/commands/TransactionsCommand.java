@@ -246,7 +246,8 @@ public class TransactionsCommand implements Command {
 
 					if (args[1].equalsIgnoreCase("topbuy")) {
 						
-						String orderBy = "uniqueClients";
+						String orderBy = "totalPrice";
+						
 						if (args.length > 2) {
 							
 							if (args[2].equalsIgnoreCase("amount")){
@@ -255,6 +256,9 @@ public class TransactionsCommand implements Command {
 								orderBy = "totalPrice";
 							}else if (args[2].equalsIgnoreCase("trans") || args[2].equalsIgnoreCase("transactions") ){
 								orderBy = "totalTransactions";
+							}else if (args[2].equalsIgnoreCase("clients")){
+								orderBy = "uniqueClients";
+								
 							}
 							
 						}
