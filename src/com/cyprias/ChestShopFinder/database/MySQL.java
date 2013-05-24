@@ -221,8 +221,15 @@ public class MySQL implements Database {
 		if (enchantments == null)
 			enchantments = "";
 
-		String qry = "SELECT *, SQRT(("+pX+"-x)*("+pX+"-x) + ("+pZ+"-z)*("+pZ+"-z)) as distance FROM "+shops_table+" WHERE `inStock` >= `amount` AND `world` LIKE ? "+itemSearch+ " ORDER BY distance LIMIT 0 , " + Config.getInt("properties.search-results");
+		String qry = "SELECT *, SQRT(("+pX+"-x)*("+pX+"-x) + ("+pZ+"-z)*("+pZ+"-z)) as distance FROM "+shops_table+" WHERE `inStock` >= `amount` AND `world` LIKE ?";
 
+		if (Config.getBoolean("properties.one-owner-per-results"))
+			qry += " GROUP BY `owner`";
+		
+		qry += itemSearch+ " ORDER BY distance LIMIT 0 , " + Config.getInt("properties.search-results");
+		
+		
+		
 		queryReturn results = executeQuery(qry, loc.getWorld().getName(), stock.getTypeId(), stock.getDurability(), enchantments);
 		ResultSet r = results.result;
 

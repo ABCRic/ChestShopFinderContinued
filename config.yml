@@ -45,7 +45,7 @@ properties:
   show-nicknames: true
   
   # Monitor hopper events to update shop stock.
-  hopper-detection: true
+  hopper-detection: false
   
   # Log transactions to DB
   log-transactions: true
