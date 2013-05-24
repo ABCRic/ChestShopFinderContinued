@@ -23,7 +23,7 @@ import com.cyprias.ChestShopFinder.Logger;
 import com.cyprias.ChestShopFinder.Plugin;
 import com.cyprias.ChestShopFinder.configuration.Config;
 import com.cyprias.ChestShopFinder.database.Database.itemTraded;
-import com.cyprias.ChestShopFinder.database.Database.ownerCount;
+import com.cyprias.ChestShopFinder.database.Database.traderCount;
 import com.cyprias.ChestShopFinder.database.Database.popularOwner;
 import com.cyprias.ChestShopFinder.database.MySQL.queryReturn;
 import com.cyprias.ChestShopFinder.utils.ChatUtils;
@@ -500,34 +500,46 @@ public class SQLite implements Database {
 		return owners;
 	}
 
-	public List<ownerCount> getTopOwnersByItemsSold() throws SQLException {
+	public List<traderCount> getTopOwnersByItemsSold() throws SQLException {
 
 		String qry = "SELECT owner, SUM(`amount`) as amountTotal FROM `"+transactions_table+"` WHERE `flags` = 1 AND `owner` != '"+Config.getString("properties.admin-shop")+"' GROUP BY `owner` ORDER BY `amountTotal` DESC LIMIT 0 , "+Config.getInt("properties.transaction-results");
-		List<ownerCount> owners =  new ArrayList<ownerCount>();
+		List<traderCount> owners =  new ArrayList<traderCount>();
 		
 		queryReturn results = executeQuery(qry);
 		ResultSet r = results.result;
 		while (r.next()) {
-			owners.add(new ownerCount(r.getString("owner"), r.getInt("amountTotal")));
+			owners.add(new traderCount(r.getString("owner"), r.getInt("amountTotal")));
 		}
 		results.close();
 		return owners;
 	}
 
-	public List<ownerCount> getTopOwnerByProfit() throws SQLException {
+	public List<traderCount> getTopOwnerByProfit() throws SQLException {
 		String qry = "SELECT owner, SUM(`price`) as topProfit FROM `"+transactions_table+"` WHERE `flags` = 1 AND `owner` != '"+Config.getString("properties.admin-shop")+"' GROUP BY `owner` ORDER BY `topProfit` DESC LIMIT 0 , " + Config.getInt("properties.transaction-results");
-		List<ownerCount> owners =  new ArrayList<ownerCount>();
+		List<traderCount> owners =  new ArrayList<traderCount>();
 		
 		queryReturn results = executeQuery(qry);
 		ResultSet r = results.result;
 		while (r.next()) {
-			owners.add(new ownerCount(r.getString("owner"), r.getDouble("topProfit")));
+			owners.add(new traderCount(r.getString("owner"), r.getDouble("topProfit")));
 		}
 		results.close();
 		return owners;
 	}
 
-
+	public List<traderCount> getTopClientBySpent() throws SQLException {
+		String qry = "SELECT client, SUM(`price`) as topProfit FROM `"+transactions_table+"` WHERE `flags` = 2 AND `owner` != '"+Config.getString("properties.admin-shop")+"' GROUP BY `client` ORDER BY `topProfit` DESC LIMIT 0 , " + Config.getInt("properties.transaction-results");
+		List<traderCount> owners =  new ArrayList<traderCount>();
+		
+		queryReturn results = executeQuery(qry);
+		ResultSet r = results.result;
+		while (r.next()) {
+			owners.add(new traderCount(r.getString("client"), r.getDouble("topProfit")));
+		}
+		results.close();
+		return owners;
+	}
+	
 	@Override
 	public List<itemTraded> topItemBought(String orderBy) throws SQLException {
 		String qry = "SELECT count(*) as totalTransactions, typeId, durability, enchantments, SUM(`amount`) as totalAmount, SUM(`price`) as totalPrice FROM `"+transactions_table+"` WHERE `flags` = 1 AND `owner` != '"+Config.getString("properties.admin-shop")+"' GROUP BY `typeId`, `durability`, `enchantments` ORDER BY `"+orderBy+"` DESC LIMIT 0 , " + Config.getInt("properties.transaction-results");

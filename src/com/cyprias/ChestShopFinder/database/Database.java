@@ -50,23 +50,25 @@ public interface Database {
 	}
 	
 	
-	List<ownerCount> getTopOwnersByItemsSold() throws SQLException;
-	class ownerCount{
-		public String ownerName;
+	List<traderCount> getTopOwnersByItemsSold() throws SQLException;
+	class traderCount{
+		public String playerName;
 		public int icount;
 		public double dcount;
-		public ownerCount(String ownerName, int int1) {
-			this.ownerName = ownerName;
+		public traderCount(String ownerName, int int1) {
+			this.playerName = ownerName;
 			this.icount = int1;
 		}
-		public ownerCount(String ownerName, double int1) {
-			this.ownerName = ownerName;
+		public traderCount(String ownerName, double int1) {
+			this.playerName = ownerName;
 			this.dcount = int1;
 		}
 	}
 	
 	
-	List<ownerCount> getTopOwnerByProfit() throws SQLException;
+	List<traderCount> getTopOwnerByProfit() throws SQLException;
+	List<traderCount> getTopClientBySpent() throws SQLException;
+	
 	
 	
 	List<itemTraded> topItemBought(String orderBy) throws SQLException;

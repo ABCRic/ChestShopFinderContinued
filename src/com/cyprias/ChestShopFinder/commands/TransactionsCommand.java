@@ -13,7 +13,7 @@ import com.cyprias.ChestShopFinder.command.Command;
 import com.cyprias.ChestShopFinder.command.CommandAccess;
 import com.cyprias.ChestShopFinder.configuration.Config;
 import com.cyprias.ChestShopFinder.database.Database.itemTraded;
-import com.cyprias.ChestShopFinder.database.Database.ownerCount;
+import com.cyprias.ChestShopFinder.database.Database.traderCount;
 import com.cyprias.ChestShopFinder.database.Database.popularOwner;
 import com.cyprias.ChestShopFinder.database.Transaction;
 import com.cyprias.ChestShopFinder.utils.ChatUtils;
@@ -170,18 +170,18 @@ public class TransactionsCommand implements Command {
 
 						return true;
 					}else if (args[1].equalsIgnoreCase("items")) {
-						List<ownerCount> owners = Plugin.database.getTopOwnersByItemsSold();
+						List<traderCount> owners = Plugin.database.getTopOwnersByItemsSold();
 						
 						String[] s1 = new String[owners.size()];
 						String[] s2 = new String[owners.size()];
 						String[] s3 = new String[owners.size()];
 						
-						ownerCount o;
+						traderCount o;
 						for (int i = 0; i < owners.size(); i++) {
 							o = owners.get(i);
 							
 							s1[i] = ""+(i + 1);
-							s2[i] = o.ownerName;
+							s2[i] = o.playerName;
 							s3[i] = ""+o.icount;
 						}
 						if (Config.getBoolean("properties.white-space-results")){
@@ -198,8 +198,8 @@ public class TransactionsCommand implements Command {
 						return true;
 
 					}else if (args[1].equalsIgnoreCase("profit")) {
-						List<ownerCount> owners = Plugin.database.getTopOwnerByProfit();
-						ownerCount o;
+						List<traderCount> owners = Plugin.database.getTopOwnerByProfit();
+						traderCount o;
 
 						String[] s1 = new String[owners.size()];
 						String[] s2 = new String[owners.size()];
@@ -210,7 +210,7 @@ public class TransactionsCommand implements Command {
 							//ChatUtils.send(sender, (i + 1) + " " + o.ownerName + ": $" + o.dcount + " made.");
 							
 							s1[i] = ""+(i + 1);
-							s2[i] = o.ownerName;
+							s2[i] = o.playerName;
 							s3[i] = Plugin.Round(o.dcount);
 						}
 						if (Config.getBoolean("properties.white-space-results")){
@@ -310,18 +310,69 @@ public class TransactionsCommand implements Command {
 				ChatUtils.send(sender, ChatColor.GRAY+"/" + cmd.getName() + " transactions item topbuy [amount|price]: Most bought item.");
 				
 				return true;
+				
+			} else if (args[0].equalsIgnoreCase("client")) {
+				if (!Plugin.checkPermission(sender, Perm.TRANSACTIONS_ITEM))
+					return false;
+				
+				if (args.length > 1) {
+					if (args[1].equalsIgnoreCase("topspent")) {
+						List<traderCount> clients = Plugin.database.getTopClientBySpent();
+						/*
+						popularOwner o;
+						for (int i = 0; i < owners.size(); i++) {
+							o = owners.get(i);
+							ChatUtils.send(sender, (i + 1) + " " + o.ownerName + ": " + o.clientCount + " clients");
+						}*/
+						String[] s1 = new String[clients.size()];
+						String[] s2 = new String[clients.size()];
+						String[] s3 = new String[clients.size()];
+						traderCount o;
+						for (int i = 0; i < clients.size(); i++) {
+							o = clients.get(i);
+						//	ChatUtils.send(sender, (i + 1) + " " + o.ownerName + ": " + o.clientCount + " clients");
+							
+							s1[i] = ""+(i + 1);
+							s2[i] = o.playerName;
+							s3[i] = ""+Plugin.Round(o.dcount);
+						}
+						if (Config.getBoolean("properties.white-space-results")){
+							s1 = MinecraftFontWidthCalculator.getWhitespacedStrings(s1);
+							s2 = MinecraftFontWidthCalculator.getWhitespacedStrings(s2);
+							s3 = MinecraftFontWidthCalculator.getWhitespacedStrings(s3);
+						}
+						String fMsg = "§f%s§7: §f%s§7: $§f%s §7spent";
+	
+						for (int i=0;i<s1.length;i++)
+							ChatUtils.send(sender,String.format(fMsg, s1[i], s2[i], s3[i]));
+						
+	
+						return true;
+					}
+				}
+				
+				
+				
+				
+				
+				ChatUtils.send(sender, ChatColor.GRAY+"/" + cmd.getName() + " transactions client topspent");
+				return true;
+				
 			}
 			
 		}
 
 		if (Plugin.hasPermission(sender, Perm.TRANSACTIONS_MINE))
-			ChatUtils.send(sender, "/" + cmd.getName() + " transactions mine [page]");
-
-		if (Plugin.hasPermission(sender, Perm.TRANSACTIONS_OWNER))
-			ChatUtils.send(sender, "/" + cmd.getName() + " transactions owner");
+			ChatUtils.send(sender, ChatColor.GRAY+"/" + cmd.getName() + " transactions mine [page]");
 
 		if (Plugin.hasPermission(sender, Perm.TRANSACTIONS_ITEM))
-			ChatUtils.send(sender, "/" + cmd.getName() + " transactions item");
+			ChatUtils.send(sender, ChatColor.GRAY+"/" + cmd.getName() + " transactions item");
+		
+		if (Plugin.hasPermission(sender, Perm.TRANSACTIONS_OWNER))
+			ChatUtils.send(sender, ChatColor.GRAY+"/" + cmd.getName() + " transactions owner");
+		
+		if (Plugin.hasPermission(sender, Perm.TRANSACTIONS_CLIENT))
+			ChatUtils.send(sender, ChatColor.GRAY+"/" + cmd.getName() + " transactions client");
 		
 		return true;
 	}

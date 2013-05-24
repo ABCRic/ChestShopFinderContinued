@@ -20,9 +20,11 @@ public enum Perm {
 	ARBITRAGE("csf.arbitrage"),
 	TRANSACTIONS_MINE("csf.transactions.mine"),
 	TRANSACTIONS_OWNER("csf.transactions.owner"),
+	TRANSACTIONS_CLIENT("csf.transactions.client"),
+	
 	TRANSACTIONS_ITEM("csf.transactions.item"),
 	
-	TRANSACTIONS("csf.transactions", TRANSACTIONS_MINE, TRANSACTIONS_OWNER, TRANSACTIONS_ITEM),
+	TRANSACTIONS("csf.transactions", TRANSACTIONS_MINE, TRANSACTIONS_OWNER, TRANSACTIONS_ITEM, TRANSACTIONS_CLIENT),
 	
 	PARENT_USER("csf.user", SEARCH, LOOK, BUY, SELL, PRICE, ARBITRAGE, TRANSACTIONS),
 	
