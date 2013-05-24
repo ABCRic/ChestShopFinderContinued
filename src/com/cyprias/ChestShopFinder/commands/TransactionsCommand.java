@@ -119,7 +119,7 @@ public class TransactionsCommand implements Command {
 					
 				}
 				
-				//String fMsg = ChatColor.WHITE + "%s %s"+ChatColor.GRAY+": " + ChatColor.WHITE + "%s " + ChatColor.GRAY + "items sold";
+				//String fMsg = ChatColor.WHITE + "%s %s§7: §f%s §7items sold";
 
 				for (int i=0;i<s1.length;i++)
 					ChatUtils.send(sender,String.format(mFormat, s1[i], s2[i], s3[i], s4[i], s5[i]));
@@ -162,7 +162,7 @@ public class TransactionsCommand implements Command {
 							s2 = MinecraftFontWidthCalculator.getWhitespacedStrings(s2);
 							s3 = MinecraftFontWidthCalculator.getWhitespacedStrings(s3);
 						}
-						String fMsg = ChatColor.WHITE + "%s %s"+ChatColor.GRAY+": " + ChatColor.WHITE + "%s " + ChatColor.GRAY + "clients";
+						String fMsg = ChatColor.WHITE + "§f%s §f%s §7had §f%s §7clients";
 
 						for (int i=0;i<s1.length;i++)
 							ChatUtils.send(sender,String.format(fMsg, s1[i], s2[i], s3[i]));
@@ -190,7 +190,7 @@ public class TransactionsCommand implements Command {
 							s3 = MinecraftFontWidthCalculator.getWhitespacedStrings(s3);
 						}
 						
-						String fMsg = ChatColor.WHITE + "%s %s"+ChatColor.GRAY+": " + ChatColor.WHITE + "%s " + ChatColor.GRAY + "items sold";
+						String fMsg = ChatColor.WHITE + "§f%s §f%s §7sold §f%s  §7items";
 
 						for (int i=0;i<s1.length;i++)
 							ChatUtils.send(sender,String.format(fMsg, s1[i], s2[i], s3[i]));
@@ -219,7 +219,7 @@ public class TransactionsCommand implements Command {
 							s3 = MinecraftFontWidthCalculator.getWhitespacedStrings(s3);
 						}
 						
-						String fMsg = ChatColor.WHITE + "%s %s"+ChatColor.GRAY+": $" + ChatColor.WHITE + "%s " + ChatColor.GRAY + "made";
+						String fMsg = ChatColor.WHITE + "§f%s §f%s§7 §7made $§f%s";
 
 						for (int i=0;i<s1.length;i++)
 							ChatUtils.send(sender,String.format(fMsg, s1[i], s2[i], s3[i]));
@@ -341,7 +341,7 @@ public class TransactionsCommand implements Command {
 							s2 = MinecraftFontWidthCalculator.getWhitespacedStrings(s2);
 							s3 = MinecraftFontWidthCalculator.getWhitespacedStrings(s3);
 						}
-						String fMsg = "§f%s§7: §f%s§7: $§f%s §7spent";
+						String fMsg = "§f%s §f%s§7 §7spent $§f%s";
 	
 						for (int i=0;i<s1.length;i++)
 							ChatUtils.send(sender,String.format(fMsg, s1[i], s2[i], s3[i]));

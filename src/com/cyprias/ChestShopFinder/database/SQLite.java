@@ -489,9 +489,9 @@ public class SQLite implements Database {
 
 	public List<popularOwner> getTopPopularShopOwner() throws SQLException {
 		List<popularOwner> owners =  new ArrayList<popularOwner>();
-		String qry = "SELECT owner, count(distinct client) as uniqueClients FROM `"+transactions_table+"` WHERE `owner` != '"+Config.getString("properties.admin-shop")+"' GROUP BY `owner` ORDER BY `uniqueClients` DESC LIMIT 0 , "+Config.getInt("properties.transaction-results");
+		String qry = "SELECT owner, count(distinct client) as uniqueClients FROM `"+transactions_table+"` WHERE `owner` != '"+Config.getString("properties.admin-shop")+"'  AND `time` >= ? GROUP BY `owner` ORDER BY `uniqueClients` DESC LIMIT 0 , "+Config.getInt("properties.transaction-results");
 
-		queryReturn results = executeQuery(qry);
+		queryReturn results = executeQuery(qry, (Plugin.getUnixTime() - Config.getInt("properties.transaction-age-include")));
 		ResultSet r = results.result;
 		while (r.next()) {
 			owners.add(new popularOwner(r.getString("owner"), r.getInt("uniqueClients")));
@@ -500,12 +500,14 @@ public class SQLite implements Database {
 		return owners;
 	}
 
+
+	@Override
 	public List<traderCount> getTopOwnersByItemsSold() throws SQLException {
 
-		String qry = "SELECT owner, SUM(`amount`) as amountTotal FROM `"+transactions_table+"` WHERE `flags` = 1 AND `owner` != '"+Config.getString("properties.admin-shop")+"' GROUP BY `owner` ORDER BY `amountTotal` DESC LIMIT 0 , "+Config.getInt("properties.transaction-results");
+		String qry = "SELECT owner, SUM(`amount`) as amountTotal FROM `"+transactions_table+"` WHERE `flags` = 1 AND `owner` != '"+Config.getString("properties.admin-shop")+"' AND `time` >= ? GROUP BY `owner` ORDER BY `amountTotal` DESC LIMIT 0 , "+Config.getInt("properties.transaction-results");
 		List<traderCount> owners =  new ArrayList<traderCount>();
 		
-		queryReturn results = executeQuery(qry);
+		queryReturn results = executeQuery(qry, (Plugin.getUnixTime() - Config.getInt("properties.transaction-age-include")));
 		ResultSet r = results.result;
 		while (r.next()) {
 			owners.add(new traderCount(r.getString("owner"), r.getInt("amountTotal")));
@@ -514,11 +516,13 @@ public class SQLite implements Database {
 		return owners;
 	}
 
+
+	@Override
 	public List<traderCount> getTopOwnerByProfit() throws SQLException {
-		String qry = "SELECT owner, SUM(`price`) as topProfit FROM `"+transactions_table+"` WHERE `flags` = 1 AND `owner` != '"+Config.getString("properties.admin-shop")+"' GROUP BY `owner` ORDER BY `topProfit` DESC LIMIT 0 , " + Config.getInt("properties.transaction-results");
+		String qry = "SELECT owner, SUM(`price`) as topProfit FROM `"+transactions_table+"` WHERE `flags` = 1 AND `owner` != '"+Config.getString("properties.admin-shop")+"' AND `time` >= ? GROUP BY `owner` ORDER BY `topProfit` DESC LIMIT 0 , " + Config.getInt("properties.transaction-results");
 		List<traderCount> owners =  new ArrayList<traderCount>();
 		
-		queryReturn results = executeQuery(qry);
+		queryReturn results = executeQuery(qry, (Plugin.getUnixTime() - Config.getInt("properties.transaction-age-include")));
 		ResultSet r = results.result;
 		while (r.next()) {
 			owners.add(new traderCount(r.getString("owner"), r.getDouble("topProfit")));
@@ -528,25 +532,31 @@ public class SQLite implements Database {
 	}
 
 	public List<traderCount> getTopClientBySpent() throws SQLException {
-		String qry = "SELECT client, SUM(`price`) as topProfit FROM `"+transactions_table+"` WHERE `flags` = 2 AND `owner` != '"+Config.getString("properties.admin-shop")+"' GROUP BY `client` ORDER BY `topProfit` DESC LIMIT 0 , " + Config.getInt("properties.transaction-results");
+		String qry = "SELECT client, SUM(`price`) as topProfit FROM `"+transactions_table+"` WHERE `flags` = 1 AND `owner` != '"+Config.getString("properties.admin-shop")+"' AND `time` >= ? GROUP BY `client` ORDER BY `topProfit` DESC LIMIT 0 , " + Config.getInt("properties.transaction-results");
 		List<traderCount> owners =  new ArrayList<traderCount>();
 		
-		queryReturn results = executeQuery(qry);
+		
+		
+		queryReturn results = executeQuery(qry, (Plugin.getUnixTime() - Config.getInt("properties.transaction-age-include")));
 		ResultSet r = results.result;
 		while (r.next()) {
 			owners.add(new traderCount(r.getString("client"), r.getDouble("topProfit")));
 		}
+		
+	
+		
 		results.close();
 		return owners;
 	}
 	
+
 	@Override
 	public List<itemTraded> topItemBought(String orderBy) throws SQLException {
-		String qry = "SELECT count(*) as totalTransactions, typeId, durability, enchantments, SUM(`amount`) as totalAmount, SUM(`price`) as totalPrice FROM `"+transactions_table+"` WHERE `flags` = 1 AND `owner` != '"+Config.getString("properties.admin-shop")+"' GROUP BY `typeId`, `durability`, `enchantments` ORDER BY `"+orderBy+"` DESC LIMIT 0 , " + Config.getInt("properties.transaction-results");
+		String qry = "SELECT count(*) as totalTransactions, typeId, durability, enchantments, SUM(`amount`) as totalAmount, SUM(`price`) as totalPrice FROM `"+transactions_table+"` WHERE `flags` = 1 AND `owner` != '"+Config.getString("properties.admin-shop")+"' AND `time` >= ? GROUP BY `typeId`, `durability`, `enchantments` ORDER BY `"+orderBy+"` DESC LIMIT 0 , " + Config.getInt("properties.transaction-results");
 		
 		List<itemTraded> items =  new ArrayList<itemTraded>();
 		
-		queryReturn results = executeQuery(qry);
+		queryReturn results = executeQuery(qry, (Plugin.getUnixTime() - Config.getInt("properties.transaction-age-include")));
 		ResultSet r = results.result;
 		while (r.next()) {
 
