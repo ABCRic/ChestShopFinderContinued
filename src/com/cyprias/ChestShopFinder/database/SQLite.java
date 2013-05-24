@@ -22,7 +22,11 @@ import com.Acrobot.Breeze.Utils.MaterialUtil;
 import com.cyprias.ChestShopFinder.Logger;
 import com.cyprias.ChestShopFinder.Plugin;
 import com.cyprias.ChestShopFinder.configuration.Config;
+import com.cyprias.ChestShopFinder.database.Database.itemTraded;
+import com.cyprias.ChestShopFinder.database.Database.ownerCount;
+import com.cyprias.ChestShopFinder.database.Database.popularOwner;
 import com.cyprias.ChestShopFinder.database.MySQL.queryReturn;
+import com.cyprias.ChestShopFinder.utils.ChatUtils;
 
 public class SQLite implements Database {
 	private static String sqlDB;
@@ -427,34 +431,119 @@ public class SQLite implements Database {
 		return (success > 0) ? true : false;
 	}
 
-	@Override
-	public List<Transaction> getOwnerTransactions(CommandSender sender, String playerName, int page) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Transaction> getOwnerTransactions(CommandSender sender, String ownerName, int page) throws SQLException {
+		int rows = getResultCount("SELECT COUNT(*) FROM " + transactions_table + " WHERE `owner` LIKE ?", ownerName);
+		int perPage = Config.getInt("properties.transaction-results");
+		int max = (rows / perPage);// + 1;
+		if (rows % perPage == 0)
+			max--;
+		if (page < 0){
+			page = max - (Math.abs(page) - 1);
+		}else{
+			if (page > max)
+				page = max;
+
+		}
+		
+		
+		
+		if (sender != null)
+			ChatUtils.send(sender, "§7Page: §f" + (page+1) + "§7/§f" + (max+1));
+		
+		if (rows == 0)
+			return null;
+		
+		
+		List<Transaction> transactions =  new ArrayList<Transaction>();
+		String qry = "SELECT * FROM `"+transactions_table+"` WHERE `owner` LIKE ? ORDER BY `id` LIMIT "+(perPage * page)+" , " + perPage;
+
+		queryReturn results = executeQuery(qry, ownerName);
+		ResultSet r = results.result;
+
+		Transaction transaction;
+		while (r.next()) {
+
+			transaction = new Transaction(
+				r.getString("owner"), 
+				r.getString("client"), 
+				r.getInt("flags"), 
+				r.getDouble("price"), 
+				r.getInt("typeId"),
+				r.getShort("durability"),
+				r.getString("enchantments"),
+				r.getInt("amount"),
+				r.getLong("time")
+			);
+		
+			
+			transaction.setId(r.getInt("id"));
+		
+			
+			
+			transactions.add(transaction);
+			
+		}
+		results.close();
+		return transactions;
 	}
 
-	@Override
 	public List<popularOwner> getTopPopularShopOwner() throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		List<popularOwner> owners =  new ArrayList<popularOwner>();
+		String qry = "SELECT owner, count(distinct client) as uniqueClients FROM `"+transactions_table+"` WHERE `owner` != '"+Config.getString("properties.admin-shop")+"' GROUP BY `owner` ORDER BY `uniqueClients` DESC LIMIT 0 , "+Config.getInt("properties.transaction-results");
+
+		queryReturn results = executeQuery(qry);
+		ResultSet r = results.result;
+		while (r.next()) {
+			owners.add(new popularOwner(r.getString("owner"), r.getInt("uniqueClients")));
+		}
+		results.close();
+		return owners;
 	}
 
-	@Override
 	public List<ownerCount> getTopOwnersByItemsSold() throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+
+		String qry = "SELECT owner, SUM(`amount`) as amountTotal FROM `"+transactions_table+"` WHERE `flags` = 1 AND `owner` != '"+Config.getString("properties.admin-shop")+"' GROUP BY `owner` ORDER BY `amountTotal` DESC LIMIT 0 , "+Config.getInt("properties.transaction-results");
+		List<ownerCount> owners =  new ArrayList<ownerCount>();
+		
+		queryReturn results = executeQuery(qry);
+		ResultSet r = results.result;
+		while (r.next()) {
+			owners.add(new ownerCount(r.getString("owner"), r.getInt("amountTotal")));
+		}
+		results.close();
+		return owners;
 	}
 
-	@Override
 	public List<ownerCount> getTopOwnerByProfit() throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		String qry = "SELECT owner, SUM(`price`) as topProfit FROM `"+transactions_table+"` WHERE `flags` = 1 AND `owner` != '"+Config.getString("properties.admin-shop")+"' GROUP BY `owner` ORDER BY `topProfit` DESC LIMIT 0 , " + Config.getInt("properties.transaction-results");
+		List<ownerCount> owners =  new ArrayList<ownerCount>();
+		
+		queryReturn results = executeQuery(qry);
+		ResultSet r = results.result;
+		while (r.next()) {
+			owners.add(new ownerCount(r.getString("owner"), r.getDouble("topProfit")));
+		}
+		results.close();
+		return owners;
 	}
+
 
 	@Override
 	public List<itemTraded> topItemBought(String orderBy) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		String qry = "SELECT count(*) as totalTransactions, typeId, durability, enchantments, SUM(`amount`) as totalAmount, SUM(`price`) as totalPrice FROM `"+transactions_table+"` WHERE `flags` = 1 AND `owner` != '"+Config.getString("properties.admin-shop")+"' GROUP BY `typeId`, `durability`, `enchantments` ORDER BY `"+orderBy+"` DESC LIMIT 0 , " + Config.getInt("properties.transaction-results");
+		
+		List<itemTraded> items =  new ArrayList<itemTraded>();
+		
+		queryReturn results = executeQuery(qry);
+		ResultSet r = results.result;
+		while (r.next()) {
+
+			items.add(new itemTraded(r.getInt("typeId"), r.getInt("durability"), r.getString("enchantments"), r.getInt("totalTransactions"), r.getInt("totalAmount"),r.getDouble("totalPrice")));
+			
+			
+		}
+		results.close();
+		return items;
 	}
 
 	

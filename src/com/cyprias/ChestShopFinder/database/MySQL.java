@@ -478,31 +478,17 @@ WHERE `sellPrice` > 0 AND `balance` >= `sellPrice`;
 	
 	
 	public List<Transaction> getOwnerTransactions(CommandSender sender, String ownerName, int page) throws SQLException {
-		
-		
-		int rows;
-		
-		rows = getResultCount("SELECT COUNT(*) FROM " + transactions_table + " WHERE `owner` LIKE ?", ownerName);
-				
-		//Logger.debug("rows: " +rows);
-		
+		int rows = getResultCount("SELECT COUNT(*) FROM " + transactions_table + " WHERE `owner` LIKE ?", ownerName);
 		int perPage = Config.getInt("properties.transaction-results");
-
 		int max = (rows / perPage);// + 1;
-		//Logger.debug("max 1: " +max);
-		
 		if (rows % perPage == 0)
 			max--;
-		//Logger.debug("max 2: " +max);
-		//Logger.debug("page 1: " +page);
 		if (page < 0){
 			page = max - (Math.abs(page) - 1);
-		//	Logger.debug("page 2: " +page);
 		}else{
 			if (page > max)
 				page = max;
-			
-		//	Logger.debug("page 13: " +page);
+
 		}
 		
 		
@@ -522,18 +508,7 @@ WHERE `sellPrice` > 0 AND `balance` >= `sellPrice`;
 
 		Transaction transaction;
 		while (r.next()) {
-			
-			//tLoc = new Location(Plugin.getInstance().getServer().getWorld(r.getString("world")), r.getDouble("x"), r.getDouble("y"), r.getDouble("z"));
-			//String owner, String client, TransactionType transactionType, double price, int typeId, short durability, String enchantments, int amount, double time
-			/*
-			TransactionType transactionType;
-			
-			if (MathUtil.hasMask(r.getInt("flags"), Transaction.mask_BUY))
-				transactionType = TransactionType.BUY;
-			if (MathUtil.hasMask(r.getInt("flags"), Transaction.mask_SELL))
-				transactionType = TransactionType.SELL;
-			*/
-			
+
 			transaction = new Transaction(
 				r.getString("owner"), 
 				r.getString("client"), 
@@ -607,7 +582,7 @@ WHERE `sellPrice` > 0 AND `balance` >= `sellPrice`;
 
 	@Override
 	public List<itemTraded> topItemBought(String orderBy) throws SQLException {
-		String qry = "SELECT count(*) as totalTransactions, typeId, durability, enchantments, SUM(`amount`) as totalAmount, SUM(`price`) as totalPrice FROM `"+transactions_table+"` WHERE `flags` = 1 AND `owner` != '"+Config.getString("properties.admin-shop")+"' GROUP BY `typeId`, `durability`, `enchantments` ORDER BY `"+orderBy+"` DESC LIMIT 0 , 10";
+		String qry = "SELECT count(*) as totalTransactions, typeId, durability, enchantments, SUM(`amount`) as totalAmount, SUM(`price`) as totalPrice FROM `"+transactions_table+"` WHERE `flags` = 1 AND `owner` != '"+Config.getString("properties.admin-shop")+"' GROUP BY `typeId`, `durability`, `enchantments` ORDER BY `"+orderBy+"` DESC LIMIT 0 , " + Config.getInt("properties.transaction-results");
 		
 		List<itemTraded> items =  new ArrayList<itemTraded>();
 		
@@ -661,7 +636,6 @@ WHERE `sellPrice` > 0 AND `balance` >= `sellPrice`;
 				    con.close();
 					
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				
