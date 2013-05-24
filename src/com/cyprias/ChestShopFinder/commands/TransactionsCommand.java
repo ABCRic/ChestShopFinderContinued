@@ -246,13 +246,15 @@ public class TransactionsCommand implements Command {
 
 					if (args[1].equalsIgnoreCase("topbuy")) {
 						
-						String orderBy = "totalTransactions";
+						String orderBy = "uniqueClients";
 						if (args.length > 2) {
 							
 							if (args[2].equalsIgnoreCase("amount")){
 								orderBy = "totalAmount";
 							}else if (args[2].equalsIgnoreCase("price")){
 								orderBy = "totalPrice";
+							}else if (args[2].equalsIgnoreCase("trans") || args[2].equalsIgnoreCase("transactions") ){
+								orderBy = "totalTransactions";
 							}
 							
 						}
@@ -264,12 +266,14 @@ public class TransactionsCommand implements Command {
 						String[] s3 = new String[items.size()+1];
 						String[] s4 = new String[items.size()+1];
 						String[] s5 = new String[items.size()+1];
+						String[] s6 = new String[items.size()+1];
 						
 						s1[0] = "#";
 						s2[0] = "Item";
-						s3[0] = "Trans";
-						s4[0] = "Amount";
-						s5[0] = "Price";
+						s3[0] = "Clients";
+						s4[0] = "Trans";
+						s5[0] = "Amount";
+						s6[0] = "Price";
 						
 						
 						
@@ -281,9 +285,11 @@ public class TransactionsCommand implements Command {
 							s1[i+1] = ""+(i + 1);
 							
 							s2[i+1] = MaterialUtil.getName(o.stock);
-							s3[i+1] = ""+o.transactions;
-							s4[i+1] = ""+o.amount;
-							s5[i+1] = ""+o.price;
+							s3[i+1] = ""+o.clients;
+							s4[i+1] = ""+o.transactions;
+							s5[i+1] = ""+o.amount;
+							s6[i+1] = ""+Plugin.Round(o.price);
+							
 
 						}
 						if (Config.getBoolean("properties.white-space-results")){
@@ -292,14 +298,16 @@ public class TransactionsCommand implements Command {
 							s3 = MinecraftFontWidthCalculator.getWhitespacedStrings(s3);
 							s4 = MinecraftFontWidthCalculator.getWhitespacedStrings(s4);
 							s5 = MinecraftFontWidthCalculator.getWhitespacedStrings(s5);
+							s6 = MinecraftFontWidthCalculator.getWhitespacedStrings(s6);
+							
 						}
 						
-						String fMsg = ChatColor.WHITE + "§f%s %s %s %s §7$§f%s";
+						String fMsg = ChatColor.WHITE + "§f%s %s %s %s %s §7$§f%s";
 
-						ChatUtils.send(sender,String.format(fMsg, s1[0], s2[0], s3[0], s4[0], s5[0]));
+						ChatUtils.send(sender,String.format(fMsg, s1[0], s2[0], s3[0], s4[0], s5[0], s6[0]));
 						
 						for (int i=1;i<s1.length;i++)
-							ChatUtils.send(sender,String.format(fMsg, s1[i], s2[i], s3[i], s4[i], s5[i]));
+							ChatUtils.send(sender,String.format(fMsg, s1[i], s2[i], s3[i], s4[i], s5[i], s6[i]));
 						
 						
 						return true;
@@ -307,7 +315,7 @@ public class TransactionsCommand implements Command {
 				}
 				
 				
-				ChatUtils.send(sender, ChatColor.GRAY+"/" + cmd.getName() + " transactions item topbuy [amount|price]: Most bought item.");
+				ChatUtils.send(sender, ChatColor.GRAY+"/" + cmd.getName() + " transactions item topbuy [trans|amount|price]: Most bought item.");
 				
 				return true;
 				

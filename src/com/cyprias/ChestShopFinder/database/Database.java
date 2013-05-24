@@ -75,17 +75,19 @@ public interface Database {
 	class itemTraded{
 		//items.add(new itemTraded(r.getInt("itemId"), r.getInt("durability"), r.getString("enchantments"), r.getInt("totalTransactions"), r.getInt("totalAmount"),r.getDouble("totalPrice")));
 		
-		public itemTraded(int itemId, int durability, String enchantments, int totalTransactions, int totalAmount, double totalPrice) {
+		public itemTraded(int itemId, int durability, String enchantments, int totalTransactions, int totalAmount, double totalPrice, int clients) {
 			this.stock = new ItemStack(itemId, durability);
 			stock.addEnchantments(MaterialUtil.Enchantment.getEnchantments(enchantments));
 			
 			this.transactions = totalTransactions;
 			this.amount = totalAmount;
 			this.price = totalPrice;
+			this.clients = clients;
 		}
 		public ItemStack stock;
-		public int transactions, amount;
+		public int transactions, amount, clients;
 		public double price;
+		
 		
 		
 		

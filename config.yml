@@ -53,7 +53,7 @@ properties:
   #Add whitespaces after variables so messages better line up.
   white-space-results: true
   
-  # How long in seconds should we include in the transaction commands.
+  # How old in seconds should we include in the transaction commands.
   transaction-age-include: 604800
   
 # MySQL DB info.
