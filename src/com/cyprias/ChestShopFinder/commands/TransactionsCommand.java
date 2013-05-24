@@ -117,9 +117,11 @@ public class TransactionsCommand implements Command {
 							s3[i] = ""+o.clientCount;
 							
 						}
-						s1 = MinecraftFontWidthCalculator.getWhitespacedStrings(s1);
-						s2 = MinecraftFontWidthCalculator.getWhitespacedStrings(s2);
-						s3 = MinecraftFontWidthCalculator.getWhitespacedStrings(s3);
+						if (Config.getBoolean("properties.white-space-results")){
+							s1 = MinecraftFontWidthCalculator.getWhitespacedStrings(s1);
+							s2 = MinecraftFontWidthCalculator.getWhitespacedStrings(s2);
+							s3 = MinecraftFontWidthCalculator.getWhitespacedStrings(s3);
+						}
 						String fMsg = ChatColor.WHITE + "%s %s"+ChatColor.GRAY+": " + ChatColor.WHITE + "%s " + ChatColor.GRAY + "clients";
 
 						for (int i=0;i<s1.length;i++)
@@ -142,10 +144,11 @@ public class TransactionsCommand implements Command {
 							s2[i] = o.ownerName;
 							s3[i] = ""+o.icount;
 						}
-						s1 = MinecraftFontWidthCalculator.getWhitespacedStrings(s1);
-						s2 = MinecraftFontWidthCalculator.getWhitespacedStrings(s2);
-						s3 = MinecraftFontWidthCalculator.getWhitespacedStrings(s3);
-						
+						if (Config.getBoolean("properties.white-space-results")){
+							s1 = MinecraftFontWidthCalculator.getWhitespacedStrings(s1);
+							s2 = MinecraftFontWidthCalculator.getWhitespacedStrings(s2);
+							s3 = MinecraftFontWidthCalculator.getWhitespacedStrings(s3);
+						}
 						
 						String fMsg = ChatColor.WHITE + "%s %s"+ChatColor.GRAY+": " + ChatColor.WHITE + "%s " + ChatColor.GRAY + "items sold";
 
@@ -170,11 +173,12 @@ public class TransactionsCommand implements Command {
 							s2[i] = o.ownerName;
 							s3[i] = Plugin.Round(o.dcount);
 						}
-	
-						s1 = MinecraftFontWidthCalculator.getWhitespacedStrings(s1);
-						s2 = MinecraftFontWidthCalculator.getWhitespacedStrings(s2);
-						s3 = MinecraftFontWidthCalculator.getWhitespacedStrings(s3);
-	
+						if (Config.getBoolean("properties.white-space-results")){
+							s1 = MinecraftFontWidthCalculator.getWhitespacedStrings(s1);
+							s2 = MinecraftFontWidthCalculator.getWhitespacedStrings(s2);
+							s3 = MinecraftFontWidthCalculator.getWhitespacedStrings(s3);
+						}
+						
 						String fMsg = ChatColor.WHITE + "%s %s"+ChatColor.GRAY+": $" + ChatColor.WHITE + "%s " + ChatColor.GRAY + "made";
 
 						for (int i=0;i<s1.length;i++)
@@ -212,64 +216,7 @@ public class TransactionsCommand implements Command {
 							}
 							
 						}
-						
-						
-						
-						
-						/*
-						int wItem = MinecraftFontWidthCalculator.getStringWidth("Item");
-						int wTransactions = MinecraftFontWidthCalculator.getStringWidth("Trans");
-						int wAmount = MinecraftFontWidthCalculator.getStringWidth("Amount");
-						int wPrice = MinecraftFontWidthCalculator.getStringWidth("Price");
-						
-						
-						for (itemTraded o : items){
-							
-							wItem = Math.max(wItem, MinecraftFontWidthCalculator.getStringWidth(MaterialUtil.getName(o.stock)));
-							wTransactions = Math.max(wTransactions, MinecraftFontWidthCalculator.getStringWidth(String.valueOf(o.transactions)));
-							wAmount = Math.max(wAmount, MinecraftFontWidthCalculator.getStringWidth(String.valueOf(o.amount)));
-							wPrice = Math.max(wPrice, MinecraftFontWidthCalculator.getStringWidth("$" + Plugin.Round(o.price)));
 
-						}
-						
-						wItem += 10;
-						wTransactions +=10;
-						wAmount += 10;
-						wPrice += 10;
-						
-						
-						//MinecraftFontWidthCalculator.
-						
-						ChatUtils.send(sender,MinecraftFontWidthCalculator.whitespace((items.size()+1) + " ") +  
-							MinecraftFontWidthCalculator.textWithWhitespace("Item", wItem) + 
-							MinecraftFontWidthCalculator.textWithWhitespace("Trans", wTransactions) + 
-							MinecraftFontWidthCalculator.textWithWhitespace("Amount", wAmount) + 
-							MinecraftFontWidthCalculator.textWithWhitespace("Price", wPrice)
-							
-							
-							);
-						
-						
-						
-						
-						itemTraded o;
-						String line;
-						for (int i = 0; i < items.size(); i++) {
-							o = items.get(i);
-
-							line = MinecraftFontWidthCalculator.textWithWhitespace(""+(i + 1) + " ",(items.size()+1) + " ");
-
-							line += MinecraftFontWidthCalculator.textWithWhitespace(MaterialUtil.getName(o.stock), wItem);
-							line += MinecraftFontWidthCalculator.textWithWhitespace(o.transactions, wTransactions);
-							line += MinecraftFontWidthCalculator.textWithWhitespace(o.amount, wAmount);
-							line += MinecraftFontWidthCalculator.textWithWhitespace("$" + o.price, wPrice);
-	
-							ChatUtils.send(sender,line);
-
-						}
-						return true;
-						*/
-						
 						List<itemTraded> items = Plugin.database.topItemBought(orderBy);
 						
 						String[] s1 = new String[items.size()+1];
@@ -299,12 +246,13 @@ public class TransactionsCommand implements Command {
 							s5[i+1] = ""+o.price;
 
 						}
-	
-						s1 = MinecraftFontWidthCalculator.getWhitespacedStrings(s1);
-						s2 = MinecraftFontWidthCalculator.getWhitespacedStrings(s2);
-						s3 = MinecraftFontWidthCalculator.getWhitespacedStrings(s3);
-						s4 = MinecraftFontWidthCalculator.getWhitespacedStrings(s4);
-						s5 = MinecraftFontWidthCalculator.getWhitespacedStrings(s5);
+						if (Config.getBoolean("properties.white-space-results")){
+							s1 = MinecraftFontWidthCalculator.getWhitespacedStrings(s1);
+							s2 = MinecraftFontWidthCalculator.getWhitespacedStrings(s2);
+							s3 = MinecraftFontWidthCalculator.getWhitespacedStrings(s3);
+							s4 = MinecraftFontWidthCalculator.getWhitespacedStrings(s4);
+							s5 = MinecraftFontWidthCalculator.getWhitespacedStrings(s5);
+						}
 						
 						String fMsg = ChatColor.WHITE + "§f%s %s %s %s §7$§f%s";
 

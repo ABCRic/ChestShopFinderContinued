@@ -50,6 +50,9 @@ properties:
   # Log transactions to DB
   log-transactions: true
   
+  #Add whitespaces after variables so messages better line up.
+  white-space-results: true
+  
 # MySQL DB info.
 mysql:
   hostname: localhost

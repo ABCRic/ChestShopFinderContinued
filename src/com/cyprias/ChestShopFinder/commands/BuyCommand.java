@@ -21,6 +21,7 @@ import com.cyprias.ChestShopFinder.configuration.Config;
 import com.cyprias.ChestShopFinder.database.Shop;
 import com.cyprias.ChestShopFinder.utils.ChatUtils;
 import com.cyprias.ChestShopFinder.utils.MathUtil;
+import com.cyprias.ChestShopFinder.utils.MinecraftFontWidthCalculator;
 
 public class BuyCommand implements Command {
 
@@ -93,7 +94,7 @@ public class BuyCommand implements Command {
 				ChatUtils.send(sender,String.format("§f%s §7results for §f%s§7.", shops.size(), MaterialUtil.getName(stock)));
 				SearchCommand.previousResults.put(sender.getName(), shops);
 				// [1] Cyprias has 16 for $2 22 blocks north of you.
-				String shopFormat = "§7[§f%s§7] §f%s §7sells §f%s §7for $§f%s §7($§f%s§7e), §f%s §7blocks §f%s";
+				String shopFormat = "§f%s§7: §f%s §7sells §f%s §7for $§f%s §7($§f%s§7e), §f%s §f%s";
 				String sDir;
 				
 				Shop shop;
@@ -102,6 +103,16 @@ public class BuyCommand implements Command {
 				Location sLoc;
 				double dist;
 				double distP;
+				
+				String[] s1 = new String[shops.size()];
+				String[] s2 = new String[shops.size()];
+				String[] s3 = new String[shops.size()];
+				String[] s4 = new String[shops.size()];
+				String[] s5 = new String[shops.size()];
+				String[] s6 = new String[shops.size()];
+				String[] s7 = new String[shops.size()];
+				//String[] s8 = new String[shops.size()];
+				
 				for (int i=0; i<shops.size(); i++){
 					shop = shops.get(i);
 					
@@ -113,14 +124,42 @@ public class BuyCommand implements Command {
 					
 	
 					distP = ((dist - closest) / between) * 100;
+					distP = Math.max(distP, 0);
 					
-					//Logger.debug(i + "dist: " + dist + ", b: " + distP);
-		
-					
-					
-					ChatUtils.send(sender, String.format(shopFormat, i+1, Plugin.getPlayerName(shop.owner), shop.amount, Plugin.Round(shop.buyPrice, pl), each, Plugin.getDistanceColour(distP) + Plugin.Round(dist), sDir));
+					//ChatUtils.send(sender, String.format(shopFormat, i+1, Plugin.getPlayerName(shop.owner), shop.amount, Plugin.Round(shop.buyPrice, pl), each, Plugin.getDistanceColour(distP) + Plugin.Round(dist), sDir));
 
+					s1[i] = ""+(i + 1);
+					
+					s2[i] = Plugin.getPlayerName(shop.owner);
+					s3[i] = ""+shop.amount;
+					s4[i] = Plugin.Round(shop.buyPrice, pl);
+					s5[i] = each;
+					s6[i] = Plugin.getDistanceColour(distP) + Plugin.Round(dist);
+					s7[i] = sDir;
+					
+					//s8[i] = ;
+					//s9[i] = ;
+					
+					
+					
+					
+					
 				}
+				if (Config.getBoolean("properties.white-space-results")){
+					s1 = MinecraftFontWidthCalculator.getWhitespacedStrings(s1);
+					s2 = MinecraftFontWidthCalculator.getWhitespacedStrings(s2);
+					s3 = MinecraftFontWidthCalculator.getWhitespacedStrings(s3);
+					s4 = MinecraftFontWidthCalculator.getWhitespacedStrings(s4);
+					s5 = MinecraftFontWidthCalculator.getWhitespacedStrings(s5);
+					s6 = MinecraftFontWidthCalculator.getWhitespacedStrings(s6);
+					s7 = MinecraftFontWidthCalculator.getWhitespacedStrings(s7);
+				}
+				
+				for (int i=0;i<s1.length;i++)
+					ChatUtils.send(sender,String.format(shopFormat, s1[i], s2[i], s3[i], s4[i], s5[i], s6[i], s7[i]));
+				
+				
+				
 				
 			}
 		});
