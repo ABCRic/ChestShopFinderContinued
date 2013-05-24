@@ -18,17 +18,19 @@ public enum Perm {
 	SELL("csf.sell"),
 	PRICE("csf.price"),
 	ARBITRAGE("csf.arbitrage"),
-	PARENT_USER("csf.user", SEARCH, LOOK, BUY, SELL, PRICE, ARBITRAGE),
-	
-	VERSION("csf.version"), 
-	RELOAD("csf.reload"),
-	PARENT_ADMIN("csf.admin", VERSION, RELOAD),
-
 	TRANSACTIONS_MINE("csf.transactions.mine"),
 	TRANSACTIONS_OWNER("csf.transactions.owner"),
 	TRANSACTIONS_ITEM("csf.transactions.item"),
 	
 	TRANSACTIONS("csf.transactions", TRANSACTIONS_MINE, TRANSACTIONS_OWNER, TRANSACTIONS_ITEM),
+	
+	PARENT_USER("csf.user", SEARCH, LOOK, BUY, SELL, PRICE, ARBITRAGE, TRANSACTIONS),
+	
+	VERSION("csf.version"), 
+	RELOAD("csf.reload"),
+	PARENT_ADMIN("csf.admin", VERSION, RELOAD),
+
+
 	PARENT_TEST("csf.test", TRANSACTIONS);
 	
 	private Perm(String value, Perm... childrenArray) {

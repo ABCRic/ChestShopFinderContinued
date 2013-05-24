@@ -1,7 +1,6 @@
 package com.cyprias.ChestShopFinder.commands;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.ChatColor;
@@ -64,9 +63,9 @@ public class TransactionsCommand implements Command {
 
 				List<Transaction> transactions = Plugin.database.getOwnerTransactions(sender, sender.getName(), page);
 				Transaction t;
-				String stype, msg;
+				String stype;
 				int pl = Config.getInt("properties.price-rounding");
-				String each;
+				//String each;
 
 				String g = ChatColor.GRAY.toString();
 				String w = ChatColor.WHITE.toString();
@@ -80,16 +79,12 @@ public class TransactionsCommand implements Command {
 				String[] s3 = new String[transactions.size()];
 				String[] s4 = new String[transactions.size()];
 				String[] s5 = new String[transactions.size()];
-				String[] s6 = new String[transactions.size()];
-				String[] s7 = new String[transactions.size()];
-				String[] s8 = new String[transactions.size()];
-				String[] s9 = new String[transactions.size()];
 				
 				
 				for (int i = 0; i < transactions.size(); i++) {
 					t = transactions.get(i);
 					// each = Plugin.Round(t.getPrice()/t.getAmount(),pl);
-					msg = "";
+					
 					stype = "";
 					if (t.isBuy()) {
 						stype = "Sold";
@@ -103,7 +98,7 @@ public class TransactionsCommand implements Command {
 					s1[i] = stype;
 					s2[i] = t.getItemName();
 					s3[i] = ""+t.getAmount();
-					s4[i] = Plugin.Round(t.getPrice());
+					s4[i] = Plugin.Round(t.getPrice(), pl);
 					s5[i] = Plugin.secondsToString(t.getTimeOffset());
 					
 					/*
@@ -238,9 +233,9 @@ public class TransactionsCommand implements Command {
 
 				}
 
-				ChatUtils.send(sender, "/" + cmd.getName() + " transactions owner popular: Most popular shop owners");
-				ChatUtils.send(sender, "/" + cmd.getName() + " transactions owner items: Most items sold");
-				ChatUtils.send(sender, "/" + cmd.getName() + " transactions owner profit: Most money made.");
+				ChatUtils.send(sender, ChatColor.GRAY+"/" + cmd.getName() + " transactions owner popular: Most popular shop owners");
+				ChatUtils.send(sender, ChatColor.GRAY+"/" + cmd.getName() + " transactions owner items: Most items sold");
+				ChatUtils.send(sender, ChatColor.GRAY+"/" + cmd.getName() + " transactions owner profit: Most money made.");
 				
 				return true;
 			} else if (args[0].equalsIgnoreCase("item")) {
@@ -312,7 +307,7 @@ public class TransactionsCommand implements Command {
 				}
 				
 				
-				ChatUtils.send(sender, "/" + cmd.getName() + " transactions item topbuy [amount|price]: Most bought item.");
+				ChatUtils.send(sender, ChatColor.GRAY+"/" + cmd.getName() + " transactions item topbuy [amount|price]: Most bought item.");
 				
 				return true;
 			}
