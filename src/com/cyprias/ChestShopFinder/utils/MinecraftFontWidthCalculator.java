@@ -2,6 +2,8 @@ package com.cyprias.ChestShopFinder.utils;
 
 import java.util.List;
 
+import org.bukkit.ChatColor;
+
 /**
  * DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE Version 2, December 2004
  * Copyright (C) 2004 Sam Hocevar <sam@hocevar.net>
@@ -82,9 +84,11 @@ public class MinecraftFontWidthCalculator {
 		int maxWidth = 0;
 
 		for (String s : strings) {
-			maxWidth = Math.max(maxWidth, getStringWidth(s));
+			maxWidth = Math.max(maxWidth, getStringWidth(ChatColor.stripColor(s)));
 		}
 
+		
+		
 		for (int i = 0; i < strings.length; i++) {
 			strings[i] = textWithWhitespace(strings[i], maxWidth);
 		}

@@ -75,6 +75,17 @@ public class TransactionsCommand implements Command {
 				// g+"%s "+w+"%s"+g+"x"+w+"%s "+g+"for "+g+"$"+w+"%s "+g+"("+w+"%s"+g+"e) "+w+"%s "+g+"ago";
 				String mFormat = g + "%s " + w + "%s" + g + "x" + w + "%s " + g + "for " + g + "$" + w + "%s %s " + g + "ago";
 
+				String[] s1 = new String[transactions.size()];
+				String[] s2 = new String[transactions.size()];
+				String[] s3 = new String[transactions.size()];
+				String[] s4 = new String[transactions.size()];
+				String[] s5 = new String[transactions.size()];
+				String[] s6 = new String[transactions.size()];
+				String[] s7 = new String[transactions.size()];
+				String[] s8 = new String[transactions.size()];
+				String[] s9 = new String[transactions.size()];
+				
+				
 				for (int i = 0; i < transactions.size(); i++) {
 					t = transactions.get(i);
 					// each = Plugin.Round(t.getPrice()/t.getAmount(),pl);
@@ -85,9 +96,43 @@ public class TransactionsCommand implements Command {
 					} else if (t.isSell()) {
 						stype = "Bought";
 					}
-					msg = String.format(mFormat, stype, t.getItemName(), t.getAmount(), Plugin.Round(t.getPrice()), Plugin.secondsToString(t.getTimeOffset()));
-					ChatUtils.send(sender, msg);
+					//msg = String.format(mFormat, stype, t.getItemName(), t.getAmount(), Plugin.Round(t.getPrice()), Plugin.secondsToString(t.getTimeOffset()));
+					//ChatUtils.send(sender, msg);
+					
+					
+					s1[i] = stype;
+					s2[i] = t.getItemName();
+					s3[i] = ""+t.getAmount();
+					s4[i] = Plugin.Round(t.getPrice());
+					s5[i] = Plugin.secondsToString(t.getTimeOffset());
+					
+					/*
+					s6[i] = ;
+					s7[i] = ;
+					s8[i] = ;
+					s9[i] = ;
+					s10[i] = ;*/
+					
+					
 				}
+				if (Config.getBoolean("properties.white-space-results")){
+					s1 = MinecraftFontWidthCalculator.getWhitespacedStrings(s1);
+					s2 = MinecraftFontWidthCalculator.getWhitespacedStrings(s2);
+					s3 = MinecraftFontWidthCalculator.getWhitespacedStrings(s3);
+					s4 = MinecraftFontWidthCalculator.getWhitespacedStrings(s4);
+					s5 = MinecraftFontWidthCalculator.getWhitespacedStrings(s5);
+					
+				}
+				
+				//String fMsg = ChatColor.WHITE + "%s %s"+ChatColor.GRAY+": " + ChatColor.WHITE + "%s " + ChatColor.GRAY + "items sold";
+
+				for (int i=0;i<s1.length;i++)
+					ChatUtils.send(sender,String.format(mFormat, s1[i], s2[i], s3[i], s4[i], s5[i]));
+				
+				
+				
+				
+				
 				return true;
 
 			} else if (args[0].equalsIgnoreCase("owner")) {
