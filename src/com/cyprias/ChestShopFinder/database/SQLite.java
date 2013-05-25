@@ -587,7 +587,7 @@ public class SQLite implements Database {
 	}
 
 	public List<popularTrader> getOwnersTopClients(String ownerName) throws SQLException {
-		String qry = "SELECT owner, client, SUM(`price`) as totalPrice FROM `"+transactions_table+"` WHERE `flags` = 1 AND `owner` = ? AND `time` >= ? GROUP BY `client` ORDER BY `totalPrice` DESC LIMIT 0 , 10;";
+		String qry = "SELECT owner, client, SUM(`price`) as totalPrice FROM `"+transactions_table+"` WHERE `flags` = 1 AND `owner` = ? AND `time` >= ? GROUP BY `client` ORDER BY `totalPrice` DESC"; // LIMIT 0 , 10;
 		
 		
 		List<popularTrader> traders =  new ArrayList<popularTrader>();
@@ -606,7 +606,7 @@ public class SQLite implements Database {
 	}
 
 	public List<popularTrader> getClientsTopOwners(String clientName) throws SQLException {
-		String qry = "SELECT client, owner, SUM(`price`) as totalPrice FROM `"+transactions_table+"` WHERE `flags` = 1 AND `client` = ? AND `time` >= ? GROUP BY `owner` ORDER BY `totalPrice` DESC LIMIT 0 , 10;";
+		String qry = "SELECT client, owner, SUM(`price`) as totalPrice FROM `"+transactions_table+"` WHERE `flags` = 1 AND `client` = ? AND `time` >= ? GROUP BY `owner` ORDER BY `totalPrice` DESC";// LIMIT 0 , 10;
 		
 		
 		List<popularTrader> traders =  new ArrayList<popularTrader>();

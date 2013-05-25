@@ -8,6 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import com.Acrobot.Breeze.Utils.MaterialUtil;
+import com.cyprias.ChestShopFinder.Logger;
 import com.cyprias.ChestShopFinder.Perm;
 import com.cyprias.ChestShopFinder.Plugin;
 import com.cyprias.ChestShopFinder.command.Command;
@@ -162,7 +163,20 @@ public class TransactionsCommand implements Command {
 								for (popularTrader client : c)
 									sumPrice += client.dnum;
 
-								s4[i] = ChatColor.WHITE + Plugin.Round((c.get(0).dnum / sumPrice) * 100) + ChatColor.GRAY + "%";
+
+								
+								// Remove 0%
+								for (int t=c.size()-1;t>=0;t--)
+									if ((c.get(t).dnum / sumPrice) < 0.01)
+										c.remove(t);
+									
+
+								//Only include 5 percentages in our string.
+								for (int t=c.size()-1;t>=5;t--)
+									c.remove(t);
+								
+								
+								s4[i] = "(" + ChatColor.WHITE + Plugin.Round((c.get(0).dnum / sumPrice) * 100) + ChatColor.GRAY + "%";
 
 								for (int ci = 1; ci < (c.size() - 1); ci++)
 									s4[i] += ", " + ChatColor.WHITE + Plugin.Round((c.get(ci).dnum / sumPrice) * 100) + ChatColor.GRAY + "%";
@@ -170,6 +184,8 @@ public class TransactionsCommand implements Command {
 								if (c.size() > 1)
 									s4[i] += " & " + ChatColor.WHITE + Plugin.Round((c.get(c.size() - 1).dnum / sumPrice) * 100) + ChatColor.GRAY + "%";
 
+								s4[i] += ChatColor.GRAY + ")";
+								
 							}
 
 						}
@@ -180,7 +196,7 @@ public class TransactionsCommand implements Command {
 							s4 = MinecraftFontWidthCalculator.getWhitespacedStrings(s4);
 
 						}
-						String fMsg = ChatColor.WHITE + "§f%s §f%s §7had §f%s §7clients (%s)";
+						String fMsg = ChatColor.WHITE + "§f%s §f%s §7had §f%s §7clients %s";
 
 						for (int i = 0; i < s1.length; i++)
 							ChatUtils.send(sender, String.format(fMsg, s1[i], s2[i], s3[i], s4[i]));
@@ -323,7 +339,7 @@ public class TransactionsCommand implements Command {
 
 							s1[i + 1] = "" + (i + 1);
 
-							s2[i + 1] = MaterialUtil.getName(o.stock);
+							s2[i + 1] = MaterialUtil.getName(o.stock, true);
 							s3[i + 1] = "" + o.traders;
 							s4[i + 1] = "" + o.transactions;
 							s5[i + 1] = "" + o.amount;
@@ -392,7 +408,9 @@ public class TransactionsCommand implements Command {
 
 							s1[i + 1] = "" + (i + 1);
 
-							s2[i + 1] = MaterialUtil.getName(o.stock);
+							//MaterialUtil.getn
+							
+							s2[i + 1] = MaterialUtil.getName(o.stock, true);
 							s3[i + 1] = "" + o.traders;
 							s4[i + 1] = "" + o.transactions;
 							s5[i + 1] = "" + o.amount;
@@ -498,7 +516,10 @@ public class TransactionsCommand implements Command {
 						String[] s1 = new String[owners.size()];
 						String[] s2 = new String[owners.size()];
 						String[] s3 = new String[owners.size()];
+						String[] s4 = new String[owners.size()];
+						
 						popularTrader o;
+						List<popularTrader> c;
 						for (int i = 0; i < owners.size(); i++) {
 							o = owners.get(i);
 							// ChatUtils.send(sender, (i + 1) + " " +
@@ -507,17 +528,52 @@ public class TransactionsCommand implements Command {
 							s1[i] = "" + (i + 1);
 							s2[i] = o.traderName;
 							s3[i] = "" + o.popCount;
+							
+							
+							s4[i] = "§f100§7%";
+
+							c = Plugin.database.getClientsTopOwners(o.traderName);
+
+							if (c.size() > 0) {
+								double sumPrice = 0;
+								for (popularTrader client : c)
+									sumPrice += client.dnum;
+
+
+								
+								// Remove 0%
+								for (int t=c.size()-1;t>=0;t--)
+									if ((c.get(t).dnum / sumPrice) < 0.01)
+										c.remove(t);
+									
+								//Only include 5 percentages in our string.
+								for (int t=c.size()-1;t>=5;t--)
+									c.remove(t);
+								
+								s4[i] = "(" + ChatColor.WHITE + Plugin.Round((c.get(0).dnum / sumPrice) * 100) + ChatColor.GRAY + "%";
+
+								for (int ci = 1; ci < (c.size() - 1); ci++)
+									s4[i] += ", " + ChatColor.WHITE + Plugin.Round((c.get(ci).dnum / sumPrice) * 100) + ChatColor.GRAY + "%";
+
+								if (c.size() > 1)
+									s4[i] += " & " + ChatColor.WHITE + Plugin.Round((c.get(c.size() - 1).dnum / sumPrice) * 100) + ChatColor.GRAY + "%";
+
+								s4[i] += ChatColor.GRAY + ")";
+								
+							}
 
 						}
 						if (Config.getBoolean("properties.white-space-results")) {
 							s1 = MinecraftFontWidthCalculator.getWhitespacedStrings(s1);
 							s2 = MinecraftFontWidthCalculator.getWhitespacedStrings(s2);
 							s3 = MinecraftFontWidthCalculator.getWhitespacedStrings(s3);
+							s4 = MinecraftFontWidthCalculator.getWhitespacedStrings(s4);
+							
 						}
-						String fMsg = ChatColor.WHITE + "§f%s §f%s §7has visited §f%s §7shop owners.";
+						String fMsg = ChatColor.WHITE + "§f%s §f%s §7visited §f%s §7owners. %s";
 
 						for (int i = 0; i < s1.length; i++)
-							ChatUtils.send(sender, String.format(fMsg, s1[i], s2[i], s3[i]));
+							ChatUtils.send(sender, String.format(fMsg, s1[i], s2[i], s3[i], s4[i]));
 
 						return true;
 					}

@@ -85,7 +85,7 @@ public interface Database {
 		
 		public itemTraded(int itemId, int durability, String enchantments, int totalTransactions, int totalAmount, double totalPrice, int traders) {
 			this.stock = new ItemStack(itemId, durability);
-			stock.addEnchantments(MaterialUtil.Enchantment.getEnchantments(enchantments));
+			this.stock.addEnchantments(MaterialUtil.Enchantment.getEnchantments(enchantments));
 			
 			this.transactions = totalTransactions;
 			this.amount = totalAmount;
