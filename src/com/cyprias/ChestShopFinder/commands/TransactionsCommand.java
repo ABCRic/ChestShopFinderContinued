@@ -212,6 +212,7 @@ public class TransactionsCommand implements Command {
 						//HashMap<String, List<popularTrader>> ownerClients = new HashMap<String, List<popularTrader>>();
 						
 						
+						double mpercent;
 						for (int i = 0; i < owners.size(); i++) {
 							o = owners.get(i);
 							//ChatUtils.send(sender, (i + 1) + " " + o.ownerName + ": $" + o.dcount + " made.");
@@ -224,41 +225,22 @@ public class TransactionsCommand implements Command {
 							//ownerClients.put(o.playerName, );
 							
 							
-							s4[i] = "100%";
+							s4[i] = ""+0;
 							//s5[i] = "Unknown";
 							
 							c = Plugin.database.getOwnersTopClients(o.playerName);
+							
+							mpercent = 0;
 							if (c.size() > 0){
-								
-								s4[i] = ChatColor.WHITE+Plugin.Round((c.get(0).dnum / o.dcount) * 100) + ChatColor.GRAY+"%";
-								
-								
-								
-								for (int ci=1; ci<(c.size()-1); ci++)
-									s4[i] += ", " + ChatColor.WHITE+Plugin.Round((c.get(ci).dnum / o.dcount) * 100) + ChatColor.GRAY+"%";
-								
-								if (c.size() > 1)
-									s4[i] += " & " + ChatColor.WHITE+Plugin.Round((c.get(c.size()-1).dnum / o.dcount) * 100) + ChatColor.GRAY+ "%";
-								
-								
-								
-								//s5[i] = c.get(0).traderName;
-								
-								
-								
-								
-								
-								/*
-								s4[i] = c.get(0).traderName;
-								
-								for (int ci=1; ci<(c.size()-1); ci++)
-									s4[i] += ", " + c.get(ci).traderName;
-								
-								s4[c.size()] += " & " + c.get(c.size()).traderName;
-								*/
-								
-								
-								
+								for (int ci=0; ci<(c.size()); ci++){
+									mpercent += (c.get(ci).dnum / o.dcount);
+									s4[i] = ""+(ci+1);
+									
+									if (mpercent > .5)
+										break;
+									
+								}
+
 							}
 							
 						}
@@ -272,7 +254,7 @@ public class TransactionsCommand implements Command {
 						
 						//String fMsg = ChatColor.WHITE + "§f%s §f%s§7 §7made $§f%s §7from §f%s§7.";
 						//String fMsg = ChatColor.WHITE + "§f%s §f%s§7 §7made $§f%s§7, §f%s§7%% from §f%s§7.";
-						String fMsg = ChatColor.WHITE + "§f%s §f%s§7 §7made $§f%s§7, top clients: §f%s";
+						String fMsg = ChatColor.WHITE + "§f%s §f%s§7 §7made $§f%s§7 mostly from §f%s §7client(s).";
 						
 						
 						for (int i=0;i<s1.length;i++)
