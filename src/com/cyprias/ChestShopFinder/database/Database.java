@@ -48,6 +48,11 @@ public interface Database {
 			this.traderName = traderName;
 			this.popCount = int1;
 		}
+		public double dnum;
+		public popularTrader(String string, double dnum) {
+			this.traderName = string;
+			this.dnum = dnum;
+		}
 	}
 	
 	
@@ -88,10 +93,12 @@ public interface Database {
 		public ItemStack stock;
 		public int transactions, amount, clients;
 		public double price;
-		
-		
-		
-		
 	}
+	
+	List<popularTrader> getOwnersTopClients(String ownerName) throws SQLException;
+	
+	
+	
+	
 	
 }

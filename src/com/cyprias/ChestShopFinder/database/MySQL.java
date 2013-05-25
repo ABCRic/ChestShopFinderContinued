@@ -642,6 +642,27 @@ WHERE `sellPrice` > 0 AND `balance` >= `sellPrice`;
 		return items;
 	}
 
+
+	@Override
+	public List<popularTrader> getOwnersTopClients(String ownerName) throws SQLException {
+		String qry = "SELECT owner, client, SUM(`price`) as totalPrice FROM `"+transactions_table+"` WHERE `owner` = ? AND `time` >= ? GROUP BY `client` ORDER BY `totalPrice` DESC LIMIT 0 , 1;";
+		
+		
+		List<popularTrader> traders =  new ArrayList<popularTrader>();
+		
+		queryReturn results = executeQuery(qry, ownerName, (Plugin.getUnixTime() - Config.getInt("properties.transaction-age-include")));
+		ResultSet r = results.result;
+		while (r.next()) {
+
+			//traders.add(new itemTraded(r.getInt("typeId"), r.getInt("durability"), r.getString("enchantments"), r.getInt("totalTransactions"), r.getInt("totalAmount"),r.getDouble("totalPrice"), r.getInt("uniqueClients")));
+			
+			traders.add(new popularTrader(r.getString("client"), r.getDouble("totalPrice")));
+
+		}
+		results.close();
+		return traders;
+	}
+
 	
 	
 

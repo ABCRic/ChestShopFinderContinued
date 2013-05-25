@@ -1,6 +1,7 @@
 package com.cyprias.ChestShopFinder.commands;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.ChatColor;
@@ -204,7 +205,13 @@ public class TransactionsCommand implements Command {
 						String[] s1 = new String[owners.size()];
 						String[] s2 = new String[owners.size()];
 						String[] s3 = new String[owners.size()];
-
+						String[] s4 = new String[owners.size()];
+						String[] s5 = new String[owners.size()];
+						
+						List<popularTrader> c;//clients
+						//HashMap<String, List<popularTrader>> ownerClients = new HashMap<String, List<popularTrader>>();
+						
+						
 						for (int i = 0; i < owners.size(); i++) {
 							o = owners.get(i);
 							//ChatUtils.send(sender, (i + 1) + " " + o.ownerName + ": $" + o.dcount + " made.");
@@ -212,18 +219,53 @@ public class TransactionsCommand implements Command {
 							s1[i] = ""+(i + 1);
 							s2[i] = o.playerName;
 							s3[i] = Plugin.Round(o.dcount);
+							
+							//clients = ;
+							//ownerClients.put(o.playerName, );
+							
+							
+							s4[i] = "100";
+							s5[i] = "Unknown";
+							
+							c = Plugin.database.getOwnersTopClients(o.playerName);
+							if (c.size() > 0){
+								
+								s4[i] = Plugin.Round((c.get(0).dnum / o.dcount) * 100);
+								s5[i] = c.get(0).traderName;
+								
+								
+								
+								
+								
+								/*
+								s4[i] = c.get(0).traderName;
+								
+								for (int ci=1; ci<(c.size()-1); ci++)
+									s4[i] += ", " + c.get(ci).traderName;
+								
+								s4[c.size()] += " & " + c.get(c.size()).traderName;
+								*/
+								
+								
+								
+							}
+							
 						}
 						if (Config.getBoolean("properties.white-space-results")){
 							s1 = MinecraftFontWidthCalculator.getWhitespacedStrings(s1);
 							s2 = MinecraftFontWidthCalculator.getWhitespacedStrings(s2);
 							s3 = MinecraftFontWidthCalculator.getWhitespacedStrings(s3);
+							s4 = MinecraftFontWidthCalculator.getWhitespacedStrings(s4);
+							s5 = MinecraftFontWidthCalculator.getWhitespacedStrings(s5);
 						}
 						
-						String fMsg = ChatColor.WHITE + "§f%s §f%s§7 §7made $§f%s";
-
+						//String fMsg = ChatColor.WHITE + "§f%s §f%s§7 §7made $§f%s §7from §f%s§7.";
+						String fMsg = ChatColor.WHITE + "§f%s §f%s§7 §7made $§f%s§7, §f%s§7%% from §f%s§7.";
+						
 						for (int i=0;i<s1.length;i++)
-							ChatUtils.send(sender,String.format(fMsg, s1[i], s2[i], s3[i]));
+							ChatUtils.send(sender,String.format(fMsg, s1[i], s2[i], s3[i], s4[i], s5[i]));
 
+						
 						return true;
 						
 						
@@ -328,7 +370,7 @@ public class TransactionsCommand implements Command {
 					return false;
 				
 				if (args.length > 1) {
-					if (args[1].equalsIgnoreCase("topspent")) {
+					if (args[1].equalsIgnoreCase("spent")) {
 						List<traderCount> clients = Plugin.database.getTopClientBySpent();
 						/*
 						popularTrader o;
@@ -400,7 +442,7 @@ public class TransactionsCommand implements Command {
 				
 				
 				
-				ChatUtils.send(sender, ChatColor.GRAY+"/" + cmd.getName() + " transactions client topspent");
+				ChatUtils.send(sender, ChatColor.GRAY+"/" + cmd.getName() + " transactions client spent");
 				ChatUtils.send(sender, ChatColor.GRAY+"/" + cmd.getName() + " transactions client popular");
 				
 				
