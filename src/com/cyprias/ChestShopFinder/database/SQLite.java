@@ -591,6 +591,12 @@ public class SQLite implements Database {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public List<popularTrader> getClientsTopOwners(String ownerName) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 	

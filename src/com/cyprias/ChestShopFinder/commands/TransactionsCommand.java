@@ -148,7 +148,10 @@ public class TransactionsCommand implements Command {
 						String[] s1 = new String[owners.size()];
 						String[] s2 = new String[owners.size()];
 						String[] s3 = new String[owners.size()];
+						String[] s4 = new String[owners.size()];
+						
 						popularTrader o;
+						List<popularTrader> c;
 						for (int i = 0; i < owners.size(); i++) {
 							o = owners.get(i);
 						//	ChatUtils.send(sender, (i + 1) + " " + o.ownerName + ": " + o.clientCount + " clients");
@@ -156,17 +159,42 @@ public class TransactionsCommand implements Command {
 							s1[i] = ""+(i + 1);
 							s2[i] = o.traderName;
 							s3[i] = ""+o.popCount;
+
+							s4[i] = "§f100§7%";
+							
+ 							c = Plugin.database.getOwnersTopClients(o.traderName);
+
+ 							if (c.size() > 0){
+ 								double sumPrice = 0;
+ 								for (popularTrader client : c)
+ 									sumPrice += client.dnum;
+
+ 								s4[i] = ChatColor.WHITE+Plugin.Round((c.get(0).dnum / sumPrice) * 100) + ChatColor.GRAY+"%";
+
+
+								for (int ci=1; ci<(c.size()-1); ci++)
+									s4[i] += ", " + ChatColor.WHITE+Plugin.Round((c.get(ci).dnum /sumPrice) * 100) + ChatColor.GRAY+"%";
+
+								if (c.size() > 1)
+									s4[i] += " & " + ChatColor.WHITE+Plugin.Round((c.get(c.size()-1).dnum / sumPrice) * 100) + ChatColor.GRAY+ "%";
+
+ 							}
+							
+							
+							
 							
 						}
 						if (Config.getBoolean("properties.white-space-results")){
 							s1 = MinecraftFontWidthCalculator.getWhitespacedStrings(s1);
 							s2 = MinecraftFontWidthCalculator.getWhitespacedStrings(s2);
 							s3 = MinecraftFontWidthCalculator.getWhitespacedStrings(s3);
+							s4 = MinecraftFontWidthCalculator.getWhitespacedStrings(s4);
+							
 						}
-						String fMsg = ChatColor.WHITE + "§f%s §f%s §7had §f%s §7clients total";
+						String fMsg = ChatColor.WHITE + "§f%s §f%s §7had §f%s §7clients (%s)";
 
 						for (int i=0;i<s1.length;i++)
-							ChatUtils.send(sender,String.format(fMsg, s1[i], s2[i], s3[i]));
+							ChatUtils.send(sender,String.format(fMsg, s1[i], s2[i], s3[i], s4[i]));
 						
 
 						return true;
@@ -178,17 +206,20 @@ public class TransactionsCommand implements Command {
 						String[] s3 = new String[owners.size()];
 						
 						traderCount o;
-						for (int i = 0; i < owners.size(); i++) {
+								for (int i = 0; i < owners.size(); i++) {
 							o = owners.get(i);
 							
 							s1[i] = ""+(i + 1);
 							s2[i] = o.playerName;
 							s3[i] = ""+o.icount;
+							
+
 						}
 						if (Config.getBoolean("properties.white-space-results")){
 							s1 = MinecraftFontWidthCalculator.getWhitespacedStrings(s1);
 							s2 = MinecraftFontWidthCalculator.getWhitespacedStrings(s2);
 							s3 = MinecraftFontWidthCalculator.getWhitespacedStrings(s3);
+							
 						}
 						
 						String fMsg = ChatColor.WHITE + "§f%s §f%s §7sold §f%s  §7items";
@@ -206,12 +237,9 @@ public class TransactionsCommand implements Command {
 						String[] s2 = new String[owners.size()];
 						String[] s3 = new String[owners.size()];
 						String[] s4 = new String[owners.size()];
-						//String[] s5 = new String[owners.size()];
-						
+
 						List<popularTrader> c;//clients
-						//HashMap<String, List<popularTrader>> ownerClients = new HashMap<String, List<popularTrader>>();
-						
-						
+
 						double mpercent;
 						for (int i = 0; i < owners.size(); i++) {
 							o = owners.get(i);
@@ -220,16 +248,11 @@ public class TransactionsCommand implements Command {
 							s1[i] = ""+(i + 1);
 							s2[i] = o.playerName;
 							s3[i] = Plugin.Round(o.dcount);
-							
-							//clients = ;
-							//ownerClients.put(o.playerName, );
-							
-							
-							// Here we get the owner's top clients sorted by money spent, then count how many make up 50%+ of the owner's funds.
+
 							s4[i] = ""+0;
 							c = Plugin.database.getOwnersTopClients(o.playerName);
 							mpercent = 0;
-							if (c.size() > 0){
+							if (c.size() > 0)
 								for (int ci=0; ci<(c.size()); ci++){
 									mpercent += (c.get(ci).dnum / o.dcount);
 									s4[i] = ""+(ci+1);
@@ -239,7 +262,7 @@ public class TransactionsCommand implements Command {
 									
 								}
 
-							}
+							
 							
 						}
 						if (Config.getBoolean("properties.white-space-results")){
@@ -247,11 +270,8 @@ public class TransactionsCommand implements Command {
 							s2 = MinecraftFontWidthCalculator.getWhitespacedStrings(s2);
 							s3 = MinecraftFontWidthCalculator.getWhitespacedStrings(s3);
 							s4 = MinecraftFontWidthCalculator.getWhitespacedStrings(s4);
-						//	s5 = MinecraftFontWidthCalculator.getWhitespacedStrings(s5);
 						}
 						
-						//String fMsg = ChatColor.WHITE + "§f%s §f%s§7 §7made $§f%s §7from §f%s§7.";
-						//String fMsg = ChatColor.WHITE + "§f%s §f%s§7 §7made $§f%s§7, §f%s§7%% from §f%s§7.";
 						String fMsg = ChatColor.WHITE + "§f%s §f%s§7 §7made $§f%s§7 mostly from §f%s §7client(s).";
 						
 						
@@ -374,7 +394,11 @@ public class TransactionsCommand implements Command {
 						String[] s1 = new String[clients.size()];
 						String[] s2 = new String[clients.size()];
 						String[] s3 = new String[clients.size()];
+						String[] s4 = new String[clients.size()];
+						
 						traderCount o;
+						List<popularTrader> c;
+						double mpercent;
 						for (int i = 0; i < clients.size(); i++) {
 							o = clients.get(i);
 						//	ChatUtils.send(sender, (i + 1) + " " + o.ownerName + ": " + o.clientCount + " clients");
@@ -382,16 +406,34 @@ public class TransactionsCommand implements Command {
 							s1[i] = ""+(i + 1);
 							s2[i] = o.playerName;
 							s3[i] = ""+Plugin.Round(o.dcount);
+							
+							
+							s4[i] = ""+0;
+							c = Plugin.database.getClientsTopOwners(o.playerName);
+							mpercent = 0;
+							if (c.size() > 0)
+								for (int ci=0; ci<(c.size()); ci++){
+									mpercent += (c.get(ci).dnum / o.dcount);
+									s4[i] = ""+(ci+1);
+									
+									if (mpercent > .5)//50%
+										break;
+									
+								}
+
+							
 						}
 						if (Config.getBoolean("properties.white-space-results")){
 							s1 = MinecraftFontWidthCalculator.getWhitespacedStrings(s1);
 							s2 = MinecraftFontWidthCalculator.getWhitespacedStrings(s2);
 							s3 = MinecraftFontWidthCalculator.getWhitespacedStrings(s3);
+							s4 = MinecraftFontWidthCalculator.getWhitespacedStrings(s4);
+							
 						}
-						String fMsg = "§f%s §f%s§7 §7spent $§f%s";
+						String fMsg = "§f%s §f%s§7 §7spent $§f%s §7mostly at §f%s §7store(s).";
 	
 						for (int i=0;i<s1.length;i++)
-							ChatUtils.send(sender,String.format(fMsg, s1[i], s2[i], s3[i]));
+							ChatUtils.send(sender,String.format(fMsg, s1[i], s2[i], s3[i], s4[i]));
 						
 	
 						return true;

@@ -96,6 +96,7 @@ public interface Database {
 	}
 	
 	List<popularTrader> getOwnersTopClients(String ownerName) throws SQLException;
+	List<popularTrader> getClientsTopOwners(String ownerName) throws SQLException;
 	
 	
 	
