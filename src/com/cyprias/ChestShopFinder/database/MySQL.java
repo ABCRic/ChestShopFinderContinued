@@ -645,7 +645,7 @@ WHERE `sellPrice` > 0 AND `balance` >= `sellPrice`;
 
 	@Override
 	public List<popularTrader> getOwnersTopClients(String ownerName) throws SQLException {
-		String qry = "SELECT owner, client, SUM(`price`) as totalPrice FROM `"+transactions_table+"` WHERE `owner` = ? AND `time` >= ? GROUP BY `client` ORDER BY `totalPrice` DESC LIMIT 0 , 1;";
+		String qry = "SELECT owner, client, SUM(`price`) as totalPrice FROM `"+transactions_table+"` WHERE `owner` = ? AND `time` >= ? GROUP BY `client` ORDER BY `totalPrice` DESC LIMIT 0 , 5;";
 		
 		
 		List<popularTrader> traders =  new ArrayList<popularTrader>();
