@@ -14,7 +14,7 @@ import com.cyprias.ChestShopFinder.command.CommandAccess;
 import com.cyprias.ChestShopFinder.configuration.Config;
 import com.cyprias.ChestShopFinder.database.Database.itemTraded;
 import com.cyprias.ChestShopFinder.database.Database.traderCount;
-import com.cyprias.ChestShopFinder.database.Database.popularOwner;
+import com.cyprias.ChestShopFinder.database.Database.popularTrader;
 import com.cyprias.ChestShopFinder.database.Transaction;
 import com.cyprias.ChestShopFinder.utils.ChatUtils;
 import com.cyprias.ChestShopFinder.utils.MinecraftFontWidthCalculator;
@@ -137,9 +137,9 @@ public class TransactionsCommand implements Command {
 				if (args.length > 1) {
 
 					if (args[1].equalsIgnoreCase("popular")) {
-						List<popularOwner> owners = Plugin.database.getTopPopularShopOwner();
+						List<popularTrader> owners = Plugin.database.getTopPopularShopOwner();
 						/*
-						popularOwner o;
+						popularTrader o;
 						for (int i = 0; i < owners.size(); i++) {
 							o = owners.get(i);
 							ChatUtils.send(sender, (i + 1) + " " + o.ownerName + ": " + o.clientCount + " clients");
@@ -147,14 +147,14 @@ public class TransactionsCommand implements Command {
 						String[] s1 = new String[owners.size()];
 						String[] s2 = new String[owners.size()];
 						String[] s3 = new String[owners.size()];
-						popularOwner o;
+						popularTrader o;
 						for (int i = 0; i < owners.size(); i++) {
 							o = owners.get(i);
 						//	ChatUtils.send(sender, (i + 1) + " " + o.ownerName + ": " + o.clientCount + " clients");
 							
 							s1[i] = ""+(i + 1);
-							s2[i] = o.ownerName;
-							s3[i] = ""+o.clientCount;
+							s2[i] = o.traderName;
+							s3[i] = ""+o.popCount;
 							
 						}
 						if (Config.getBoolean("properties.white-space-results")){
@@ -319,7 +319,7 @@ public class TransactionsCommand implements Command {
 				}
 				
 				
-				ChatUtils.send(sender, ChatColor.GRAY+"/" + cmd.getName() + " transactions item topbuy [trans|amount|price]: Most bought item.");
+				ChatUtils.send(sender, ChatColor.GRAY+"/" + cmd.getName() + " transactions item topbuy [clients|trans|amount|price]");
 				
 				return true;
 				
@@ -331,7 +331,7 @@ public class TransactionsCommand implements Command {
 					if (args[1].equalsIgnoreCase("topspent")) {
 						List<traderCount> clients = Plugin.database.getTopClientBySpent();
 						/*
-						popularOwner o;
+						popularTrader o;
 						for (int i = 0; i < owners.size(); i++) {
 							o = owners.get(i);
 							ChatUtils.send(sender, (i + 1) + " " + o.ownerName + ": " + o.clientCount + " clients");
@@ -360,6 +360,39 @@ public class TransactionsCommand implements Command {
 						
 	
 						return true;
+					}else if (args[1].equalsIgnoreCase("popular")) {
+						List<popularTrader> owners = Plugin.database.getTopPopularShopClient();
+						/*
+						popularTrader o;
+						for (int i = 0; i < owners.size(); i++) {
+							o = owners.get(i);
+							ChatUtils.send(sender, (i + 1) + " " + o.ownerName + ": " + o.clientCount + " clients");
+						}*/
+						String[] s1 = new String[owners.size()];
+						String[] s2 = new String[owners.size()];
+						String[] s3 = new String[owners.size()];
+						popularTrader o;
+						for (int i = 0; i < owners.size(); i++) {
+							o = owners.get(i);
+						//	ChatUtils.send(sender, (i + 1) + " " + o.ownerName + ": " + o.clientCount + " clients");
+							
+							s1[i] = ""+(i + 1);
+							s2[i] = o.traderName;
+							s3[i] = ""+o.popCount;
+							
+						}
+						if (Config.getBoolean("properties.white-space-results")){
+							s1 = MinecraftFontWidthCalculator.getWhitespacedStrings(s1);
+							s2 = MinecraftFontWidthCalculator.getWhitespacedStrings(s2);
+							s3 = MinecraftFontWidthCalculator.getWhitespacedStrings(s3);
+						}
+						String fMsg = ChatColor.WHITE + "§f%s §f%s §7has visited §f%s §7shop owners.";
+
+						for (int i=0;i<s1.length;i++)
+							ChatUtils.send(sender,String.format(fMsg, s1[i], s2[i], s3[i]));
+						
+
+						return true;
 					}
 				}
 				
@@ -368,6 +401,10 @@ public class TransactionsCommand implements Command {
 				
 				
 				ChatUtils.send(sender, ChatColor.GRAY+"/" + cmd.getName() + " transactions client topspent");
+				ChatUtils.send(sender, ChatColor.GRAY+"/" + cmd.getName() + " transactions client popular");
+				
+				
+				
 				return true;
 				
 			}

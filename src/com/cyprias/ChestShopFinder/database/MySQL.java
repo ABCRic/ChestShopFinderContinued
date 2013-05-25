@@ -548,19 +548,31 @@ WHERE `sellPrice` > 0 AND `balance` >= `sellPrice`;
 
 
 	@Override
-	public List<popularOwner> getTopPopularShopOwner() throws SQLException {
-		List<popularOwner> owners =  new ArrayList<popularOwner>();
+	public List<popularTrader> getTopPopularShopOwner() throws SQLException {
+		List<popularTrader> traders =  new ArrayList<popularTrader>();
 		String qry = "SELECT owner, count(distinct client) as uniqueClients FROM `"+transactions_table+"` WHERE `owner` != '"+Config.getString("properties.admin-shop")+"'  AND `time` >= ? GROUP BY `owner` ORDER BY `uniqueClients` DESC LIMIT 0 , "+Config.getInt("properties.transaction-results");
 
 		queryReturn results = executeQuery(qry, (Plugin.getUnixTime() - Config.getInt("properties.transaction-age-include")));
 		ResultSet r = results.result;
 		while (r.next()) {
-			owners.add(new popularOwner(r.getString("owner"), r.getInt("uniqueClients")));
+			traders.add(new popularTrader(r.getString("owner"), r.getInt("uniqueClients")));
 		}
 		results.close();
-		return owners;
+		return traders;
 	}
+	public List<popularTrader> getTopPopularShopClient() throws SQLException {
+		List<popularTrader> traders =  new ArrayList<popularTrader>();
+		String qry = "SELECT client, count(distinct owner) as uniqueOwners FROM `"+transactions_table+"` WHERE `owner` != '"+Config.getString("properties.admin-shop")+"'  AND `time` >= ? GROUP BY `client` ORDER BY `uniqueOwners` DESC LIMIT 0 , "+Config.getInt("properties.transaction-results");
 
+		queryReturn results = executeQuery(qry, (Plugin.getUnixTime() - Config.getInt("properties.transaction-age-include")));
+		ResultSet r = results.result;
+		while (r.next()) {
+			traders.add(new popularTrader(r.getString("client"), r.getInt("uniqueOwners")));
+		}
+		results.close();
+		return traders;
+	}
+	
 
 	@Override
 	public List<traderCount> getTopOwnersByItemsSold() throws SQLException {
@@ -630,6 +642,8 @@ WHERE `sellPrice` > 0 AND `balance` >= `sellPrice`;
 		return items;
 	}
 
+	
+	
 
 	/*
 	public static HashMap<Integer, Integer> updateStock = new HashMap<Integer, Integer>();

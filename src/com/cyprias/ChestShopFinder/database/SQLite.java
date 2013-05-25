@@ -24,7 +24,7 @@ import com.cyprias.ChestShopFinder.Plugin;
 import com.cyprias.ChestShopFinder.configuration.Config;
 import com.cyprias.ChestShopFinder.database.Database.itemTraded;
 import com.cyprias.ChestShopFinder.database.Database.traderCount;
-import com.cyprias.ChestShopFinder.database.Database.popularOwner;
+import com.cyprias.ChestShopFinder.database.Database.popularTrader;
 import com.cyprias.ChestShopFinder.database.MySQL.queryReturn;
 import com.cyprias.ChestShopFinder.utils.ChatUtils;
 
@@ -492,14 +492,14 @@ public class SQLite implements Database {
 		return transactions;
 	}
 
-	public List<popularOwner> getTopPopularShopOwner() throws SQLException {
-		List<popularOwner> owners =  new ArrayList<popularOwner>();
+	public List<popularTrader> getTopPopularShopOwner() throws SQLException {
+		List<popularTrader> owners =  new ArrayList<popularTrader>();
 		String qry = "SELECT owner, count(distinct client) as uniqueClients FROM `"+transactions_table+"` WHERE `owner` != '"+Config.getString("properties.admin-shop")+"'  AND `time` >= ? GROUP BY `owner` ORDER BY `uniqueClients` DESC LIMIT 0 , "+Config.getInt("properties.transaction-results");
 
 		queryReturn results = executeQuery(qry, (Plugin.getUnixTime() - Config.getInt("properties.transaction-age-include")));
 		ResultSet r = results.result;
 		while (r.next()) {
-			owners.add(new popularOwner(r.getString("owner"), r.getInt("uniqueClients")));
+			owners.add(new popularTrader(r.getString("owner"), r.getInt("uniqueClients")));
 		}
 		results.close();
 		return owners;
@@ -573,7 +573,20 @@ public class SQLite implements Database {
 		results.close();
 		return items;
 	}
+	public List<popularTrader> getTopPopularShopClient() throws SQLException {
+		List<popularTrader> traders =  new ArrayList<popularTrader>();
+		String qry = "SELECT client, count(distinct owner) as uniqueOwners FROM `"+transactions_table+"` WHERE `owner` != '"+Config.getString("properties.admin-shop")+"'  AND `time` >= ? GROUP BY `client` ORDER BY `uniqueOwners` DESC LIMIT 0 , "+Config.getInt("properties.transaction-results");
 
+		queryReturn results = executeQuery(qry, (Plugin.getUnixTime() - Config.getInt("properties.transaction-age-include")));
+		ResultSet r = results.result;
+		while (r.next()) {
+			traders.add(new popularTrader(r.getString("client"), r.getInt("uniqueOwners")));
+		}
+		results.close();
+		return traders;
+	}
+	
+	
 	
 	/*
 	public static HashMap<Integer, Integer> updateStock = new HashMap<Integer, Integer>();

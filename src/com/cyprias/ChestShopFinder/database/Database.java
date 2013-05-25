@@ -39,13 +39,14 @@ public interface Database {
 	
 	List<Transaction> getOwnerTransactions(CommandSender sender, String playerName, int page) throws SQLException;
 	
-	List<popularOwner> getTopPopularShopOwner() throws SQLException;
-	class popularOwner{
-		public String ownerName;
-		public int clientCount;
-		public popularOwner(String ownerName, int int1) {
-			this.ownerName = ownerName;
-			this.clientCount = int1;
+	List<popularTrader> getTopPopularShopOwner() throws SQLException;
+	List<popularTrader> getTopPopularShopClient() throws SQLException;
+	class popularTrader{
+		public String traderName;
+		public int popCount;
+		public popularTrader(String traderName, int int1) {
+			this.traderName = traderName;
+			this.popCount = int1;
 		}
 	}
 	
