@@ -163,7 +163,7 @@ public class TransactionsCommand implements Command {
 							s2 = MinecraftFontWidthCalculator.getWhitespacedStrings(s2);
 							s3 = MinecraftFontWidthCalculator.getWhitespacedStrings(s3);
 						}
-						String fMsg = ChatColor.WHITE + "§f%s §f%s §7had §f%s §7clients";
+						String fMsg = ChatColor.WHITE + "§f%s §f%s §7had §f%s §7clients total";
 
 						for (int i=0;i<s1.length;i++)
 							ChatUtils.send(sender,String.format(fMsg, s1[i], s2[i], s3[i]));
@@ -225,18 +225,16 @@ public class TransactionsCommand implements Command {
 							//ownerClients.put(o.playerName, );
 							
 							
+							// Here we get the owner's top clients sorted by money spent, then count how many make up 50%+ of the owner's funds.
 							s4[i] = ""+0;
-							//s5[i] = "Unknown";
-							
 							c = Plugin.database.getOwnersTopClients(o.playerName);
-							
 							mpercent = 0;
 							if (c.size() > 0){
 								for (int ci=0; ci<(c.size()); ci++){
 									mpercent += (c.get(ci).dnum / o.dcount);
 									s4[i] = ""+(ci+1);
 									
-									if (mpercent > .5)
+									if (mpercent > .5)//50%
 										break;
 									
 								}
