@@ -78,20 +78,22 @@ public interface Database {
 	
 	
 	List<itemTraded> topItemBought(String orderBy) throws SQLException;
+	List<itemTraded> topItemSold(String orderBy) throws SQLException;
+	
 	class itemTraded{
 		//items.add(new itemTraded(r.getInt("itemId"), r.getInt("durability"), r.getString("enchantments"), r.getInt("totalTransactions"), r.getInt("totalAmount"),r.getDouble("totalPrice")));
 		
-		public itemTraded(int itemId, int durability, String enchantments, int totalTransactions, int totalAmount, double totalPrice, int clients) {
+		public itemTraded(int itemId, int durability, String enchantments, int totalTransactions, int totalAmount, double totalPrice, int traders) {
 			this.stock = new ItemStack(itemId, durability);
 			stock.addEnchantments(MaterialUtil.Enchantment.getEnchantments(enchantments));
 			
 			this.transactions = totalTransactions;
 			this.amount = totalAmount;
 			this.price = totalPrice;
-			this.clients = clients;
+			this.traders = traders;
 		}
 		public ItemStack stock;
-		public int transactions, amount, clients;
+		public int transactions, amount, traders;
 		public double price;
 	}
 	

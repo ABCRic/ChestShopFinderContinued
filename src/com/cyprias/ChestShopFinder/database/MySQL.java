@@ -641,7 +641,24 @@ WHERE `sellPrice` > 0 AND `balance` >= `sellPrice`;
 		results.close();
 		return items;
 	}
+	public List<itemTraded> topItemSold(String orderBy) throws SQLException {
+		//String qry = "SELECT count(*) as totalTransactions, typeId, durability, enchantments, SUM(`amount`) as totalAmount, SUM(`price`) as totalPrice FROM `"+transactions_table+"` WHERE `flags` = 1 AND `owner` != '"+Config.getString("properties.admin-shop")+"' AND `time` >= ? GROUP BY `typeId`, `durability`, `enchantments` ORDER BY `"+orderBy+"` DESC LIMIT 0 , " + Config.getInt("properties.transaction-results");
+		String qry = "SELECT count(distinct `owner`) as uniqueOwners, count(*) as totalTransactions, typeId, durability, enchantments, SUM(`amount`) as totalAmount, SUM(`price`) as totalPrice FROM `"+transactions_table+"` WHERE `flags` = 2 AND `owner` != '"+Config.getString("properties.admin-shop")+"' AND `time` >= ? GROUP BY `typeId`, `durability`, `enchantments` ORDER BY `"+orderBy+"` DESC LIMIT 0 , " + Config.getInt("properties.transaction-results");
+		
+		List<itemTraded> items =  new ArrayList<itemTraded>();
+		
+		queryReturn results = executeQuery(qry, (Plugin.getUnixTime() - Config.getInt("properties.transaction-age-include")));
+		ResultSet r = results.result;
+		while (r.next()) {
 
+			items.add(new itemTraded(r.getInt("typeId"), r.getInt("durability"), r.getString("enchantments"), r.getInt("totalTransactions"), r.getInt("totalAmount"),r.getDouble("totalPrice"), r.getInt("uniqueOwners")));
+			
+			
+		}
+		results.close();
+		return items;
+	}
+	
 
 	@Override
 	public List<popularTrader> getOwnersTopClients(String ownerName) throws SQLException {
