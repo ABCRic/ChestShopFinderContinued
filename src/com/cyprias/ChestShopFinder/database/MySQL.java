@@ -698,6 +698,22 @@ WHERE `sellPrice` > 0 AND `balance` >= `sellPrice`;
 		results.close();
 		return traders;
 	}
+
+
+	@Override
+	public Stats getOverallStats() throws SQLException {
+		String qry = "SELECT COUNT('*') as totalCount, SUM(`price`) as totalPrice, SUM(`amount`) as totalAmount FROM `"+transactions_table+"` WHERE `owner` != '"+Config.getString("properties.admin-shop")+"' AND `time` > ? ;"; // LIMIT 0 , 10
+		
+		Stats stats = null;
+		
+		queryReturn results = executeQuery(qry, (Plugin.getUnixTime() - Config.getInt("properties.transaction-age-include")));
+		ResultSet r = results.result;
+		if (r.next()) 
+			stats = new Stats(r.getInt("totalCount"), r.getDouble("totalPrice"), r.getInt("totalAmount"));
+		
+		results.close();
+		return stats;
+	}
 	
 
 	/*

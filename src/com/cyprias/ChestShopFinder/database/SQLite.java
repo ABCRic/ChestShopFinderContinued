@@ -641,6 +641,12 @@ public class SQLite implements Database {
 		results.close();
 		return items;
 	}
+
+	@Override
+	public Stats getOverallStats() throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 	

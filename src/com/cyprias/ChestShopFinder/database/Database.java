@@ -1,6 +1,7 @@
 package com.cyprias.ChestShopFinder.database;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Location;
@@ -100,8 +101,19 @@ public interface Database {
 	List<popularTrader> getOwnersTopClients(String ownerName) throws SQLException;
 	List<popularTrader> getClientsTopOwners(String ownerName) throws SQLException;
 	
-	
-	
+	Stats getOverallStats() throws SQLException;
+	class Stats{
+		public List<Object> args = new ArrayList<Object>();
+		public Stats(Object ...args){
+			//this.args.add(args);
+			
+			for (int i=0; i<args.length; i++)
+				this.args.add(args[i]);
+				
+			
+			
+		}
+	}
 	
 	
 }

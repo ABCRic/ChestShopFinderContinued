@@ -123,4 +123,39 @@ public class ChatUtils {
 		}
 		colorCodes = string;
 	}
+	
+	public static String secondsToString(long totalSeconds) {
+
+		long days = totalSeconds / 86400;
+		long remainder = totalSeconds % 86400;
+
+		long hours = remainder / 3600;
+		remainder = totalSeconds % 3600;
+		long minutes = remainder / 60;
+		long seconds = remainder % 60;
+
+		
+		String msg = "";
+		if (days > 0)
+			msg += days+"d";
+		
+		if (hours > 0)
+			msg += hours+"h";
+		
+		if (minutes > 0)
+			msg += minutes+"m";
+		
+		if (seconds > 0 || msg == "")
+			msg += seconds+"s";
+		
+		return msg;
+		//if (days > 0)
+		//	return days + "d" + hours + "h" + minutes + "m" + seconds + "s";
+		//else if (hours > 0)
+		//	return hours + "h" + minutes + "m" + seconds + "s";
+		//else if (minutes > 0)
+		//	return minutes + "m" + seconds + "s";
+		//else
+		//	return seconds + "s";
+	}
 }

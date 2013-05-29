@@ -14,6 +14,7 @@ import com.cyprias.ChestShopFinder.Plugin;
 import com.cyprias.ChestShopFinder.command.Command;
 import com.cyprias.ChestShopFinder.command.CommandAccess;
 import com.cyprias.ChestShopFinder.configuration.Config;
+import com.cyprias.ChestShopFinder.database.Database.Stats;
 import com.cyprias.ChestShopFinder.database.Database.itemTraded;
 import com.cyprias.ChestShopFinder.database.Database.traderCount;
 import com.cyprias.ChestShopFinder.database.Database.popularTrader;
@@ -494,7 +495,7 @@ public class TransactionsCommand implements Command {
 							s4 = MinecraftFontWidthCalculator.getWhitespacedStrings(s4);
 
 						}
-						String fMsg = "§f%s §f%s§7 §7spent $§f%s §7mostly to §f%s §7owners.";// yeah
+						String fMsg = "§f%s §f%s§7 §7spent $§f%s §7mostly to §f%s §7owner(s).";// yeah
 																								// yeah,
 																								// it's
 																								// a
@@ -583,13 +584,54 @@ public class TransactionsCommand implements Command {
 				ChatUtils.send(sender, ChatColor.GRAY + "/" + cmd.getName() + " transactions client popular");
 
 				return true;
+			} else if (args[0].equalsIgnoreCase("overview")) {
+				if (!Plugin.checkPermission(sender, Perm.TRANSACTIONS_OVERVIEW))
+					return false;
 
+				Stats stats = Plugin.database.getOverallStats();
+				
+				if (stats == null){
+					ChatUtils.error(sender, "Couldn't retrieve stats...");
+					return true;
+				}
+				
+				
+				
+				int totalCount = (Integer) stats.args.get(0);
+				double totalPrice = (Double) stats.args.get(1);
+				int totalAmount = (Integer) stats.args.get(2);
+				
+				//ChatUtils.send(sender, "totalCount: " + totalCount);
+				//ChatUtils.send(sender, "totalPrice: " + totalPrice);
+				//ChatUtils.send(sender, "totalAmount: " + totalAmount);
+				
+				
+				String msg = "§7In the past §f%s§7, there's been §f%s §7transactions transfering $§f%s §7of wealth.";
+				
+				ChatUtils.send(sender, String.format(msg, 
+					ChatUtils.secondsToString(Config.getInt("properties.transaction-age-include")),
+					totalCount,
+					Plugin.Round(totalPrice, Config.getInt("properties.price-rounding"))
+					)
+					
+					);
+				
+				
+				
+				//
+				
+				
+				return true;
 			}
 
 		}
 
 		if (Plugin.hasPermission(sender, Perm.TRANSACTIONS_MINE))
 			ChatUtils.send(sender, ChatColor.GRAY + "/" + cmd.getName() + " transactions mine [page]");
+
+		
+		if (Plugin.hasPermission(sender, Perm.TRANSACTIONS_OVERVIEW))
+			ChatUtils.send(sender, ChatColor.GRAY + "/" + cmd.getName() + " transactions ovewview");
 
 		if (Plugin.hasPermission(sender, Perm.TRANSACTIONS_ITEM))
 			ChatUtils.send(sender, ChatColor.GRAY + "/" + cmd.getName() + " transactions item");
