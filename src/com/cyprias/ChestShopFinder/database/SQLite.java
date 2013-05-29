@@ -22,6 +22,7 @@ import com.Acrobot.Breeze.Utils.MaterialUtil;
 import com.cyprias.ChestShopFinder.Logger;
 import com.cyprias.ChestShopFinder.Plugin;
 import com.cyprias.ChestShopFinder.configuration.Config;
+import com.cyprias.ChestShopFinder.database.Database.Stats;
 import com.cyprias.ChestShopFinder.database.Database.itemTraded;
 import com.cyprias.ChestShopFinder.database.Database.traderCount;
 import com.cyprias.ChestShopFinder.database.Database.popularTrader;
@@ -644,8 +645,17 @@ public class SQLite implements Database {
 
 	@Override
 	public Stats getOverallStats() throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		String qry = "SELECT COUNT('*') as totalCount, SUM(`price`) as totalPrice, SUM(`amount`) as totalAmount FROM `"+transactions_table+"` WHERE `owner` != '"+Config.getString("properties.admin-shop")+"' AND `time` > ? ;"; // LIMIT 0 , 10
+		
+		Stats stats = null;
+		
+		queryReturn results = executeQuery(qry, (Plugin.getUnixTime() - Config.getInt("properties.transaction-age-include")));
+		ResultSet r = results.result;
+		if (r.next()) 
+			stats = new Stats(r.getInt("totalCount"), r.getDouble("totalPrice"), r.getInt("totalAmount"));
+		
+		results.close();
+		return stats;
 	}
 	
 	
