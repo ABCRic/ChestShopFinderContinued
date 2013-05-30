@@ -2,7 +2,7 @@ name: ChestShopFinder
 main: com.cyprias.ChestShopFinder.Plugin
 author: Cyprias
 description: Find ChestShops.
-version: 0.8.4
+version: 0.9.0
 
 commands:
   csf:
