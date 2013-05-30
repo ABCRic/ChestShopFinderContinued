@@ -56,7 +56,7 @@ public class ChestShopListener implements Listener {
 	 */
 
 	@EventHandler(priority = EventPriority.NORMAL)
-	public void onTransaction(TransactionEvent event) throws SQLException {
+	public void onTransaction(final TransactionEvent event) throws SQLException {
 
 		// Logger.debug(event.getEventName());
 
@@ -102,6 +102,24 @@ public class ChestShopListener implements Listener {
 
 					}
 
+					if (Config.getBoolean("properties.log-transactions") == true){
+						int flags;
+						for (int i = 0; i < event.getStock().length; i++) {
+
+							flags = 0;
+							if (event.getTransactionType() == TransactionType.BUY)
+								flags  = MathUtil.addMask(flags, Transaction.mask_BUY);
+							if (event.getTransactionType() == TransactionType.SELL)
+								flags = MathUtil.addMask(flags, Transaction.mask_SELL);
+
+							(new Transaction(event.getOwner().getName(), event.getClient().getName(), flags, event.getPrice(),
+								event.getStock()[i].getTypeId(), event.getStock()[i].getDurability(),  MaterialUtil.Enchantment.encodeEnchantment(event.getStock()[i]), event.getStock()[i].getAmount(), Plugin.getUnixTime())).sendToDB();
+						}
+					}
+					
+					
+					
+					
 				} catch (SQLException e) {
 					Logger.warning("Exception caught updating stock on transaction.");
 					e.printStackTrace();
@@ -121,21 +139,7 @@ public class ChestShopListener implements Listener {
 		//Logger.debug("onTransaction getTransactionType: " + event.getTransactionType());
 		//Logger.debug("getUnixTime: "+ Plugin.getUnixTime());
 		
-		if (Config.getBoolean("properties.log-transactions") == true){
-			Transaction trans;
-			int flags;
-			for (int i = 0; i < event.getStock().length; i++) {
 
-				flags = 0;
-				if (event.getTransactionType() == TransactionType.BUY)
-					flags  = MathUtil.addMask(flags, Transaction.mask_BUY);
-				if (event.getTransactionType() == TransactionType.SELL)
-					flags = MathUtil.addMask(flags, Transaction.mask_SELL);
-
-				(new Transaction(event.getOwner().getName(), event.getClient().getName(), flags, event.getPrice(),
-					event.getStock()[i].getTypeId(), event.getStock()[i].getDurability(),  MaterialUtil.Enchantment.encodeEnchantment(event.getStock()[i]), event.getStock()[i].getAmount(), Plugin.getUnixTime())).sendToDB();
-			}
-		}
 		//
 
 	}
