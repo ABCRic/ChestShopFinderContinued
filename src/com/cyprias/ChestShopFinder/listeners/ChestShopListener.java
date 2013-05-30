@@ -62,7 +62,7 @@ public class ChestShopListener implements Listener {
 
 		// Check the shop how much is remaining and update our DB's stock.
 		final Sign sign = event.getSign();
-		Plugin.getInstance().getServer().getScheduler().runTaskAsynchronously(Plugin.getInstance(), new Runnable() {
+		Plugin.runTaskAsynchronously(new Runnable() {
 			public void run() {
 				try {
 
