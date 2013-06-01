@@ -77,6 +77,12 @@ public class TransactionsCommand implements Command {
 							e.printStackTrace();
 							return;
 						}
+						
+						if(transactions == null || transactions.size() == 0){
+							ChatUtils.send(sender, "§7You have no transactions.");
+							return;
+						}
+						
 						Transaction t;
 						String stype;
 						int pl = Config.getInt("properties.price-rounding");
@@ -163,6 +169,12 @@ public class TransactionsCommand implements Command {
 									e.printStackTrace();
 									return;
 								}
+								
+								if(owners == null || owners.size() == 0){
+									ChatUtils.send(sender, "§7No results found.");
+									return;
+								}
+								
 								/*
 								 * popularTrader o; for (int i = 0; i <
 								 * owners.size(); i++) { o = owners.get(i);
@@ -253,7 +265,11 @@ public class TransactionsCommand implements Command {
 									e.printStackTrace();
 									return;
 								}
-
+								if(owners == null || owners.size() == 0){
+									ChatUtils.send(sender, "§7No results found.");
+									return;
+								}
+								
 								String[] s1 = new String[owners.size()];
 								String[] s2 = new String[owners.size()];
 								String[] s3 = new String[owners.size()];
@@ -296,6 +312,11 @@ public class TransactionsCommand implements Command {
 									e.printStackTrace();
 									return;
 								}
+								if(owners == null || owners.size() == 0){
+									ChatUtils.send(sender, "§7No results found.");
+									return;
+								}
+								
 								traderCount o;
 
 								String[] s1 = new String[owners.size()];
@@ -400,7 +421,12 @@ public class TransactionsCommand implements Command {
 									e.printStackTrace();
 									return;
 								}
-
+								if(items == null || items.size() == 0){
+									ChatUtils.send(sender, "§7No results found.");
+									return;
+								}
+								
+								
 								String[] s1 = new String[items.size() + 1];
 								String[] s2 = new String[items.size() + 1];
 								String[] s3 = new String[items.size() + 1];
@@ -484,7 +510,11 @@ public class TransactionsCommand implements Command {
 									e.printStackTrace();
 									return;
 								}
-
+								if(items == null || items.size() == 0){
+									ChatUtils.send(sender, "§7No results found.");
+									return;
+								}
+								
 								String[] s1 = new String[items.size() + 1];
 								String[] s2 = new String[items.size() + 1];
 								String[] s3 = new String[items.size() + 1];
@@ -563,6 +593,11 @@ public class TransactionsCommand implements Command {
 									e.printStackTrace();
 									return;
 								}
+								if(clients == null || clients.size() == 0){
+									ChatUtils.send(sender, "§7No results found.");
+									return;
+								}
+								
 								/*
 								 * popularTrader o; for (int i = 0; i <
 								 * owners.size(); i++) { o = owners.get(i);
@@ -639,6 +674,10 @@ public class TransactionsCommand implements Command {
 								} catch (SQLException e) {
 									ChatUtils.error(sender, "Exception caught while executing this command.");
 									e.printStackTrace();
+									return;
+								}
+								if(owners == null || owners.size() == 0){
+									ChatUtils.send(sender, "§7No results found.");
 									return;
 								}
 								/*
