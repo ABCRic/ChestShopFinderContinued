@@ -90,7 +90,9 @@ public class SellCommand implements Command {
 				ChatUtils.send(sender,String.format("§f%s §7results for §f%s§7.", shops.size(), MaterialUtil.getName(stock)));
 				SearchCommand.previousResults.put(sender.getName(), shops);
 				// [1] Cyprias has 16 for $2 22 blocks north of you.
+				//String shopFormat = "§f%s§7: §f%s §7buys §f%s §7(§f%s§7) §7for $§f%s §7($§f%s§7e), §f%s §f%s";
 				String shopFormat = "§f%s§7: §f%s §7buys §f%s §7for $§f%s §7($§f%s§7e), §f%s §f%s";
+				
 				String sDir;
 				
 				Shop shop;
@@ -107,6 +109,8 @@ public class SellCommand implements Command {
 				String[] s5 = new String[shops.size()];
 				String[] s6 = new String[shops.size()];
 				String[] s7 = new String[shops.size()];
+				//String[] s8 = new String[shops.size()];
+				
 				for (int i=0; i<shops.size(); i++){
 					shop = shops.get(i);
 					
@@ -123,6 +127,7 @@ public class SellCommand implements Command {
 					s1[i] = ""+(i + 1);
 					s2[i] = Plugin.getPlayerName(shop.owner);
 					s3[i] = ""+shop.amount;
+				//	s4[i] = ""+shop.inStock;
 					s4[i] = Plugin.Round(shop.sellPrice, pl);
 					s5[i] = each;
 					s6[i] = Plugin.getDistanceColour(distP) + Plugin.Round(dist);
@@ -136,6 +141,8 @@ public class SellCommand implements Command {
 					s5 = MinecraftFontWidthCalculator.getWhitespacedStrings(s5);
 					s6 = MinecraftFontWidthCalculator.getWhitespacedStrings(s6);
 					s7 = MinecraftFontWidthCalculator.getWhitespacedStrings(s7);
+					//s8 = MinecraftFontWidthCalculator.getWhitespacedStrings(s8);
+					
 				}
 				
 				for (int i=0;i<s1.length;i++)
