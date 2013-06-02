@@ -46,7 +46,7 @@ public class WorldListener implements Listener {
 			try {
 				shops = Plugin.database.getShopsInCoords(c.worldName, c.xStart, c.xEnd, c.zStart, c.zEnd);
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
+				Logger.warning("Database error while looking up shops within a chunk.");
 				e.printStackTrace();
 				return;
 			}
@@ -95,7 +95,7 @@ public class WorldListener implements Listener {
 							try {
 								Plugin.database.deleteShop(id);
 							} catch (SQLException e) {
-								// TODO Auto-generated catch block
+								Logger.warning("Database error while attempting to delete shop.");
 								e.printStackTrace();
 							}
 						}});
@@ -128,7 +128,7 @@ public class WorldListener implements Listener {
 							try {
 								shop.setInStock(finStock);
 							} catch (SQLException e) {
-								// TODO Auto-generated catch block
+								Logger.warning("Database error while setting stock amount.");
 								e.printStackTrace();
 							}
 						}});
@@ -141,18 +141,6 @@ public class WorldListener implements Listener {
 	}
 	
 	BukkitTask taskCheckingShops;
-	public WorldListener(){
-
-		
-		
-		/*
-		Plugin.getInstance().getServer().getScheduler().runTaskAsynchronously(Plugin.getInstance(), new Runnable() {
-			public void run() {
-				
-				
-			}
-		});*/
-	}
 	
 	static public void unregisterEvents(JavaPlugin instance) {
 		ChunkLoadEvent.getHandlerList().unregister(instance);
@@ -205,112 +193,12 @@ public class WorldListener implements Listener {
 			return;
 		checkedChunks.put(t, true);
 
-		
-		
-		/*
-		Block aBlock = chunk.getBlock(0, 0, 0);
-		Block bBlock = chunk.getBlock(15, 256, 15);
-			
-		final int xStart = aBlock.getLocation().getBlockX();
-		final int xEnd = bBlock.getLocation().getBlockX();
-		final int zStart = aBlock.getLocation().getBlockZ();
-		final int zEnd = bBlock.getLocation().getBlockZ();
-*/
 
-		//chunks.add(new chunkCoords(chunk.getWorld().getName(), xStart, xEnd, zStart, zEnd));
 		chunks.add(new chunkCoords(chunk));
 		if (taskCheckingShops == null)
 			taskCheckingShops = Plugin.runTaskTimerAsynchronously(getShopsFromDB, 0, 1L);
 		
-		
-		
-		/*
-		// Run our DB call in a async thread.
-		Plugin.getInstance().getServer().getScheduler().runTaskAsynchronously(Plugin.getInstance(), new Runnable() {
-			public void run() {
-
-				try {
-				//	Logger.debug("Checking for missing shops between X: " + xStart + " - " + xEnd + ", Z: " + zStart + " - " + zEnd);
-					
-					final List<Shop> shops = Plugin.database.getShopsInCoords(chunk.getWorld().getName(), xStart, xEnd, zStart, zEnd);
-					
-					
-					// Run our check in the main thread. 
-					Plugin.getInstance().getServer().getScheduler().runTask(Plugin.getInstance(), new Runnable() {
-						public void run() {
-							Sign sign;
-							
-							for (int i=0; i<shops.size(); i++){
-								final Shop shop = shops.get(i);
-								final int id = shops.get(i).id;
-								
-								sign = shopExists(shops.get(i));
-								
-								if (sign == null){
-									Logger.warning("Shop #" + shops.get(i).id + " no longer exists, removing from DB.");
-									
-									
-									Plugin.getInstance().getServer().getScheduler().runTaskAsynchronously(Plugin.getInstance(), new Runnable() {
-										public void run() {
-											try {
-												Plugin.database.deleteShop(id);
-											} catch (SQLException e) {
-												// TODO Auto-generated catch block
-												e.printStackTrace();
-											}
-										}});
-									
-									
-									
-								}else{
-									
-									int inStock = 0;
-
-									String owner = sign.getLines()[0];
-									ItemStack stock = MaterialUtil.getItem(sign.getLines()[3]);
-
-									if (ChestShopSign.isAdminShop(owner)) {
-										inStock = 64 * 9 * 6; // Full chest. :P
-									} else {
-										Chest chest = uBlock.findConnectedChest(sign.getBlock());
-										if (chest != null) {
-											try{
-												inStock = InventoryUtil.getAmount(stock, chest.getInventory());
-											} catch (NullPointerException e) {
-												inStock = 0;
-											}
-										}
-									}
-
-									final int finStock = inStock;
-									
-									// Logger.debug("onTransaction inStock: " + inStock);
-									
-									try {
-										shop.setInStock(finStock);
-									} catch (SQLException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
-									
-									
-								}
-							}
-							
-						}});
-
-				} catch (SQLException e) {
-					Logger.warning("Exception caught while lookign up shops in chunk.");
-					e.printStackTrace();
-				}
-				
-				
-				
-			}});
-		
-		*/
-
-	}
+			}
 
 	public Sign shopExists(Shop shop){
 
