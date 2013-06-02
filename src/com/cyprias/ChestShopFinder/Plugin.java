@@ -361,10 +361,17 @@ public class Plugin extends JavaPlugin {
 			return w+seconds + g+"s"+ChatColor.RESET;
 	}
 	
-	public static BukkitTask runTaskAsynchronously(Runnable arg1){
-		return Plugin.getInstance().getServer().getScheduler().runTaskAsynchronously(instance, arg1);
+	public static BukkitTask runTaskAsynchronously(Runnable delay){
+		return Plugin.getInstance().getServer().getScheduler().runTaskAsynchronously(instance, delay);
 	}
 	
+	public static BukkitTask runTaskTimerAsynchronously(Runnable arg1, long delay, long period ){
+		return Plugin.getInstance().getServer().getScheduler().runTaskTimerAsynchronously(instance, arg1, delay, period);
+	}
 	
+	public static BukkitTask runTask(Runnable arg1 ){
+		return Plugin.getInstance().getServer().getScheduler().runTask(instance, arg1);
+	}
 	
+
 }
