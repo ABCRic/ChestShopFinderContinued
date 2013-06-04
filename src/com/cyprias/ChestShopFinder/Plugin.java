@@ -1,19 +1,12 @@
 package com.cyprias.ChestShopFinder;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.bukkit.Bukkit;
@@ -22,16 +15,13 @@ import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 import org.mcstats.Metrics;
 
-import com.Acrobot.Breeze.Utils.MaterialUtil;
 import com.cyprias.ChestShopFinder.command.CommandManager;
 import com.cyprias.ChestShopFinder.commands.BuyCommand;
 import com.cyprias.ChestShopFinder.commands.ArbitrageCommand;
@@ -166,7 +156,7 @@ public class Plugin extends JavaPlugin {
 
 	private void checkVersion() {
 		// Run our version checker in async thread, so not to lockup if timeout.
-		getServer().getScheduler().runTaskAsynchronously(instance, new Runnable() {
+		runTaskAsynchronously( new Runnable() {
 			public void run() {
 				try {
 					VersionChecker version = new VersionChecker("http://dev.bukkit.org/server-mods/chestshopfinder/files.rss");

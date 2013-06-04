@@ -68,6 +68,7 @@ public class MySQL implements Database {
 			con.prepareStatement("CREATE TABLE "+transactions_table+" (`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `owner` VARCHAR(32) NOT NULL, `client` VARCHAR(32) NOT NULL, `flags` INT NOT NULL, `price` DOUBLE NOT NULL, `typeId` INT NOT NULL, `durability` INT NOT NULL, `enchantments` VARCHAR(16) NOT NULL, `amount` INT NOT NULL, `time` DOUBLE NOT NULL) ENGINE = InnoDB").executeUpdate();
 		}
 		
+		con.close();
 	}
 	
 	public static class queryReturn {
