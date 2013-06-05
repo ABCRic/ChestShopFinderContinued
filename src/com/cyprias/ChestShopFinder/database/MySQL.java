@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
@@ -24,6 +25,7 @@ import com.cyprias.ChestShopFinder.Plugin;
 import com.cyprias.ChestShopFinder.configuration.Config;
 import com.cyprias.ChestShopFinder.utils.ChatUtils;
 import com.cyprias.ChestShopFinder.utils.MathUtil;
+import com.google.common.primitives.Doubles;
 
 public class MySQL implements Database {
 
@@ -265,6 +267,57 @@ WHERE `sellPrice` > 0 AND `balance` >= `sellPrice`;
 
 	 */
 
+	public List<Shop> getShopsPricesByItem(ItemStack stock) throws SQLException {
+		List<Shop> shops =  new ArrayList<Shop>();
+		
+		//String qry = "SELECT (`buyPrice` / `amount`) as buyEach, (`sellPrice` / `amount`) as sellEach FROM `"+shops_table+"` WHERE `typeId` = 264 AND `durability` = 0 AND `enchantments` = "" AND `inStock` > 0;";
+		
+		//String qry = "SELECT (`buyPrice` / `amount`) as buyEach, (`sellPrice` / `amount`) as sellEach";
+		String qry = "SELECT *";
+		
+		qry += " FROM `"+shops_table+"`";
+		//qry += " WHERE `world` LIKE ?";	// Only include the world we're in.
+		qry += " WHERE `typeId` = ? AND `durability` = ? AND `enchantments` = ?";	// Only show the item we're searching for.
+		//qry += " AND `inStock` > 0;";
+		//qry += " ORDER BY `"+getColumn+"` DESC";
+		
+		
+			
+		
+		
+		String enchantments = MaterialUtil.Enchantment.encodeEnchantment(stock);
+		if (enchantments == null)
+			enchantments = "";
+		
+		
+
+		queryReturn results = executeQuery(qry, stock.getTypeId(), stock.getDurability(), enchantments);
+		ResultSet r = results.result;
+
+		Shop shop;
+		while (r.next()) {
+			shop = new Shop(r.getString("owner"), stock.getTypeId(), stock.getDurability(), r.getString("enchantments"), r.getInt("amount"), r.getDouble("buyPrice"), r.getDouble("sellPrice"), r.getInt("inStock"));
+			shop.setId(r.getInt("id"));
+			shop.setWorldName(r.getString("world"));
+			shop.setX(r.getInt("x"));
+			shop.setY(r.getInt("y"));
+			shop.setZ(r.getInt("z"));
+			
+			shops.add(shop);
+		}
+		
+		results.close();
+		
+		
+	//	Dobule[] a = shops.toArray();
+		
+		
+		
+		
+		return shops; //Doubles.toArray(shops);
+		
+	}
+	
 	public List<Shop> findBuySellItemNearby(ItemStack stock, Location loc, boolean isBuy) throws SQLException {
 		List<Shop> shops =  new ArrayList<Shop>();
 		
@@ -368,6 +421,9 @@ WHERE `sellPrice` > 0 AND `balance` >= `sellPrice`;
 		return shops;
 	}
 
+
+
+	
 
 	public boolean deleteShop(int id) throws SQLException {
 		String query = "DELETE FROM `"+shops_table+"` WHERE `id` = ?";
@@ -715,7 +771,8 @@ WHERE `sellPrice` > 0 AND `balance` >= `sellPrice`;
 		results.close();
 		return stats;
 	}
-	
+
+
 
 	/*
 	public static HashMap<Integer, Integer> updateStock = new HashMap<Integer, Integer>();

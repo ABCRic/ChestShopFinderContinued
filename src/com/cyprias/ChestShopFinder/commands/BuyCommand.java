@@ -94,7 +94,7 @@ public class BuyCommand implements Command {
 				SearchCommand.previousResults.put(sender.getName(), shops);
 				// [1] Cyprias has 16 for $2 22 blocks north of you.
 				//String shopFormat = "§f%s§7: §f%s §7sells §f%s §7(§f%s§7) for $§f%s §7($§f%s§7e), §f%s §f%s";
-				String shopFormat = "§f%s§7: §f%s §7sells §f%s for $§f%s §7($§f%s§7e), §f%s §f%s";
+				String shopFormat = "§f%s§7: §f%s §7sells §f%s §7for $§f%s §7($§f%s§7e), §f%s §f%s";
 				
 				String sDir;
 				

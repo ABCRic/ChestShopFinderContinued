@@ -29,6 +29,10 @@ public interface Database {
 	
 	List<Shop> getShopsInCoords(String worldName, int xStart, int xEnd, int zStart, int zEnd) throws SQLException;
 	
+	//double[] getShopsPricesByItem(ItemStack stock, String getColumn) throws SQLException;
+	List<Shop> getShopsPricesByItem(ItemStack stock) throws SQLException;
+	
+	
 	boolean deleteShop(int id)  throws SQLException;
 
 	List<Shop> findArbitrage(ItemStack stock, Location loc)  throws SQLException;

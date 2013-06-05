@@ -26,6 +26,7 @@ import com.cyprias.ChestShopFinder.command.CommandManager;
 import com.cyprias.ChestShopFinder.commands.BuyCommand;
 import com.cyprias.ChestShopFinder.commands.ArbitrageCommand;
 import com.cyprias.ChestShopFinder.commands.LookCommand;
+import com.cyprias.ChestShopFinder.commands.PriceCommand;
 import com.cyprias.ChestShopFinder.commands.ReloadCommand;
 import com.cyprias.ChestShopFinder.commands.SearchCommand;
 import com.cyprias.ChestShopFinder.commands.SellCommand;
@@ -110,6 +111,7 @@ public class Plugin extends JavaPlugin {
 		cm.registerCommand("buy", new BuyCommand());
 		cm.registerCommand("arbitrage", new ArbitrageCommand());
 		cm.registerCommand("transactions", new TransactionsCommand());
+		cm.registerCommand("price", new PriceCommand());
 		this.getCommand("csf").setExecutor(cm);
 
 		// Load our command aliases.

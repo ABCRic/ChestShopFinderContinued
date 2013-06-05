@@ -657,6 +657,12 @@ public class SQLite implements Database {
 		results.close();
 		return stats;
 	}
+
+	@Override
+	public List<Shop> getShopsPricesByItem(ItemStack stock) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 	
