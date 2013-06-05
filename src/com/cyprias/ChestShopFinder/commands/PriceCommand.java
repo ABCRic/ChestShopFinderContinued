@@ -77,7 +77,7 @@ public class PriceCommand implements Command {
 
 				for (int i = 0; i < shops.size(); i++) {
 
-					if (shops.get(i).buyPrice > 0) {
+					if (shops.get(i).buyPrice > 0 && (shops.get(i).inStock >= shops.get(i).amount)) {
 						// buyCount += 1;
 
 						dBuyPrices.add(shops.get(i).buyPrice / shops.get(i).amount);
@@ -94,11 +94,11 @@ public class PriceCommand implements Command {
 					}
 				}
 
-				String averageBuy = Plugin.Round((totalBuyPrice / totalBuyAmount) * famount, dplaces);
+				String averageBuy = (dBuyPrices.size() > 0) ? Plugin.Round((totalBuyPrice / totalBuyAmount) * famount, dplaces) : "0";
 
-				String mean = Plugin.Round(mean(Doubles.toArray(dBuyPrices)) * famount, dplaces);
-				String median = Plugin.Round(median(Doubles.toArray(dBuyPrices)) * famount, dplaces);
-				String mode = Plugin.Round(mode(Doubles.toArray(dBuyPrices)) * famount, dplaces);
+				String mean = (dBuyPrices.size() > 0) ? Plugin.Round(mean(Doubles.toArray(dBuyPrices)) * famount, dplaces) : "0";
+				String median = (dBuyPrices.size() > 0) ? Plugin.Round(median(Doubles.toArray(dBuyPrices)) * famount, dplaces) : "0";
+				String mode = (dBuyPrices.size() > 0) ? Plugin.Round(mode(Doubles.toArray(dBuyPrices)) * famount, dplaces) : "0";
 
 				ChatUtils.send(sender, String.format("§7Buy average: $§f%s§7, mean:$§f%s§7, med:$§f%s§7, mod:$§f%s§7.",
 
@@ -132,11 +132,13 @@ public class PriceCommand implements Command {
 
 				}
 
-				String averageSell = Plugin.Round((totalSellPrice / totalSellAmount) * famount, dplaces);
+				String averageSell = (dSellPrices.size() > 0) ? Plugin.Round((totalSellPrice / totalSellAmount) * famount, dplaces) : "0";
 
-				mean = Plugin.Round(mean(Doubles.toArray(dSellPrices)) * famount, dplaces);
-				median = Plugin.Round(median(Doubles.toArray(dSellPrices)) * famount, dplaces);
-				mode = Plugin.Round(mode(Doubles.toArray(dSellPrices)) * famount, dplaces);
+				
+				
+				mean = (dSellPrices.size() > 0) ? Plugin.Round(mean(Doubles.toArray(dSellPrices)) * famount, dplaces) : "0";
+				median = (dSellPrices.size() > 0) ? Plugin.Round(median(Doubles.toArray(dSellPrices)) * famount, dplaces) : "0";
+				mode = (dSellPrices.size() > 0) ? Plugin.Round(mode(Doubles.toArray(dSellPrices)) * famount, dplaces) : "0";
 
 				//
 
