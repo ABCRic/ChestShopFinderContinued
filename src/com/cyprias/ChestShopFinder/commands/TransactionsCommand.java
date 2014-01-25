@@ -221,7 +221,7 @@ public class TransactionsCommand implements Command {
 
 										// Only include 5 percentages in our
 										// string.
-										for (int t = c.size() - 1; t >= 5; t--)
+										for (int t = c.size() - 1; t >= 3; t--)
 											c.remove(t);
 
 										s4[i] = "(" + ChatColor.WHITE + Plugin.Round((c.get(0).dnum / sumPrice) * 100) + ChatColor.GRAY + "%";
@@ -726,7 +726,7 @@ public class TransactionsCommand implements Command {
 
 										// Only include 5 percentages in our
 										// string.
-										for (int t = c.size() - 1; t >= 5; t--)
+										for (int t = c.size() - 1; t >= 3; t--)
 											c.remove(t);
 
 										s4[i] = "(" + ChatColor.WHITE + Plugin.Round((c.get(0).dnum / sumPrice) * 100) + ChatColor.GRAY + "%";

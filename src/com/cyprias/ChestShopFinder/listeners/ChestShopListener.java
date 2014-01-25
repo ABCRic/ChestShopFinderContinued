@@ -112,8 +112,10 @@ public class ChestShopListener implements Listener {
 							if (event.getTransactionType() == TransactionType.SELL)
 								flags = MathUtil.addMask(flags, Transaction.mask_SELL);
 
+							
+							
 							(new Transaction(event.getOwner().getName(), event.getClient().getName(), flags, event.getPrice(),
-								event.getStock()[i].getTypeId(), event.getStock()[i].getDurability(),  MaterialUtil.Enchantment.encodeEnchantment(event.getStock()[i]), event.getStock()[i].getAmount(), Plugin.getUnixTime())).sendToDB();
+								event.getStock()[i].getTypeId(), event.getStock()[i].getDurability(),  null, event.getStock()[i].getAmount(), Plugin.getUnixTime())).sendToDB();
 						}
 					}
 					
@@ -163,7 +165,7 @@ public class ChestShopListener implements Listener {
 
 		// Logger.debug("stock: " + stock.getTypeId() + " " +
 		// stock.getDurability());
-		final String enchantments = MaterialUtil.Enchantment.encodeEnchantment(stock);
+		final String enchantments = null; //MaterialUtil.Enchantment.encodeEnchantment(stock);
 
 		int inStock = 0;
 		if (ChestShopSign.isAdminShop(owner)) {

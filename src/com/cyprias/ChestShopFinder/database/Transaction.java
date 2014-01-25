@@ -136,7 +136,7 @@ public class Transaction {
 	
 	public ItemStack getStock(){
 		ItemStack stock = new ItemStack(typeId, durability);
-		stock.addEnchantments(MaterialUtil.Enchantment.getEnchantments(enchantments));
+		//stock.addEnchantments(MaterialUtil.Enchantment.getEnchantments(enchantments));
 		return stock;
 	}
 	

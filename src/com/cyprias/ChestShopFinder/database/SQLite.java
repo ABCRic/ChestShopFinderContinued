@@ -204,7 +204,7 @@ public class SQLite implements Database {
 		
 		String itemSearch = " AND `typeId` = ? AND `durability` = ? AND `enchantments` = ?";
 		
-		String enchantments = MaterialUtil.Enchantment.encodeEnchantment(stock);
+		String enchantments = null; //MaterialUtil.Enchantment.encodeEnchantment(stock);
 		if (enchantments == null)
 			enchantments = "";
 
@@ -282,7 +282,7 @@ public class SQLite implements Database {
 		int pX = loc.getBlockX();
 		int pZ = loc.getBlockZ();
 		
-		String enchantments = MaterialUtil.Enchantment.encodeEnchantment(stock);
+		String enchantments = null; //MaterialUtil.Enchantment.encodeEnchantment(stock);
 		if (enchantments == null)
 			enchantments = "";
 
@@ -337,7 +337,7 @@ public class SQLite implements Database {
 
 	@Override
 	public List<Shop> findArbitrage(ItemStack stock, Location loc) throws SQLException {
-		String enchantments = MaterialUtil.Enchantment.encodeEnchantment(stock);
+		String enchantments = null; //MaterialUtil.Enchantment.encodeEnchantment(stock);
 		if (enchantments == null)
 			enchantments = "";
 		
@@ -658,12 +658,38 @@ public class SQLite implements Database {
 		return stats;
 	}
 
-	@Override
 	public List<Shop> getShopsPricesByItem(ItemStack stock) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		List<Shop> shops =  new ArrayList<Shop>();
+		String qry = "SELECT *";
+		
+		qry += " FROM `"+shops_table+"`";
+		//qry += " WHERE `world` LIKE ?";	// Only include the world we're in.
+		qry += " WHERE `typeId` = ? AND `durability` = ? AND `enchantments` = ?";	// Only show the item we're searching for.
+		//qry += " AND `inStock` > 0;";
+		//qry += " ORDER BY `"+getColumn+"` DESC";
+
+		String enchantments = null; //MaterialUtil.Enchantment.encodeEnchantment(stock);
+		if (enchantments == null)
+			enchantments = "";
+
+		queryReturn results = executeQuery(qry, stock.getTypeId(), stock.getDurability(), enchantments);
+		ResultSet r = results.result;
+
+		Shop shop;
+		while (r.next()) {
+			shop = new Shop(r.getString("owner"), stock.getTypeId(), stock.getDurability(), r.getString("enchantments"), r.getInt("amount"), r.getDouble("buyPrice"), r.getDouble("sellPrice"), r.getInt("inStock"));
+			shop.setId(r.getInt("id"));
+			shop.setWorldName(r.getString("world"));
+			shop.setX(r.getInt("x"));
+			shop.setY(r.getInt("y"));
+			shop.setZ(r.getInt("z"));
+			
+			shops.add(shop);
+		}
+		
+		results.close();
+		return shops; //Doubles.toArray(shops);
 	}
-	
 	
 	
 	/*

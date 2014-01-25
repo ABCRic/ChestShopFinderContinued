@@ -220,7 +220,7 @@ public class MySQL implements Database {
 		
 		String itemSearch = " AND `typeId` = ? AND `durability` = ? AND `enchantments` = ?";
 		
-		String enchantments = MaterialUtil.Enchantment.encodeEnchantment(stock);
+		String enchantments = null; //MaterialUtil.Enchantment.encodeEnchantment(stock);
 		if (enchantments == null)
 			enchantments = "";
 
@@ -285,7 +285,7 @@ WHERE `sellPrice` > 0 AND `balance` >= `sellPrice`;
 			
 		
 		
-		String enchantments = MaterialUtil.Enchantment.encodeEnchantment(stock);
+		String enchantments = null; //MaterialUtil.Enchantment.encodeEnchantment(stock);
 		if (enchantments == null)
 			enchantments = "";
 		
@@ -324,7 +324,7 @@ WHERE `sellPrice` > 0 AND `balance` >= `sellPrice`;
 		int pX = loc.getBlockX();
 		int pZ = loc.getBlockZ();
 		
-		String enchantments = MaterialUtil.Enchantment.encodeEnchantment(stock);
+		String enchantments = null; //MaterialUtil.Enchantment.encodeEnchantment(stock);
 		if (enchantments == null)
 			enchantments = "";
 
@@ -435,7 +435,7 @@ WHERE `sellPrice` > 0 AND `balance` >= `sellPrice`;
 	public List<Shop> findArbitrage(ItemStack stock, Location loc) throws SQLException {
 		
 		
-		String enchantments = MaterialUtil.Enchantment.encodeEnchantment(stock);
+		String enchantments = null; //MaterialUtil.Enchantment.encodeEnchantment(stock);
 		if (enchantments == null)
 			enchantments = "";
 		

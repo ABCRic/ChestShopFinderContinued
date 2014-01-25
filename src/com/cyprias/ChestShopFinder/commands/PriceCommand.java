@@ -34,7 +34,7 @@ public class PriceCommand implements Command {
 		}
 
 		int amount = 1;// InventoryUtil.getAmount(item, player.getInventory());
-		if (Plugin.isInt(args[args.length - 1])) {
+		if (args.length > 1 && Plugin.isInt(args[args.length - 1])) {
 			amount = Integer.parseInt(args[args.length - 1]);
 			args = (String[]) ArrayUtils.remove(args, args.length - 1);
 		}
