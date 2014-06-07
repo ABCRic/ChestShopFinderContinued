@@ -26,14 +26,14 @@
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>craftbukkit</artifactId>
-			<version>1.6.4-R0.1-SNAPSHOT</version>
+			<version>1.7.9-R0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.Acrobot</groupId>
 			<artifactId>ChestShop</artifactId>
-			<version>3.7.3</version>
+			<version>3.8.9</version>
 			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/ChestShop-3.7.3.jar</systemPath>
+			<systemPath>${project.basedir}/lib/ChestShop-3.8.9.jar</systemPath>
 		</dependency>
 	</dependencies>
 </project>
