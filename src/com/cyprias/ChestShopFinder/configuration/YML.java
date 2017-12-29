@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -14,7 +15,7 @@ public class YML extends YamlConfiguration {
 	private static File file = null;
 	public YML(InputStream fileStream) throws IOException, InvalidConfigurationException {
 		//load yml from resources. 
-		load(fileStream);
+		load(new InputStreamReader(fileStream));
 	}
 	
 	public YML(File pluginDir, String fileName) throws FileNotFoundException, IOException, InvalidConfigurationException {
