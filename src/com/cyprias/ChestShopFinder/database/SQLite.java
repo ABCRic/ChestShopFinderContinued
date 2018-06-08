@@ -202,25 +202,23 @@ public class SQLite implements Database {
 		int pX = loc.getBlockX();
 		int pZ = loc.getBlockZ();
 		
-		String itemSearch = " AND `typeId` = ? AND `durability` = ? AND `enchantments` = ?";
-		
 		String enchantments = null; //MaterialUtil.Enchantment.encodeEnchantment(stock);
 		if (enchantments == null)
 			enchantments = "";
 
-		String qry = "SELECT *, SQRT(("+pX+"-x)*("+pX+"-x) + ("+pZ+"-z)*("+pZ+"-z)) as distance FROM "+shops_table+" WHERE `inStock` >= `amount` AND `world` LIKE ?";
+		String qry = "SELECT *, SQRT(("+pX+"-x)*("+pX+"-x) + ("+pZ+"-z)*("+pZ+"-z)) as distance FROM "+shops_table+" WHERE `inStock` >= `amount` AND `world` LIKE ?"
+				+ " AND `typeId` = ? AND `durability` = ? AND `enchantments` = ?";
 
 		if (Config.getBoolean("properties.one-owner-per-results"))
 			qry += " GROUP BY `owner`";
 		
-		qry += itemSearch+ " ORDER BY distance LIMIT 0 , " + Config.getInt("properties.search-results");
+		qry += " ORDER BY distance LIMIT 0 , " + Config.getInt("properties.search-results");
 		
 		queryReturn results = executeQuery(qry, loc.getWorld().getName(), stock.getTypeId(), stock.getDurability(), enchantments);
 		ResultSet r = results.result;
 
 		Shop shop;
 		while (r.next()) {
-			
 			//tLoc = new Location(Plugin.getInstance().getServer().getWorld(r.getString("world")), r.getDouble("x"), r.getDouble("y"), r.getDouble("z"));
 
 			shop = new Shop(r.getString("owner"), stock.getTypeId(), stock.getDurability(), r.getString("enchantments"), r.getInt("amount"), r.getDouble("buyPrice"), r.getDouble("sellPrice"), r.getInt("inStock"));
