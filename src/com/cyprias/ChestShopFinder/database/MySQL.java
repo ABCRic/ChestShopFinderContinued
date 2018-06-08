@@ -218,18 +218,17 @@ public class MySQL implements Database {
 		int pX = loc.getBlockX();
 		int pZ = loc.getBlockZ();
 		
-		String itemSearch = " AND `typeId` = ? AND `durability` = ? AND `enchantments` = ?";
-		
 		String enchantments = null; //MaterialUtil.Enchantment.encodeEnchantment(stock);
 		if (enchantments == null)
 			enchantments = "";
 
-		String qry = "SELECT *, SQRT(("+pX+"-x)*("+pX+"-x) + ("+pZ+"-z)*("+pZ+"-z)) as distance FROM "+shops_table+" WHERE `inStock` >= `amount` AND `world` LIKE ?";
+		String qry = "SELECT *, SQRT(("+pX+"-x)*("+pX+"-x) + ("+pZ+"-z)*("+pZ+"-z)) as distance FROM "+shops_table+" WHERE `inStock` >= `amount` AND `world` LIKE ?"
+				+ " AND `typeId` = ? AND `durability` = ? AND `enchantments` = ?";
 
 		if (Config.getBoolean("properties.one-owner-per-results"))
 			qry += " GROUP BY `owner`";
 		
-		qry += itemSearch+ " ORDER BY distance LIMIT 0 , " + Config.getInt("properties.search-results");
+		qry += " ORDER BY distance LIMIT 0 , " + Config.getInt("properties.search-results");
 		
 		
 		
