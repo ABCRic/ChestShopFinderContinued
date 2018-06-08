@@ -111,10 +111,10 @@ public class ChestShopListener implements Listener {
 								flags  = MathUtil.addMask(flags, Transaction.mask_BUY);
 							if (event.getTransactionType() == TransactionType.SELL)
 								flags = MathUtil.addMask(flags, Transaction.mask_SELL);
-
 							
+							String owner = sign.getLines()[0];
 							
-							(new Transaction(event.getOwner().getName(), event.getClient().getName(), flags, event.getPrice(),
+							(new Transaction(ChestShopSign.isAdminShop(owner) ? Config.getString("properties.admin-shop") : event.getOwner().getName(), event.getClient().getName(), flags, event.getPrice(),
 								event.getStock()[i].getTypeId(), event.getStock()[i].getDurability(),  null, event.getStock()[i].getAmount(), Plugin.getUnixTime())).sendToDB();
 						}
 					}
