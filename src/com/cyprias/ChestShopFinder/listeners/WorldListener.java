@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Chunk;
-import org.bukkit.World;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
@@ -204,7 +204,7 @@ public class WorldListener implements Listener {
 
 		Block block = shop.getWorld().getBlockAt(shop.getLocation());
 		
-		if (block.getType() == block.getType().WALL_SIGN)
+		if (block.getType() == Material.WALL_SIGN)
 			return (Sign) block.getState();
 		
 		

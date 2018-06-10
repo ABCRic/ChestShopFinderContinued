@@ -6,26 +6,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitTask;
-
-import com.Acrobot.Breeze.Utils.MaterialUtil;
-import com.Acrobot.ChestShop.Events.TransactionEvent.TransactionType;
 import com.cyprias.ChestShopFinder.Logger;
 import com.cyprias.ChestShopFinder.Plugin;
 import com.cyprias.ChestShopFinder.configuration.Config;
 import com.cyprias.ChestShopFinder.utils.ChatUtils;
-import com.cyprias.ChestShopFinder.utils.MathUtil;
-import com.google.common.primitives.Doubles;
 
 public class MySQL implements Database {
 

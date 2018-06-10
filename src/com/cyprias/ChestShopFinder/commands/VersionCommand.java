@@ -6,9 +6,6 @@ import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.xml.sax.SAXException;
-
 import com.cyprias.ChestShopFinder.Logger;
 import com.cyprias.ChestShopFinder.Perm;
 import com.cyprias.ChestShopFinder.Plugin;

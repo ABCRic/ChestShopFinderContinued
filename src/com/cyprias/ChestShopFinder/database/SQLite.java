@@ -8,25 +8,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitTask;
-
-import com.Acrobot.Breeze.Utils.MaterialUtil;
 import com.cyprias.ChestShopFinder.Logger;
 import com.cyprias.ChestShopFinder.Plugin;
 import com.cyprias.ChestShopFinder.configuration.Config;
-import com.cyprias.ChestShopFinder.database.Database.Stats;
-import com.cyprias.ChestShopFinder.database.Database.itemTraded;
-import com.cyprias.ChestShopFinder.database.Database.traderCount;
-import com.cyprias.ChestShopFinder.database.Database.popularTrader;
-import com.cyprias.ChestShopFinder.database.MySQL.queryReturn;
 import com.cyprias.ChestShopFinder.utils.ChatUtils;
 
 public class SQLite implements Database {

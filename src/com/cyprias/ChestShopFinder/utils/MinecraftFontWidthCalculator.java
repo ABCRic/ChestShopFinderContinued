@@ -1,7 +1,5 @@
 package com.cyprias.ChestShopFinder.utils;
 
-import java.util.List;
-
 import org.bukkit.ChatColor;
 
 /**

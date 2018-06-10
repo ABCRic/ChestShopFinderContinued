@@ -1,8 +1,5 @@
 package com.cyprias.ChestShopFinder.listeners;
 
-import java.util.HashMap;
-
-import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -11,13 +8,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.cyprias.ChestShopFinder.Plugin;
 
 public class PlayerListener implements Listener {
-
 	static public void unregisterEvents(JavaPlugin instance) {
 		PlayerCommandPreprocessEvent.getHandlerList().unregister(instance);
 
 	}
-
-
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
@@ -29,5 +23,4 @@ public class PlayerListener implements Listener {
 			return;
 		}
 	}
-
 }

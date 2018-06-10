@@ -1,14 +1,12 @@
 package com.cyprias.ChestShopFinder.commands;
 
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import com.Acrobot.Breeze.Utils.MaterialUtil;
-import com.cyprias.ChestShopFinder.Logger;
 import com.cyprias.ChestShopFinder.Perm;
 import com.cyprias.ChestShopFinder.Plugin;
 import com.cyprias.ChestShopFinder.command.Command;

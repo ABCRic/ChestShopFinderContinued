@@ -2,6 +2,7 @@ package com.cyprias.ChestShopFinder.listeners;
 
 import java.sql.SQLException;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
@@ -25,8 +26,8 @@ public class BlockListener implements Listener {
 			return;
 
 		final Block block = event.getBlock();
-
-		if (!(block.getType() == block.getType().WALL_SIGN))
+		
+		if (!(block.getType() == Material.WALL_SIGN))
 			return;
 
 		// Wait 1 tick so the lines on the sign update.

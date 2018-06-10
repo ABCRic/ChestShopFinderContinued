@@ -8,7 +8,6 @@ import com.Acrobot.Breeze.Utils.MaterialUtil;
 import com.Acrobot.ChestShop.Events.TransactionEvent.TransactionType;
 import com.cyprias.ChestShopFinder.Logger;
 import com.cyprias.ChestShopFinder.Plugin;
-import com.cyprias.ChestShopFinder.configuration.Config;
 import com.cyprias.ChestShopFinder.utils.MathUtil;
 
 public class Transaction {

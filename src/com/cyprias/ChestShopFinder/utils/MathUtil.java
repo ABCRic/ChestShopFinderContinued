@@ -3,10 +3,7 @@ package com.cyprias.ChestShopFinder.utils;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
-
-import com.cyprias.ChestShopFinder.Plugin;
 
 public class MathUtil {
 	//http://forums.bukkit.org/threads/lookat-and-move-functions.26768/#post-1014171

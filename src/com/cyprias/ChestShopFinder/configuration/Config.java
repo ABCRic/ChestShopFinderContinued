@@ -1,8 +1,6 @@
 package com.cyprias.ChestShopFinder.configuration;
 
 import java.io.IOException;
-import java.util.List;
-
 import org.bukkit.configuration.InvalidConfigurationException;
 
 import com.cyprias.ChestShopFinder.Logger;
