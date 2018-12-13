@@ -166,7 +166,7 @@ public class WorldListener implements Listener {
 			
 			this.chunk = chunk;
 			Block aBlock = chunk.getBlock(0, 0, 0);
-			Block bBlock = chunk.getBlock(15, 256, 15);
+			Block bBlock = chunk.getBlock(15, 255, 15);
 				
 			
 			this.worldName = chunk.getWorld().getName();
